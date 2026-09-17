@@ -12,10 +12,13 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
-import { COLORS, SPACING, FONTS, BORDER_RADIUS, TOUCH_TARGETS } from '../../constants/theme';
+import { SPACING, FONTS, BORDER_RADIUS, TOUCH_TARGETS, Colors } from '../../constants/theme';
+import { useTheme } from '../../context/ThemeContext';
 import { useLoginViewModel } from './LoginViewModel';
 
 export function LoginScreen() {
+  const { colors } = useTheme();
+  const styles = useStyles(colors);
   const { state, setEmail, setPassword, toggleMode, handleSubmit } = useLoginViewModel();
 
   return (
@@ -27,10 +30,7 @@ export function LoginScreen() {
         <View style={styles.content}>
           {/* Logo */}
           <View style={styles.logoContainer}>
-            <View style={styles.logo}>
-              <View style={styles.logoDot} />
-            </View>
-            <Text style={styles.appName}>UnPaso</Text>
+            <Text style={styles.appName}>NeuroPaso</Text>
             <Text style={styles.tagline}>Un paso a la vez</Text>
           </View>
 
@@ -39,7 +39,7 @@ export function LoginScreen() {
             <TextInput
               style={styles.input}
               placeholder="Email"
-              placeholderTextColor={COLORS.textMuted}
+              placeholderTextColor={colors.textMuted}
               value={state.email}
               onChangeText={setEmail}
               keyboardType="email-address"
@@ -50,7 +50,7 @@ export function LoginScreen() {
             <TextInput
               style={styles.input}
               placeholder="Contraseña"
-              placeholderTextColor={COLORS.textMuted}
+              placeholderTextColor={colors.textMuted}
               value={state.password}
               onChangeText={setPassword}
               secureTextEntry
@@ -66,7 +66,7 @@ export function LoginScreen() {
               disabled={state.loading}
             >
               {state.loading ? (
-                <ActivityIndicator color={COLORS.textPrimary} />
+                <ActivityIndicator color={colors.textPrimary} />
               ) : (
                 <Text style={styles.submitButtonText}>
                   {state.isLogin ? 'Iniciar Sesión' : 'Registrarse'}
@@ -88,10 +88,10 @@ export function LoginScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = (colors: Colors) => StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.background,
+    backgroundColor: colors.background,
   },
   keyboardView: {
     flex: 1,
@@ -109,55 +109,49 @@ const styles = StyleSheet.create({
     width: 96,
     height: 96,
     borderRadius: 48,
-    backgroundColor: COLORS.primary,
+    backgroundColor: colors.primary,
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: SPACING.lg,
   },
-  logoDot: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    backgroundColor: COLORS.accent,
-  },
   appName: {
-    color: COLORS.textPrimary,
+    color: colors.textPrimary,
     fontSize: FONTS.size.xxxlarge,
     fontWeight: FONTS.weight.bold,
     marginBottom: SPACING.sm,
   },
   tagline: {
-    color: COLORS.textSecondary,
+    color: colors.textSecondary,
     fontSize: FONTS.size.large,
   },
   form: {
     gap: SPACING.lg,
   },
   input: {
-    backgroundColor: COLORS.surface,
+    backgroundColor: colors.surface,
     borderRadius: BORDER_RADIUS.md,
     padding: SPACING.lg,
-    color: COLORS.textPrimary,
+    color: colors.textPrimary,
     fontSize: FONTS.size.large,
     minHeight: TOUCH_TARGETS.recommendedSize,
     borderWidth: 1,
-    borderColor: COLORS.border,
+    borderColor: colors.border,
   },
   error: {
-    color: COLORS.error,
+    color: colors.error,
     fontSize: FONTS.size.medium,
     textAlign: 'center',
     padding: SPACING.sm,
   },
   submitButton: {
-    backgroundColor: COLORS.accent,
+    backgroundColor: colors.accent,
     borderRadius: BORDER_RADIUS.md,
     padding: SPACING.lg,
     alignItems: 'center',
     minHeight: TOUCH_TARGETS.recommendedSize,
   },
   submitButtonText: {
-    color: COLORS.textPrimary,
+    color: colors.textPrimary,
     fontSize: FONTS.size.large,
     fontWeight: FONTS.weight.semibold,
   },
@@ -167,7 +161,7 @@ const styles = StyleSheet.create({
     minHeight: TOUCH_TARGETS.minSize,
   },
   toggleText: {
-    color: COLORS.textSecondary,
+    color: colors.textSecondary,
     fontSize: FONTS.size.medium,
   },
 });

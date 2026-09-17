@@ -5,10 +5,13 @@ import {
   StyleSheet,
   Modal,
   TouchableOpacity,
-  Alert,
+  ScrollView,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { COLORS, SPACING, FONTS, BORDER_RADIUS, TOUCH_TARGETS } from '../constants/theme';
+import { SPACING, FONTS, BORDER_RADIUS, TOUCH_TARGETS } from '../constants/theme';
+import { Colors } from '../constants/theme';
+import { useTheme, ThemeMode } from '../context/ThemeContext';
+import { useLanguage, Language } from '../i18n';
 import { TimerSettings, getTimerSettings, saveTimerSettings } from '../services/settingsService';
 
 interface SettingsModalProps {
@@ -23,6 +26,9 @@ const BREAK_OPTIONS = [3, 5, 10];
 export function SettingsModal({ visible, onClose, onSave }: SettingsModalProps) {
   const [workMinutes, setWorkMinutes] = useState(25);
   const [breakMinutes, setBreakMinutes] = useState(5);
+  const { colors, themeMode, setThemeMode } = useTheme();
+  const { language, setLanguage, t } = useLanguage();
+  const styles = useStyles(colors);
 
   useEffect(() => {
     if (visible) {
@@ -48,73 +54,138 @@ export function SettingsModal({ visible, onClose, onSave }: SettingsModalProps) 
       <View style={styles.overlay}>
         <View style={styles.container}>
           <View style={styles.header}>
-            <Text style={styles.title}>Configurar Timer</Text>
+            <Text style={styles.title}>{t('settings.title')}</Text>
             <TouchableOpacity onPress={onClose} style={styles.closeButton}>
-              <Ionicons name="close" size={24} color={COLORS.textSecondary} />
+              <Ionicons name="close" size={24} color={colors.textSecondary} />
             </TouchableOpacity>
           </View>
 
-          {/* Work Duration */}
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Tiempo de trabajo</Text>
-            <Text style={styles.sectionSubtitle}>Selecciona cuánto quieres concentrarte</Text>
-            <View style={styles.optionsRow}>
-              {WORK_OPTIONS.map((minutes) => (
-                <TouchableOpacity
-                  key={minutes}
-                  style={[
-                    styles.option,
-                    workMinutes === minutes && styles.optionActive,
-                  ]}
-                  onPress={() => setWorkMinutes(minutes)}
-                >
-                  <Text style={[
-                    styles.optionText,
-                    workMinutes === minutes && styles.optionTextActive,
-                  ]}>
-                    {minutes} min
-                  </Text>
-                </TouchableOpacity>
-              ))}
+          <ScrollView showsVerticalScrollIndicator={false}>
+            {/* Work Duration */}
+            <View style={styles.section}>
+              <Text style={styles.sectionTitle}>{t('settings.workDuration')}</Text>
+              <View style={styles.optionsRow}>
+                {WORK_OPTIONS.map((minutes) => (
+                  <TouchableOpacity
+                    key={minutes}
+                    style={[
+                      styles.option,
+                      workMinutes === minutes && styles.optionActive,
+                    ]}
+                    onPress={() => setWorkMinutes(minutes)}
+                  >
+                    <Text style={[
+                      styles.optionText,
+                      workMinutes === minutes && styles.optionTextActive,
+                    ]}>
+                      {minutes} min
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
             </View>
-          </View>
 
-          {/* Break Duration */}
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Tiempo de descanso</Text>
-            <Text style={styles.sectionSubtitle}>Tiempo para relajarte entre pomodoros</Text>
-            <View style={styles.optionsRow}>
-              {BREAK_OPTIONS.map((minutes) => (
-                <TouchableOpacity
-                  key={minutes}
-                  style={[
-                    styles.option,
-                    breakMinutes === minutes && styles.optionActive,
-                  ]}
-                  onPress={() => setBreakMinutes(minutes)}
-                >
-                  <Text style={[
-                    styles.optionText,
-                    breakMinutes === minutes && styles.optionTextActive,
-                  ]}>
-                    {minutes} min
-                  </Text>
-                </TouchableOpacity>
-              ))}
+            {/* Break Duration */}
+            <View style={styles.section}>
+              <Text style={styles.sectionTitle}>{t('settings.breakDuration')}</Text>
+              <View style={styles.optionsRow}>
+                {BREAK_OPTIONS.map((minutes) => (
+                  <TouchableOpacity
+                    key={minutes}
+                    style={[
+                      styles.option,
+                      breakMinutes === minutes && styles.optionActive,
+                    ]}
+                    onPress={() => setBreakMinutes(minutes)}
+                  >
+                    <Text style={[
+                      styles.optionText,
+                      breakMinutes === minutes && styles.optionTextActive,
+                    ]}>
+                      {minutes} min
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
             </View>
-          </View>
 
-          {/* Preview */}
-          <View style={styles.preview}>
-            <Ionicons name="time-outline" size={20} color={COLORS.textSecondary} />
-            <Text style={styles.previewText}>
-              Ciclo: {workMinutes} min trabajo + {breakMinutes} min descanso
-            </Text>
-          </View>
+            {/* Preview */}
+            <View style={styles.preview}>
+              <Ionicons name="time-outline" size={16} color={colors.textSecondary} />
+              <Text style={styles.previewText}>
+                {t('settings.preview', { work: workMinutes, break: breakMinutes })}
+              </Text>
+            </View>
+
+            {/* Theme Mode */}
+            <View style={styles.section}>
+              <Text style={styles.sectionTitle}>{t('settings.appearance')}</Text>
+              <View style={styles.optionsRow}>
+                {([
+                  { mode: 'system' as ThemeMode, label: t('settings.system'), icon: 'phone-portrait-outline' },
+                  { mode: 'light' as ThemeMode, label: t('settings.light'), icon: 'sunny-outline' },
+                  { mode: 'dark' as ThemeMode, label: t('settings.dark'), icon: 'moon-outline' },
+                ]).map((option) => (
+                  <TouchableOpacity
+                    key={option.mode}
+                    style={[
+                      styles.option,
+                      themeMode === option.mode && styles.optionActive,
+                    ]}
+                    onPress={() => setThemeMode(option.mode)}
+                  >
+                    <Ionicons
+                      name={option.icon as any}
+                      size={18}
+                      color={themeMode === option.mode ? colors.textPrimary : colors.textSecondary}
+                    />
+                    <Text style={[
+                      styles.optionText,
+                      themeMode === option.mode && styles.optionTextActive,
+                    ]}>
+                      {option.label}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            </View>
+
+            {/* Language */}
+            <View style={styles.section}>
+              <Text style={styles.sectionTitle}>{t('settings.language')}</Text>
+              <View style={styles.optionsRow}>
+                {([
+                  { lang: 'es' as Language, label: t('settings.spanish'), icon: 'globe-outline' },
+                  { lang: 'en' as Language, label: t('settings.english'), icon: 'globe-outline' },
+                ]).map((option) => (
+                  <TouchableOpacity
+                    key={option.lang}
+                    style={[
+                      styles.option,
+                      language === option.lang && styles.optionActive,
+                    ]}
+                    onPress={() => setLanguage(option.lang)}
+                  >
+                    <Ionicons
+                      name={option.icon as any}
+                      size={18}
+                      color={language === option.lang ? colors.textPrimary : colors.textSecondary}
+                    />
+                    <Text style={[
+                      styles.optionText,
+                      language === option.lang && styles.optionTextActive,
+                    ]}>
+                      {option.label}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            </View>
+          </ScrollView>
 
           {/* Save Button */}
           <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
-            <Text style={styles.saveButtonText}>Guardar</Text>
+            <Text style={styles.saveButtonText}>{t('common.save')}</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -122,104 +193,100 @@ export function SettingsModal({ visible, onClose, onSave }: SettingsModalProps) 
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = (colors: Colors) => StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    backgroundColor: colors.overlay,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: SPACING.lg,
+    padding: SPACING.md,
   },
   container: {
-    backgroundColor: COLORS.surface,
+    backgroundColor: colors.surface,
     borderRadius: BORDER_RADIUS.xl,
-    padding: SPACING.xl,
+    padding: SPACING.lg,
     width: '100%',
     maxWidth: 400,
+    maxHeight: '80%',
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: SPACING.xl,
+    marginBottom: SPACING.md,
   },
   title: {
-    color: COLORS.textPrimary,
-    fontSize: FONTS.size.xlarge,
+    color: colors.textPrimary,
+    fontSize: FONTS.size.large,
     fontWeight: FONTS.weight.bold,
   },
   closeButton: {
-    padding: SPACING.sm,
+    padding: SPACING.xs,
     minWidth: TOUCH_TARGETS.minSize,
     minHeight: TOUCH_TARGETS.minSize,
     alignItems: 'center',
     justifyContent: 'center',
   },
   section: {
-    marginBottom: SPACING.xl,
+    marginBottom: SPACING.md,
   },
   sectionTitle: {
-    color: COLORS.textPrimary,
-    fontSize: FONTS.size.large,
+    color: colors.textPrimary,
+    fontSize: FONTS.size.small,
     fontWeight: FONTS.weight.semibold,
     marginBottom: SPACING.xs,
   },
-  sectionSubtitle: {
-    color: COLORS.textSecondary,
-    fontSize: FONTS.size.small,
-    marginBottom: SPACING.md,
-  },
   optionsRow: {
     flexDirection: 'row',
-    gap: SPACING.sm,
+    gap: SPACING.xs,
   },
   option: {
     flex: 1,
-    paddingVertical: SPACING.md,
-    paddingHorizontal: SPACING.sm,
-    borderRadius: BORDER_RADIUS.md,
-    backgroundColor: COLORS.background,
+    paddingVertical: SPACING.sm,
+    paddingHorizontal: SPACING.xs,
+    borderRadius: BORDER_RADIUS.sm,
+    backgroundColor: colors.background,
     alignItems: 'center',
     borderWidth: 2,
-    borderColor: 'transparent',
-    minHeight: TOUCH_TARGETS.minSize,
+    borderColor: colors.transparent,
+    minHeight: 40,
   },
   optionActive: {
-    borderColor: COLORS.accent,
-    backgroundColor: COLORS.primary,
+    borderColor: colors.accent,
+    backgroundColor: colors.primary,
   },
   optionText: {
-    color: COLORS.textSecondary,
-    fontSize: FONTS.size.medium,
+    color: colors.textSecondary,
+    fontSize: FONTS.size.xs,
     fontWeight: FONTS.weight.medium,
   },
   optionTextActive: {
-    color: COLORS.textPrimary,
+    color: colors.textPrimary,
   },
   preview: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: SPACING.sm,
-    paddingVertical: SPACING.md,
-    backgroundColor: COLORS.background,
-    borderRadius: BORDER_RADIUS.md,
-    marginBottom: SPACING.xl,
+    gap: SPACING.xs,
+    paddingVertical: SPACING.sm,
+    backgroundColor: colors.background,
+    borderRadius: BORDER_RADIUS.sm,
+    marginBottom: SPACING.md,
   },
   previewText: {
-    color: COLORS.textSecondary,
-    fontSize: FONTS.size.small,
+    color: colors.textSecondary,
+    fontSize: FONTS.size.xs,
   },
   saveButton: {
-    backgroundColor: COLORS.accent,
+    backgroundColor: colors.accent,
     borderRadius: BORDER_RADIUS.md,
-    paddingVertical: SPACING.md,
+    paddingVertical: SPACING.sm,
     alignItems: 'center',
-    minHeight: TOUCH_TARGETS.recommendedSize,
+    minHeight: 44,
   },
   saveButtonText: {
-    color: COLORS.textPrimary,
-    fontSize: FONTS.size.large,
+    color: colors.textPrimary,
+    fontSize: FONTS.size.medium,
     fontWeight: FONTS.weight.semibold,
   },
 });

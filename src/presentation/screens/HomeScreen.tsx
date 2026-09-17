@@ -1,15 +1,21 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { 
   View, 
   Text,
   StyleSheet, 
   Alert, 
   TouchableOpacity,
-  ActivityIndicator
+  ActivityIndicator,
+  ScrollView,
+  Platform,
+  Animated
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
-import { COLORS, SPACING, FONTS, BORDER_RADIUS, TOUCH_TARGETS } from '../../constants/theme';
+import { SPACING, FONTS, BORDER_RADIUS, TOUCH_TARGETS } from '../../constants/theme';
+import { Colors } from '../../constants/theme';
+import { useTheme } from '../../context/ThemeContext';
+import { useLanguage } from '../../i18n';
 import { Timer } from '../../components/Timer';
 import { SwipeableTask } from '../../components/SwipeableTask';
 import { AddTaskModal } from '../../components/AddTaskModal';
@@ -19,11 +25,16 @@ import { StatsModal } from '../../components/StatsModal';
 import { PrivacyPolicyModal } from '../../components/PrivacyPolicyModal';
 import { DeleteAccountModal } from '../../components/DeleteAccountModal';
 import { ReportAIModal } from '../../components/ReportAIModal';
+import { DailyBrainDump } from '../../components/DailyBrainDump';
+import { ShutdownRitual } from '../../components/ShutdownRitual';
+import { MoodTracker } from '../../components/MoodTracker';
 import { useTimer } from '../../hooks/useTimer';
 import { useHomeViewModel } from './HomeViewModel';
 import { registerForPushNotifications } from '../../services/notificationService';
 import { container } from '../../di/container';
 import { auth } from '../../config/firebase';
+
+const isWeb = Platform.OS === 'web';
 
 export function HomeScreen() {
   const {
@@ -40,15 +51,58 @@ export function HomeScreen() {
     setShowPrivacyModal,
     setShowDeleteAccountModal,
     setShowReportAIModal,
+    setShowBrainDump,
+    setShowShutdownRitual,
+    setShowMoodTracker,
     setTaskToEdit,
     handleAddTask,
+    handleStartTask,
     handleCompleteStep,
     handleDeleteTask,
     handleSettingsSave,
     handleLogout,
+    refreshDailyPriorities,
   } = useHomeViewModel();
 
+  const { colors } = useTheme();
+  const { t } = useLanguage();
+  const styles = useStyles(colors);
+
   const longPressTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [celebrationMessage, setCelebrationMessage] = useState<string | null>(null);
+  const celebrationOpacity = useRef(new Animated.Value(0)).current;
+
+  const showCelebration = (type: 'step' | 'task') => {
+    const message = type === 'task' 
+      ? t('celebration.taskComplete') 
+      : t('celebration.stepComplete');
+    
+    setCelebrationMessage(message);
+    celebrationOpacity.setValue(0);
+    
+    Animated.sequence([
+      Animated.timing(celebrationOpacity, {
+        toValue: 1,
+        duration: 300,
+        useNativeDriver: true,
+      }),
+      Animated.delay(2000),
+      Animated.timing(celebrationOpacity, {
+        toValue: 0,
+        duration: 300,
+        useNativeDriver: true,
+      }),
+    ]).start(() => {
+      setCelebrationMessage(null);
+    });
+  };
+
+  const handleCompleteStepWithCelebration = async () => {
+    const result = await handleCompleteStep();
+    if (result) {
+      showCelebration(result);
+    }
+  };
 
   const timer = useTimer({
     workMinutes: state.timerSettings.workMinutes,
@@ -123,34 +177,110 @@ export function HomeScreen() {
     setTaskToEdit(null);
   };
 
+  const formatDuration = (start?: Date, end?: Date): string => {
+    if (!start || !end) return '';
+    
+    const diffMs = end.getTime() - start.getTime();
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMins / 60);
+    const remainingMins = diffMins % 60;
+    
+    if (diffHours > 0) {
+      return `${diffHours}h ${remainingMins}min`;
+    }
+    return `${diffMins} min`;
+  };
+
+  const formatDate = (date?: Date): string => {
+    if (!date) return '';
+    return date.toLocaleDateString('es-ES', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+  };
+
   if (state.loading) {
     return (
       <View style={styles.loading}>
-        <ActivityIndicator size="large" color={COLORS.accent} />
+        <ActivityIndicator size="large" color={colors.accent} />
       </View>
     );
   }
 
+  // Saludo según hora del día
+  const getGreeting = () => {
+    const hour = new Date().getHours();
+    if (hour < 12) return t('greeting.morning');
+    if (hour < 18) return t('greeting.afternoon');
+    return t('greeting.evening');
+  };
+
+  // Resumen de progreso
+  const getProgressSummary = () => {
+    if (activeTasks.length === 0) return null;
+    
+    const totalSteps = activeTasks.reduce((sum, task) => sum + task.steps.length, 0);
+    const completedSteps = activeTasks.reduce((sum, task) => sum + task.steps.filter(s => s.completed).length, 0);
+    
+    return { totalTasks: activeTasks.length, totalSteps, completedSteps };
+  };
+
+  const progressSummary = getProgressSummary();
+
   return (
     <SafeAreaView style={styles.container} edges={['top', 'left', 'right']}>
-      <View style={styles.content}>
+      <ScrollView 
+        style={styles.scrollContainer}
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+      >
+        {/* Resumen de Estado - Restate State */}
+        {progressSummary && progressSummary.completedSteps > 0 && (
+          <View style={styles.stateSummary}>
+            <Text style={styles.greeting}>{getGreeting()}</Text>
+            <View style={styles.stateSummaryContent}>
+              <Ionicons name="time" size={20} color={colors.info} />
+              <Text style={styles.stateSummaryText}>
+                {t('stateSummary.inProgress', { 
+                  tasks: progressSummary.totalTasks, 
+                  steps: progressSummary.completedSteps,
+                  total: progressSummary.totalSteps 
+                })}
+              </Text>
+            </View>
+          </View>
+        )}
+
         {/* Header */}
         <View style={styles.header}>
-          <View style={styles.logo}>
-            <View style={styles.logoDot} />
-          </View>
+          <Text style={styles.headerTitle}>NeuroPaso</Text>
           <View style={styles.headerActions}>
+            <TouchableOpacity 
+              onPress={() => setShowMoodTracker(true)} 
+              style={styles.headerButton}
+            >
+              <Ionicons name="heart-outline" size={24} color={colors.textSecondary} />
+            </TouchableOpacity>
+            <TouchableOpacity 
+              onPress={() => setShowBrainDump(true)} 
+              style={styles.headerButton}
+            >
+              <Ionicons name="bulb-outline" size={24} color={colors.textSecondary} />
+            </TouchableOpacity>
             <TouchableOpacity 
               onPress={() => setShowStatsModal(true)} 
               style={styles.headerButton}
             >
-              <Ionicons name="stats-chart" size={24} color={COLORS.textSecondary} />
+              <Ionicons name="stats-chart" size={24} color={colors.textSecondary} />
             </TouchableOpacity>
             <TouchableOpacity 
               onPress={() => setShowSettingsModal(true)} 
               style={styles.headerButton}
             >
-              <Ionicons name="settings-outline" size={24} color={COLORS.textSecondary} />
+              <Ionicons name="settings-outline" size={24} color={colors.textSecondary} />
             </TouchableOpacity>
             <TouchableOpacity 
               onPress={() => setShowHistory(!state.showHistory)} 
@@ -159,11 +289,11 @@ export function HomeScreen() {
               <Ionicons 
                 name={state.showHistory ? "list" : "time-outline"} 
                 size={24} 
-                color={COLORS.textSecondary} 
+                color={colors.textSecondary} 
               />
             </TouchableOpacity>
             <TouchableOpacity onPress={handleLogout} style={styles.headerButton}>
-              <Ionicons name="log-out-outline" size={24} color={COLORS.textSecondary} />
+              <Ionicons name="log-out-outline" size={24} color={colors.textSecondary} />
             </TouchableOpacity>
           </View>
         </View>
@@ -174,7 +304,7 @@ export function HomeScreen() {
             <Text style={styles.historyTitle}>Historial de Tareas</Text>
             {completedTasks.length === 0 ? (
               <View style={styles.emptyHistory}>
-                <Ionicons name="checkmark-done-circle-outline" size={48} color={COLORS.textMuted} />
+                <Ionicons name="checkmark-done-circle-outline" size={48} color={colors.textMuted} />
                 <Text style={styles.emptyHistoryText}>No hay tareas completadas aún</Text>
               </View>
             ) : (
@@ -187,10 +317,27 @@ export function HomeScreen() {
                     onPressOut={handleLongPressEnd}
                     delayLongPress={3000}
                   >
-                    <Ionicons name="checkmark-circle" size={24} color={COLORS.success} />
+                    <Ionicons name="checkmark-circle" size={24} color={colors.success} />
                     <View style={styles.historyItemContent}>
                       <Text style={styles.historyItemTitle}>{task.title}</Text>
                       <Text style={styles.historyItemSteps}>{task.steps.length} pasos completados</Text>
+                      {task.startedAt && task.completedAt && (
+                        <Text style={styles.historyItemDuration}>
+                          Duración: {formatDuration(task.startedAt, task.completedAt)}
+                        </Text>
+                      )}
+                      <View style={styles.historyItemDates}>
+                        {task.startedAt && (
+                          <Text style={styles.historyItemDate}>
+                            Inicio: {formatDate(task.startedAt)}
+                          </Text>
+                        )}
+                        {task.completedAt && (
+                          <Text style={styles.historyItemDate}>
+                            Fin: {formatDate(task.completedAt)}
+                          </Text>
+                        )}
+                      </View>
                     </View>
                   </TouchableOpacity>
                 ))}
@@ -215,10 +362,14 @@ export function HomeScreen() {
                 onSwipeRight={handleSwipeRight}
                 onDelete={() => handleDeleteTask(currentTask.id!)}
                 onEdit={() => onEditTask(currentTask)}
+                onPrevious={handleSwipeRight}
+                onNext={handleSwipeLeft}
+                canGoPrevious={state.currentTaskIndex > 0}
+                canGoNext={state.currentTaskIndex < activeTasks.length - 1}
               />
             ) : (
               <View style={styles.emptyState}>
-                <Ionicons name="clipboard-outline" size={64} color={COLORS.textMuted} />
+                <Ionicons name="clipboard-outline" size={64} color={colors.textMuted} />
                 <Text style={styles.emptyTitle}>Sin tareas</Text>
                 <Text style={styles.emptySubtitle}>Toca + para agregar tu primera tarea</Text>
               </View>
@@ -234,12 +385,18 @@ export function HomeScreen() {
                       timer.isRunning && styles.mainButtonPause,
                       timer.mode === 'break' && styles.mainButtonBreak,
                     ]}
-                    onPress={timer.toggle}
+                    onPress={() => {
+                      // Mark task as started when user presses play for the first time
+                      if (!timer.isRunning && timer.mode === 'work' && !currentTask.startedAt) {
+                        handleStartTask(currentTask.id!);
+                      }
+                      timer.toggle();
+                    }}
                   >
                     <Ionicons 
                       name={timer.isRunning ? 'pause' : 'play'} 
                       size={28} 
-                      color={COLORS.textPrimary} 
+                      color={colors.textPrimary} 
                     />
                     <Text style={styles.mainButtonText}>
                       {timer.mode === 'break' 
@@ -253,7 +410,7 @@ export function HomeScreen() {
                       style={styles.skipBreakButton}
                       onPress={timer.skipBreak}
                     >
-                      <Ionicons name="play-skip-forward" size={20} color={COLORS.textPrimary} />
+                      <Ionicons name="play-skip-forward" size={20} color={colors.textPrimary} />
                       <Text style={styles.skipBreakText}>Saltar descanso</Text>
                     </TouchableOpacity>
                   )}
@@ -263,8 +420,8 @@ export function HomeScreen() {
               <View style={styles.secondaryActions}>
                 {/* Botón Completar paso */}
                 {currentTask && (
-                  <TouchableOpacity style={styles.iconButtonComplete} onPress={handleCompleteStep}>
-                    <Ionicons name="checkmark-circle" size={28} color={COLORS.success} />
+                  <TouchableOpacity style={styles.iconButtonComplete} onPress={handleCompleteStepWithCelebration}>
+                    <Ionicons name="checkmark-circle" size={28} color={colors.success} />
                   </TouchableOpacity>
                 )}
 
@@ -273,9 +430,36 @@ export function HomeScreen() {
                   style={styles.addButton}
                   onPress={() => setShowAddModal(true)}
                 >
-                  <Ionicons name="add" size={28} color={COLORS.textPrimary} />
+                  <Ionicons name="add" size={28} color={colors.textPrimary} />
                 </TouchableOpacity>
               </View>
+            </View>
+
+            {/* Quick Actions - Brain Dump, Shutdown, Mood */}
+            <View style={styles.quickActions}>
+              <TouchableOpacity 
+                style={styles.quickAction}
+                onPress={() => setShowBrainDump(true)}
+              >
+                <Ionicons name="bulb" size={20} color={colors.warning} />
+                <Text style={styles.quickActionText}>Prioridades</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity 
+                style={styles.quickAction}
+                onPress={() => setShowMoodTracker(true)}
+              >
+                <Ionicons name="heart" size={20} color={colors.error} />
+                <Text style={styles.quickActionText}>Ánimo</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity 
+                style={styles.quickAction}
+                onPress={() => setShowShutdownRitual(true)}
+              >
+                <Ionicons name="moon" size={20} color={colors.info} />
+                <Text style={styles.quickActionText}>Cerrar Día</Text>
+              </TouchableOpacity>
             </View>
 
             {/* Contador de tareas */}
@@ -312,7 +496,7 @@ export function HomeScreen() {
 
               {/* AI Disclosure */}
               <View style={styles.aiDisclosure}>
-                <Ionicons name="sparkles" size={14} color={COLORS.textMuted} />
+                <Ionicons name="sparkles" size={14} color={colors.textMuted} />
                 <Text style={styles.aiDisclosureText}>
                   Utiliza IA generativa para crear pasos de tareas
                 </Text>
@@ -323,7 +507,27 @@ export function HomeScreen() {
             </View>
           </>
         )}
-      </View>
+      </ScrollView>
+
+      {/* Celebration Overlay */}
+      {celebrationMessage && (
+        <Animated.View 
+          style={[
+            styles.celebrationContainer,
+            { opacity: celebrationOpacity }
+          ]}
+          pointerEvents="none"
+        >
+          <View style={styles.celebrationContent}>
+            <Ionicons 
+              name="trophy" 
+              size={48} 
+              color={colors.warning} 
+            />
+            <Text style={styles.celebrationText}>{celebrationMessage}</Text>
+          </View>
+        </Animated.View>
+      )}
 
       {/* Modal Agregar Tarea */}
       <AddTaskModal
@@ -373,18 +577,48 @@ export function HomeScreen() {
         visible={state.showReportAIModal}
         onClose={() => setShowReportAIModal(false)}
       />
+
+      {/* Modal Brain Dump - Prioridades del Día */}
+      <DailyBrainDump
+        visible={state.showBrainDump}
+        onClose={() => {
+          setShowBrainDump(false);
+          refreshDailyPriorities();
+        }}
+        tasks={activeTasks}
+      />
+
+      {/* Modal Shutdown Ritual - Cerrar el Día */}
+      <ShutdownRitual
+        visible={state.showShutdownRitual}
+        onClose={() => setShowShutdownRitual(false)}
+        tasks={activeTasks}
+      />
+
+      {/* Modal Mood Tracker - Ánimo */}
+      <MoodTracker
+        visible={state.showMoodTracker}
+        onClose={() => setShowMoodTracker(false)}
+      />
     </SafeAreaView>
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = (colors: Colors) => StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.background,
+    backgroundColor: colors.background,
+  },
+  scrollContainer: {
+    flex: 1,
+  },
+  scrollContent: {
+    flexGrow: 1,
+    paddingVertical: SPACING.md,
   },
   loading: {
     flex: 1,
-    backgroundColor: COLORS.background,
+    backgroundColor: colors.background,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -400,19 +634,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: SPACING.lg,
     paddingTop: SPACING.sm,
   },
-  logo: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    backgroundColor: COLORS.primary,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  logoDot: {
-    width: 16,
-    height: 16,
-    borderRadius: 8,
-    backgroundColor: COLORS.accent,
+  headerTitle: {
+    color: colors.textPrimary,
+    fontSize: FONTS.size.xlarge,
+    fontWeight: FONTS.weight.bold,
   },
   headerActions: {
     flexDirection: 'row',
@@ -425,12 +650,35 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  stateSummary: {
+    backgroundColor: colors.tintedInfo,
+    borderRadius: BORDER_RADIUS.md,
+    padding: SPACING.md,
+    marginHorizontal: SPACING.lg,
+    marginBottom: SPACING.md,
+  },
+  greeting: {
+    color: colors.info,
+    fontSize: FONTS.size.large,
+    fontWeight: FONTS.weight.bold,
+    marginBottom: SPACING.xs,
+  },
+  stateSummaryContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: SPACING.sm,
+  },
+  stateSummaryText: {
+    color: colors.textPrimary,
+    fontSize: FONTS.size.small,
+    flex: 1,
+  },
   historyContainer: {
     flex: 1,
     paddingHorizontal: SPACING.lg,
   },
   historyTitle: {
-    color: COLORS.textPrimary,
+    color: colors.textPrimary,
     fontSize: FONTS.size.xlarge,
     fontWeight: FONTS.weight.bold,
     marginBottom: SPACING.lg,
@@ -442,7 +690,7 @@ const styles = StyleSheet.create({
     gap: SPACING.md,
   },
   emptyHistoryText: {
-    color: COLORS.textSecondary,
+    color: colors.textSecondary,
     fontSize: FONTS.size.medium,
   },
   historyList: {
@@ -451,7 +699,7 @@ const styles = StyleSheet.create({
   historyItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: COLORS.surface,
+    backgroundColor: colors.surface,
     borderRadius: BORDER_RADIUS.md,
     padding: SPACING.md,
     gap: SPACING.md,
@@ -461,14 +709,28 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   historyItemTitle: {
-    color: COLORS.textPrimary,
+    color: colors.textPrimary,
     fontSize: FONTS.size.medium,
     fontWeight: FONTS.weight.semibold,
     marginBottom: 2,
   },
   historyItemSteps: {
-    color: COLORS.textSecondary,
+    color: colors.textSecondary,
     fontSize: FONTS.size.small,
+  },
+  historyItemDuration: {
+    color: colors.accent,
+    fontSize: FONTS.size.small,
+    fontWeight: FONTS.weight.semibold,
+    marginTop: 4,
+  },
+  historyItemDates: {
+    marginTop: 4,
+    gap: 2,
+  },
+  historyItemDate: {
+    color: colors.textMuted,
+    fontSize: FONTS.size.xsmall,
   },
   actions: {
     paddingHorizontal: SPACING.lg,
@@ -476,7 +738,7 @@ const styles = StyleSheet.create({
   },
   mainButton: {
     flexDirection: 'row',
-    backgroundColor: COLORS.accent,
+    backgroundColor: colors.accent,
     borderRadius: BORDER_RADIUS.full,
     paddingVertical: SPACING.md,
     paddingHorizontal: SPACING.xl,
@@ -486,13 +748,13 @@ const styles = StyleSheet.create({
     minHeight: TOUCH_TARGETS.recommendedSize,
   },
   mainButtonPause: {
-    backgroundColor: COLORS.warning,
+    backgroundColor: colors.warning,
   },
   mainButtonBreak: {
-    backgroundColor: COLORS.success,
+    backgroundColor: colors.success,
   },
   mainButtonText: {
-    color: COLORS.textPrimary,
+    color: colors.textPrimary,
     fontSize: FONTS.size.large,
     fontWeight: FONTS.weight.semibold,
   },
@@ -506,17 +768,17 @@ const styles = StyleSheet.create({
     width: TOUCH_TARGETS.recommendedSize,
     height: TOUCH_TARGETS.recommendedSize,
     borderRadius: BORDER_RADIUS.md,
-    backgroundColor: COLORS.surface,
+    backgroundColor: colors.surface,
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 1,
-    borderColor: COLORS.success,
+    borderColor: colors.success,
   },
   addButton: {
     width: TOUCH_TARGETS.recommendedSize,
     height: TOUCH_TARGETS.recommendedSize,
     borderRadius: BORDER_RADIUS.md,
-    backgroundColor: COLORS.accent,
+    backgroundColor: colors.accent,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -527,14 +789,14 @@ const styles = StyleSheet.create({
     gap: SPACING.sm,
     paddingVertical: SPACING.sm,
     paddingHorizontal: SPACING.md,
-    backgroundColor: COLORS.surface,
+    backgroundColor: colors.surface,
     borderRadius: BORDER_RADIUS.full,
     borderWidth: 1,
-    borderColor: COLORS.border,
+    borderColor: colors.border,
     minHeight: TOUCH_TARGETS.minSize,
   },
   skipBreakText: {
-    color: COLORS.textSecondary,
+    color: colors.textSecondary,
     fontSize: FONTS.size.small,
   },
   emptyState: {
@@ -543,13 +805,35 @@ const styles = StyleSheet.create({
     gap: SPACING.md,
   },
   emptyTitle: {
-    color: COLORS.textPrimary,
+    color: colors.textPrimary,
     fontSize: FONTS.size.xlarge,
     fontWeight: FONTS.weight.bold,
   },
   emptySubtitle: {
-    color: COLORS.textSecondary,
+    color: colors.textSecondary,
     fontSize: FONTS.size.medium,
+  },
+  quickActions: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    gap: SPACING.lg,
+    paddingHorizontal: SPACING.lg,
+    marginTop: SPACING.lg,
+    paddingVertical: SPACING.md,
+    backgroundColor: colors.surface,
+    borderRadius: BORDER_RADIUS.md,
+    marginHorizontal: SPACING.lg,
+  },
+  quickAction: {
+    alignItems: 'center',
+    gap: SPACING.xs,
+    padding: SPACING.sm,
+    minWidth: 70,
+  },
+  quickActionText: {
+    color: colors.textSecondary,
+    fontSize: FONTS.size.xsmall,
+    fontWeight: FONTS.weight.medium,
   },
   footer: {
     alignItems: 'center',
@@ -563,10 +847,10 @@ const styles = StyleSheet.create({
     width: 10,
     height: 10,
     borderRadius: 5,
-    backgroundColor: COLORS.textMuted,
+    backgroundColor: colors.textMuted,
   },
   dotActive: {
-    backgroundColor: COLORS.accent,
+    backgroundColor: colors.accent,
     width: 28,
   },
   footerLinks: {
@@ -579,11 +863,11 @@ const styles = StyleSheet.create({
     paddingVertical: SPACING.sm,
   },
   footerLinkText: {
-    color: COLORS.textMuted,
+    color: colors.textMuted,
     fontSize: FONTS.size.small,
   },
   footerLinkDanger: {
-    color: COLORS.error,
+    color: colors.error,
   },
   aiDisclosure: {
     flexDirection: 'row',
@@ -593,12 +877,41 @@ const styles = StyleSheet.create({
     marginTop: SPACING.sm,
   },
   aiDisclosureText: {
-    color: COLORS.textMuted,
+    color: colors.textMuted,
     fontSize: FONTS.size.xsmall,
   },
   reportLink: {
-    color: COLORS.accent,
+    color: colors.accent,
     fontSize: FONTS.size.xsmall,
     textDecorationLine: 'underline',
+  },
+  celebrationContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 1000,
+  },
+  celebrationContent: {
+    backgroundColor: colors.surface,
+    borderRadius: BORDER_RADIUS.xl,
+    padding: SPACING.xl,
+    alignItems: 'center',
+    gap: SPACING.md,
+    shadowColor: colors.shadow,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 8,
+  },
+  celebrationText: {
+    color: colors.textPrimary,
+    fontSize: FONTS.size.large,
+    fontWeight: FONTS.weight.bold,
+    textAlign: 'center',
   },
 });

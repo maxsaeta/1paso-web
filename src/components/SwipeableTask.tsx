@@ -8,10 +8,15 @@ import {
   Dimensions,
   TouchableOpacity,
   Modal,
-  Alert
+  Alert,
+  Platform,
+  ScrollView
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { COLORS, SPACING, FONTS, BORDER_RADIUS, TOUCH_TARGETS } from '../constants/theme';
+import { SPACING, FONTS, BORDER_RADIUS, TOUCH_TARGETS } from '../constants/theme';
+import { Colors } from '../constants/theme';
+import { useTheme } from '../context/ThemeContext';
+import { useLanguage } from '../i18n';
 import { Task } from '../domain/types';
 
 interface SwipeableTaskProps {
@@ -20,23 +25,55 @@ interface SwipeableTaskProps {
   onSwipeRight: () => void;
   onDelete: () => void;
   onEdit: () => void;
+  onPrevious?: () => void;
+  onNext?: () => void;
+  canGoPrevious?: boolean;
+  canGoNext?: boolean;
 }
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const SWIPE_THRESHOLD = 80;
+const isWeb = Platform.OS === 'web';
 
-export function SwipeableTask({ task, onSwipeLeft, onSwipeRight, onDelete, onEdit }: SwipeableTaskProps) {
+export function SwipeableTask({ 
+  task, 
+  onSwipeLeft, 
+  onSwipeRight, 
+  onDelete, 
+  onEdit,
+  onPrevious,
+  onNext,
+  canGoPrevious = false,
+  canGoNext = false
+}: SwipeableTaskProps) {
   const [translateX] = useState(new Animated.Value(0));
   const [showMenu, setShowMenu] = useState(false);
   const lastTap = useRef<number>(0);
   const taskRef = useRef(task);
   const callbacksRef = useRef({ onSwipeLeft, onSwipeRight, onDelete, onEdit });
   
+  const { colors } = useTheme();
+  const { t } = useLanguage();
+  const styles = useStyles(colors);
+
   taskRef.current = task;
   callbacksRef.current = { onSwipeLeft, onSwipeRight, onDelete, onEdit };
 
   const currentStep = task.steps.find(step => !step.completed) || task.steps[task.steps.length - 1];
   const completedSteps = task.steps.filter(step => step.completed).length;
+  const totalEstimatedMinutes = task.steps.reduce((sum, step) => sum + (step.estimatedMinutes || 0), 0);
+  
+  // Siguiente paso (el que viene después del actual)
+  const currentIndex = task.steps.findIndex(step => step === currentStep);
+  const nextStep = currentIndex < task.steps.length - 1 ? task.steps[currentIndex + 1] : null;
+
+  const handleWebPointerDown = () => {
+    const now = Date.now();
+    if (lastTap.current && (now - lastTap.current) < 300) {
+      setShowMenu(true);
+    }
+    lastTap.current = now;
+  };
 
   const handleDoubleTap = (): boolean => {
     const now = Date.now();
@@ -94,12 +131,12 @@ export function SwipeableTask({ task, onSwipeLeft, onSwipeRight, onDelete, onEdi
   const handleDelete = () => {
     setShowMenu(false);
     Alert.alert(
-      'Eliminar tarea',
-      `¿Estás seguro de que quieres eliminar "${task.title}"?`,
+      t('task.deleteTitle'),
+      t('task.deleteMessage', { title: task.title }),
       [
-        { text: 'Cancelar', style: 'cancel' },
+        { text: t('common.cancel'), style: 'cancel' },
         { 
-          text: 'Eliminar', 
+          text: t('common.delete'), 
           style: 'destructive',
           onPress: () => callbacksRef.current.onDelete()
         }
@@ -112,26 +149,26 @@ export function SwipeableTask({ task, onSwipeLeft, onSwipeRight, onDelete, onEdi
     callbacksRef.current.onEdit();
   };
 
-  return (
+  const taskContent = (
     <>
-      <Animated.View 
-        style={[
-          styles.container,
-          { 
-            transform: [{ translateX }],
-            opacity 
-          }
-        ]}
-        {...panResponder.panHandlers}
-        onStartShouldSetResponder={handleDoubleTap}
-      >
-        <View style={styles.taskHeader}>
-          <Text style={styles.taskTitle}>{task.title}</Text>
-          <Text style={styles.taskProgress}>
-            Paso {completedSteps + 1} de {task.steps.length}
+      <View style={styles.taskHeader}>
+        <Text style={styles.taskTitle}>{task.title}</Text>
+        <Text style={styles.taskProgress}>
+          {t('task.stepProgress', { current: completedSteps + 1, total: task.steps.length })}
+        </Text>
+      </View>
+
+      {/* Tiempo total estimado */}
+      {totalEstimatedMinutes > 0 && (
+        <View style={styles.totalTimeContainer}>
+          <Ionicons name="timer-outline" size={16} color={colors.info} />
+          <Text style={styles.totalTimeText}>
+            {t('task.totalEstimated', { minutes: totalEstimatedMinutes })}
           </Text>
         </View>
+      )}
 
+      <ScrollView style={styles.stepScroll} nestedScrollEnabled={true}>
         <View style={styles.stepCard}>
           <View style={styles.stepIndicator}>
             <Text style={styles.stepNumber}>{completedSteps + 1}</Text>
@@ -141,28 +178,109 @@ export function SwipeableTask({ task, onSwipeLeft, onSwipeRight, onDelete, onEdi
             {currentStep.description ? (
               <Text style={styles.stepDescription}>{currentStep.description}</Text>
             ) : null}
+            {currentStep.estimatedMinutes ? (
+              <View style={styles.timeEstimate}>
+                <Ionicons name="time-outline" size={14} color={colors.textMuted} />
+                <Text style={styles.timeEstimateText}>
+                  {t('task.estimatedTime', { minutes: currentStep.estimatedMinutes })}
+                </Text>
+              </View>
+            ) : null}
           </View>
         </View>
+      </ScrollView>
 
-        <View style={styles.progressBar}>
-          {task.steps.map((step, index) => (
-            <View 
-              key={index}
-              style={[
-                styles.progressDot,
-                step.completed && styles.progressDotCompleted,
-                !step.completed && index === completedSteps && styles.progressDotActive,
-              ]} 
+      {/* CTA - Siguiente Acción */}
+      {nextStep && (
+        <View style={styles.ctaContainer}>
+          <View style={styles.ctaIcon}>
+            <Ionicons name="flash" size={16} color={colors.warning} />
+          </View>
+          <Text style={styles.ctaLabel}>{t('task.nextAction')}</Text>
+          <Text style={styles.ctaText} numberOfLines={2}>
+            {nextStep.title}
+          </Text>
+        </View>
+      )}
+
+      <View style={styles.progressBar}>
+        {task.steps.map((step, index) => (
+          <View 
+            key={index}
+            style={[
+              styles.progressDot,
+              step.completed && styles.progressDotCompleted,
+              !step.completed && index === completedSteps && styles.progressDotActive,
+            ]} 
+          />
+        ))}
+      </View>
+
+      <View style={styles.swipeIndicator}>
+        <Ionicons name="chevron-back" size={16} color={colors.textMuted} />
+        <Text style={styles.swipeText}>{t('task.doubleTapHint') || 'Doble clic para opciones'}</Text>
+        <Ionicons name="chevron-forward" size={16} color={colors.textMuted} />
+      </View>
+    </>
+  );
+
+  return (
+    <>
+      <View style={styles.containerWithArrows}>
+        {/* Left Arrow - Navigation */}
+        {isWeb && (
+          <TouchableOpacity 
+            style={[styles.navArrow, styles.navArrowLeft, !canGoPrevious && styles.navArrowDisabled]}
+            onPress={onPrevious}
+            disabled={!canGoPrevious}
+          >
+            <Ionicons 
+              name="chevron-back-circle" 
+              size={40} 
+              color={canGoPrevious ? colors.accent : colors.textMuted} 
             />
-          ))}
-        </View>
+          </TouchableOpacity>
+        )}
 
-        <View style={styles.swipeIndicator}>
-          <Ionicons name="chevron-back" size={16} color={COLORS.textMuted} />
-          <Text style={styles.swipeText}>Doble clic para opciones</Text>
-          <Ionicons name="chevron-forward" size={16} color={COLORS.textMuted} />
-        </View>
-      </Animated.View>
+        {/* Task Card */}
+        <Animated.View 
+          style={[
+            styles.taskContainer,
+            { 
+              transform: [{ translateX }],
+              opacity 
+            }
+          ]}
+          {...(!isWeb ? panResponder.panHandlers : {})}
+          onStartShouldSetResponder={!isWeb ? handleDoubleTap : undefined}
+        >
+        {isWeb ? (
+          <TouchableOpacity 
+            activeOpacity={1}
+            onPress={handleWebPointerDown}
+          >
+            {taskContent}
+          </TouchableOpacity>
+        ) : (
+          taskContent
+        )}
+        </Animated.View>
+
+        {/* Right Arrow - Navigation */}
+        {isWeb && (
+          <TouchableOpacity 
+            style={[styles.navArrow, styles.navArrowRight, !canGoNext && styles.navArrowDisabled]}
+            onPress={onNext}
+            disabled={!canGoNext}
+          >
+            <Ionicons 
+              name="chevron-forward-circle" 
+              size={40} 
+              color={canGoNext ? colors.accent : colors.textMuted} 
+            />
+          </TouchableOpacity>
+        )}
+      </View>
 
       {/* Menú de opciones */}
       <Modal visible={showMenu} transparent animationType="fade">
@@ -175,13 +293,13 @@ export function SwipeableTask({ task, onSwipeLeft, onSwipeRight, onDelete, onEdi
             <Text style={styles.menuTitle}>{task.title}</Text>
             
             <TouchableOpacity style={styles.menuItem} onPress={handleEdit}>
-              <Ionicons name="create-outline" size={24} color={COLORS.accent} />
-              <Text style={styles.menuItemText}>Modificar tarea</Text>
+              <Ionicons name="create-outline" size={24} color={colors.accent} />
+              <Text style={styles.menuItemText}>{t('common.edit') || 'Modificar'}</Text>
             </TouchableOpacity>
 
             <TouchableOpacity style={[styles.menuItem, styles.menuItemDanger]} onPress={handleDelete}>
-              <Ionicons name="trash-outline" size={24} color={COLORS.error} />
-              <Text style={[styles.menuItemText, styles.menuItemTextDanger]}>Eliminar tarea</Text>
+              <Ionicons name="trash-outline" size={24} color={colors.error} />
+              <Text style={[styles.menuItemText, styles.menuItemTextDanger]}>{t('common.delete')}</Text>
             </TouchableOpacity>
 
             <TouchableOpacity 
@@ -197,44 +315,68 @@ export function SwipeableTask({ task, onSwipeLeft, onSwipeRight, onDelete, onEdi
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    paddingHorizontal: SPACING.lg,
+const useStyles = (colors: Colors) => StyleSheet.create({
+  containerWithArrows: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: isWeb ? SPACING.md : SPACING.lg,
+  },
+  navArrow: {
+    padding: SPACING.sm,
+    minWidth: TOUCH_TARGETS.minSize,
+    minHeight: TOUCH_TARGETS.minSize,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  navArrowLeft: {
+    marginRight: SPACING.sm,
+  },
+  navArrowRight: {
+    marginLeft: SPACING.sm,
+  },
+  navArrowDisabled: {
+    opacity: 0.3,
+  },
+  taskContainer: {
+    flex: 1,
     gap: SPACING.md,
   },
   taskHeader: {
     alignItems: 'center',
   },
   taskTitle: {
-    color: COLORS.textPrimary,
+    color: colors.textPrimary,
     fontSize: FONTS.size.xlarge,
     fontWeight: FONTS.weight.bold,
     textAlign: 'center',
     marginBottom: SPACING.xs,
   },
   taskProgress: {
-    color: COLORS.textSecondary,
+    color: colors.textSecondary,
     fontSize: FONTS.size.small,
+  },
+  stepScroll: {
+    maxHeight: 200,
   },
   stepCard: {
     flexDirection: 'row',
-    backgroundColor: COLORS.surface,
+    backgroundColor: colors.surface,
     borderRadius: BORDER_RADIUS.lg,
     padding: SPACING.lg,
     gap: SPACING.md,
     borderWidth: 1,
-    borderColor: COLORS.border,
+    borderColor: colors.border,
   },
   stepIndicator: {
     width: 48,
     height: 48,
     borderRadius: 24,
-    backgroundColor: COLORS.accent,
+    backgroundColor: colors.accent,
     alignItems: 'center',
     justifyContent: 'center',
   },
   stepNumber: {
-    color: COLORS.textPrimary,
+    color: colors.textPrimary,
     fontSize: FONTS.size.large,
     fontWeight: FONTS.weight.bold,
   },
@@ -243,15 +385,73 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   stepTitle: {
-    color: COLORS.textPrimary,
+    color: colors.textPrimary,
     fontSize: FONTS.size.large,
     fontWeight: FONTS.weight.semibold,
     marginBottom: SPACING.xs,
   },
   stepDescription: {
-    color: COLORS.textSecondary,
+    color: colors.textSecondary,
     fontSize: FONTS.size.small,
     lineHeight: 20,
+  },
+  timeEstimate: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: SPACING.xs,
+    marginTop: SPACING.sm,
+    paddingTop: SPACING.sm,
+    borderTopWidth: 1,
+    borderTopColor: colors.border,
+  },
+  timeEstimateText: {
+    color: colors.textMuted,
+    fontSize: FONTS.size.xsmall,
+  },
+  totalTimeContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: SPACING.sm,
+    paddingVertical: SPACING.sm,
+    backgroundColor: colors.tintedInfo,
+    borderRadius: BORDER_RADIUS.md,
+    marginBottom: SPACING.sm,
+  },
+  totalTimeText: {
+    color: colors.info,
+    fontSize: FONTS.size.small,
+    fontWeight: FONTS.weight.medium,
+  },
+  ctaContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: colors.surface,
+    borderRadius: BORDER_RADIUS.md,
+    padding: SPACING.md,
+    gap: SPACING.sm,
+    borderLeftWidth: 3,
+    borderLeftColor: colors.warning,
+  },
+  ctaIcon: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    backgroundColor: colors.tintedWarning || 'rgba(251, 191, 36, 0.1)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  ctaLabel: {
+    color: colors.warning,
+    fontSize: FONTS.size.xsmall,
+    fontWeight: FONTS.weight.bold,
+    textTransform: 'uppercase',
+  },
+  ctaText: {
+    color: colors.textPrimary,
+    fontSize: FONTS.size.small,
+    fontWeight: FONTS.weight.semibold,
+    flex: 1,
   },
   progressBar: {
     flexDirection: 'row',
@@ -262,13 +462,13 @@ const styles = StyleSheet.create({
     width: 10,
     height: 10,
     borderRadius: 5,
-    backgroundColor: COLORS.textMuted,
+    backgroundColor: colors.textMuted,
   },
   progressDotCompleted: {
-    backgroundColor: COLORS.success,
+    backgroundColor: colors.success,
   },
   progressDotActive: {
-    backgroundColor: COLORS.accent,
+    backgroundColor: colors.accent,
     width: 28,
   },
   swipeIndicator: {
@@ -279,24 +479,24 @@ const styles = StyleSheet.create({
     marginTop: SPACING.sm,
   },
   swipeText: {
-    color: COLORS.textMuted,
+    color: colors.textMuted,
     fontSize: FONTS.size.xs,
   },
   menuOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.6)',
+    backgroundColor: colors.overlay,
     justifyContent: 'center',
     alignItems: 'center',
   },
   menuContainer: {
-    backgroundColor: COLORS.surface,
+    backgroundColor: colors.surface,
     borderRadius: BORDER_RADIUS.xl,
     padding: SPACING.xl,
     width: '85%',
     maxWidth: 320,
   },
   menuTitle: {
-    color: COLORS.textPrimary,
+    color: colors.textPrimary,
     fontSize: FONTS.size.large,
     fontWeight: FONTS.weight.bold,
     textAlign: 'center',
@@ -309,20 +509,20 @@ const styles = StyleSheet.create({
     paddingVertical: SPACING.md,
     paddingHorizontal: SPACING.lg,
     borderRadius: BORDER_RADIUS.md,
-    backgroundColor: COLORS.background,
+    backgroundColor: colors.background,
     marginBottom: SPACING.md,
     minHeight: TOUCH_TARGETS.minSize,
   },
   menuItemDanger: {
-    backgroundColor: 'rgba(239, 68, 68, 0.1)',
+    backgroundColor: colors.tintedError,
   },
   menuItemText: {
-    color: COLORS.textPrimary,
+    color: colors.textPrimary,
     fontSize: FONTS.size.medium,
     fontWeight: FONTS.weight.medium,
   },
   menuItemTextDanger: {
-    color: COLORS.error,
+    color: colors.error,
   },
   menuCancelButton: {
     paddingVertical: SPACING.md,
@@ -330,7 +530,7 @@ const styles = StyleSheet.create({
     minHeight: TOUCH_TARGETS.minSize,
   },
   menuCancelText: {
-    color: COLORS.textSecondary,
+    color: colors.textSecondary,
     fontSize: FONTS.size.medium,
   },
 });

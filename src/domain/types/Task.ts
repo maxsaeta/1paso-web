@@ -3,6 +3,7 @@ export interface TaskStep {
   title: string;
   description: string;
   completed: boolean;
+  estimatedMinutes?: number;
 }
 
 export interface Task {
@@ -14,6 +15,7 @@ export interface Task {
   completed: boolean;
   order: number;
   createdAt: Date;
+  startedAt?: Date;
   completedAt?: Date;
 }
 
