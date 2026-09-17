@@ -3,7 +3,7 @@
   publish = "dist"
 
 [build.environment]
-  NODE_VERSION = "18"
+  NODE_VERSION = "20"
   EXPO_CLI_TELEMETRY_DISABLED = "1"
 
 [[redirects]]
