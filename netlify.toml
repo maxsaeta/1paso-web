@@ -1,11 +1,12 @@
 [build]
-  command = "npm install && npx expo export --platform web"
+  command = "npm install && npx expo export --platform web && cp -r legal dist/legal"
   publish = "dist"
 
 [build.environment]
   NODE_VERSION = "20"
   EXPO_CLI_TELEMETRY_DISABLED = "1"
 
+# SPA catch-all (must be last)
 [[redirects]]
   from = "/*"
   to = "/index.html"
