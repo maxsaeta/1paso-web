@@ -3,42 +3,666 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NeuroPaso</title>
-    <meta http-equiv="refresh" content="0;url=/landing.html">
+    <title>NeuroPaso - Productividad para Mentes Neurodivergentes</title>
+    <meta name="description" content="Aplicación diseñada para personas con TDAH. Una tarea a la vez, sin abrumarse. Paso a paso, logra más.">
+    <link rel="icon" href="../assets/favicon.png" type="image/png">
     <style>
+        :root {
+            /* M3 Dark Theme */
+            --primary: #e8a0bf;
+            --on-primary: #3e1028;
+            --primary-container: #5c1940;
+            --on-primary-container: #ffd8e4;
+            --secondary: #d0b8c9;
+            --secondary-container: #523f4f;
+            --tertiary: #c4c8ff;
+            --tertiary-container: #413d78;
+            --background: #1a1120;
+            --on-background: #ece0e7;
+            --surface: #1a1120;
+            --surface-container: #271e28;
+            --surface-container-high: #322832;
+            --on-surface: #ece0e7;
+            --on-surface-variant: #d0c2cc;
+            --outline: #9a8d97;
+            --outline-variant: #4e444c;
+            --success: #4ade80;
+            --warning: #fbbf24;
+            --info: #3b82f6;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #1a1120;
-            color: #ece0e7;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
+            background-color: var(--background);
+            color: var(--on-background);
+            line-height: 1.6;
         }
-        .loading {
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(26, 17, 32, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            border-bottom: 1px solid var(--outline-variant);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 24px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--on-surface-variant);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .cta-button {
+            background: var(--primary);
+            color: var(--on-primary);
+            padding: 12px 24px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(232, 160, 191, 0.3);
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 140px 0 80px;
             text-align: center;
         }
-        .spinner {
-            width: 40px;
-            height: 40px;
-            border: 3px solid #322832;
-            border-top-color: #e8a0bf;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
+
+        .hero-badge {
+            display: inline-block;
+            background: var(--primary-container);
+            color: var(--on-primary-container);
+            padding: 8px 16px;
+            border-radius: 16px;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 24px;
         }
-        @keyframes spin {
-            to { transform: rotate(360deg); }
+
+        .hero h1 {
+            font-size: clamp(36px, 6vw, 64px);
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 24px;
+            color: var(--on-background);
+        }
+
+        .hero h1 span {
+            color: var(--primary);
+        }
+
+        .hero p {
+            font-size: 20px;
+            color: var(--on-surface-variant);
+            max-width: 600px;
+            margin: 0 auto 40px;
+        }
+
+        .hero-cta {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: var(--on-primary);
+            padding: 16px 32px;
+            border-radius: 24px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 18px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(232, 160, 191, 0.3);
+        }
+
+        .btn-secondary {
+            background: var(--surface-container);
+            color: var(--on-surface);
+            padding: 16px 32px;
+            border-radius: 24px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 18px;
+            border: 1px solid var(--outline-variant);
+            transition: background 0.2s;
+        }
+
+        .btn-secondary:hover {
+            background: var(--surface-container-high);
+        }
+
+        /* Features Section */
+        .features {
+            padding: 80px 0;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 64px;
+        }
+
+        .section-title h2 {
+            font-size: 36px;
+            margin-bottom: 16px;
+        }
+
+        .section-title p {
+            color: var(--on-surface-variant);
+            font-size: 18px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+        }
+
+        .feature-card {
+            background: var(--surface-container);
+            border-radius: 16px;
+            padding: 32px;
+            border: 1px solid var(--outline-variant);
+            transition: transform 0.2s, border-color 0.2s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--primary);
+        }
+
+        .feature-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+
+        .feature-icon.primary {
+            background: var(--primary-container);
+        }
+
+        .feature-icon.secondary {
+            background: var(--secondary-container);
+        }
+
+        .feature-icon.tertiary {
+            background: var(--tertiary-container);
+        }
+
+        .feature-card h3 {
+            font-size: 20px;
+            margin-bottom: 12px;
+        }
+
+        .feature-card p {
+            color: var(--on-surface-variant);
+            font-size: 15px;
+        }
+
+        /* How it Works */
+        .how-it-works {
+            padding: 80px 0;
+            background: var(--surface-container);
+        }
+
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 32px;
+            margin-top: 48px;
+        }
+
+        .step {
+            text-align: center;
+            position: relative;
+        }
+
+        .step-number {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: var(--on-primary);
+            font-size: 24px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+        }
+
+        .step h3 {
+            font-size: 20px;
+            margin-bottom: 12px;
+        }
+
+        .step p {
+            color: var(--on-surface-variant);
+            font-size: 15px;
+        }
+
+        /* Benefits */
+        .benefits {
+            padding: 80px 0;
+        }
+
+        .benefits-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-top: 48px;
+        }
+
+        .benefit-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            padding: 20px;
+            background: var(--surface-container);
+            border-radius: 12px;
+        }
+
+        .benefit-check {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--success);
+            color: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .benefit-item h4 {
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+
+        .benefit-item p {
+            color: var(--on-surface-variant);
+            font-size: 14px;
+        }
+
+        /* Testimonial */
+        .testimonial {
+            padding: 80px 0;
+            background: var(--surface-container);
+            text-align: center;
+        }
+
+        .testimonial-quote {
+            font-size: 24px;
+            font-style: italic;
+            max-width: 800px;
+            margin: 0 auto 24px;
+            color: var(--on-surface);
+        }
+
+        .testimonial-author {
+            color: var(--on-surface-variant);
+            font-size: 16px;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            padding: 80px 0;
+            text-align: center;
+        }
+
+        .cta-section h2 {
+            font-size: 36px;
+            margin-bottom: 16px;
+        }
+
+        .cta-section p {
+            color: var(--on-surface-variant);
+            font-size: 18px;
+            margin-bottom: 32px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Footer */
+        footer {
+            padding: 48px 0;
+            border-top: 1px solid var(--outline-variant);
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 32px;
+        }
+
+        .footer-section h4 {
+            font-size: 16px;
+            margin-bottom: 16px;
+            color: var(--primary);
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section li {
+            margin-bottom: 8px;
+        }
+
+        .footer-section a {
+            color: var(--on-surface-variant);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+
+        .footer-section a:hover {
+            color: var(--primary);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 32px;
+            margin-top: 32px;
+            border-top: 1px solid var(--outline-variant);
+            color: var(--on-surface-variant);
+            font-size: 14px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hero h1 {
+                font-size: 32px;
+            }
+
+            .hero p {
+                font-size: 16px;
+            }
+
+            .features-grid,
+            .steps,
+            .benefits-list {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="loading">
-        <div class="spinner"></div>
-        <p>Cargando...</p>
-    </div>
-    <script>
-        window.location.href = '/landing.html';
-    </script>
+    <header>
+        <nav>
+            <div class="logo">NeuroPaso</div>
+            <ul class="nav-links">
+                <li><a href="#features">Funciones</a></li>
+                <li><a href="#how-it-works">Cómo funciona</a></li>
+                <li><a href="#benefits">Beneficios</a></li>
+                <li><a href="#legal/privacy.html">Privacidad</a></li>
+            </ul>
+            <a href="#download" class="cta-button">Descargar</a>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Hero -->
+        <section class="hero">
+            <div class="container">
+                <span class="hero-badge">Diseñado para mentes neurodivergentes</span>
+                <h1>Una tarea a la vez.<br><span>Sin abrumarse.</span></h1>
+                <p>NeuroPaso divide tus tareas en pasos pequeños y manejables. Una tarea a la vez, sin paralizarte por el exceso de opciones.</p>
+                <div class="hero-cta">
+                    <a href="#download" class="btn-primary">Descargar Gratis</a>
+                    <a href="#how-it-works" class="btn-secondary">Cómo funciona</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features -->
+        <section class="features" id="features">
+            <div class="container">
+                <div class="section-title">
+                    <h2>Funciones pensadas para TDAH</h2>
+                    <p>Cada función está diseñada para reducir la carga cognitiva y aumentar tu productividad</p>
+                </div>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon primary">
+                            <span>🎯</span>
+                        </div>
+                        <h3>Una tarea a la vez</h3>
+                        <p>No más lista interminable de tareas. Enfócate en una cosa, completa, siguiente.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon secondary">
+                            <span>🤖</span>
+                        </div>
+                        <h3>Pasos con IA</h3>
+                        <p>La Inteligencia Artificial divide tus tareas grandes en pasos pequeños de 5 minutos.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon tertiary">
+                            <span>⏱️</span>
+                        </div>
+                        <h3>Timer Pomodoro</h3>
+                        <p>25 minutos de enfoque, 5 de descanso. Automático, sin pensar.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon primary">
+                            <span>📊</span>
+                        </div>
+                        <h3>Progreso visible</h3>
+                        <p>Ve exactamente dónde estás. "Paso 3 de 5" siempre visible.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon secondary">
+                            <span>🌙</span>
+                        </div>
+                        <h3>Cerrar día</h3>
+                        <p>Ritual de cierre para desconectar y preparar el día siguiente.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon tertiary">
+                            <span>😊</span>
+                        </div>
+                        <h3>Tracker de ánimo</h3>
+                        <p>Registra cómo te sientes y recibe consejos personalizados.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- How it Works -->
+        <section class="how-it-works" id="how-it-works">
+            <div class="container">
+                <div class="section-title">
+                    <h2>Así de simple</h2>
+                    <p>Tres pasos para empezar a ser productivo</p>
+                </div>
+                <div class="steps">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <h3>Escribe tu tarea</h3>
+                        <p>"Llamar al médico", "Hacer la cena", lo que sea.</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <h3>La IA la divide</h3>
+                        <p>Automaticamente la divide en pasos pequeños y manejables.</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <h3>Sigue los pasos</h3>
+                        <p>Uno a la vez. Sin saltar. Sin abrumarte.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Benefits -->
+        <section class="benefits" id="benefits">
+            <div class="container">
+                <div class="section-title">
+                    <h2>Por qué NeuroPaso</h2>
+                    <p>Resultados reales para personas reales</p>
+                </div>
+                <div class="benefits-list">
+                    <div class="benefit-item">
+                        <div class="benefit-check">✓</div>
+                        <div>
+                            <h4>Reduce la parálisis</h4>
+                            <p>No más "¿por dónde empiezo?"</p>
+                        </div>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="benefit-check">✓</div>
+                        <div>
+                            <h4>Aumenta el enfoque</h4>
+                            <p>Una cosa a la vez, sin distracciones</p>
+                        </div>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="benefit-check">✓</div>
+                        <div>
+                            <h4>Celebra logros</h4>
+                            <p>Cada paso completado es una victoria</p>
+                        </div>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="benefit-check">✓</div>
+                        <div>
+                            <h4>Sin juzgar</h4>
+                            <p>Diseñado con compasión, no con culpa</p>
+                        </div>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="benefit-check">✓</div>
+                        <div>
+                            <h4>Gratis</h4>
+                            <p>Funciones básicas sin costo</p>
+                        </div>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="benefit-check">✓</div>
+                        <div>
+                            <h4>Privado</h4>
+                            <p>Tus datos son solo tuyos</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Testimonial -->
+        <section class="testimonial">
+            <div class="container">
+                <blockquote class="testimonial-quote">
+                    "Por primera vez siento que puedo terminar las cosas. No es que sea más productivo, es que por fin entiendo cómo funciona mi cerebro."
+                </blockquote>
+                <p class="testimonial-author">— Usuario de NeuroPaso</p>
+            </div>
+        </section>
+
+        <!-- CTA -->
+        <section class="cta-section" id="download">
+            <div class="container">
+                <h2>Empieza hoy</h2>
+                <p>Descarga NeuroPaso gratis y descubre lo que puedes lograr cuando no estás abrumado.</p>
+                <a href="https://play.google.com/store/apps/details?id=com.unpaso.app" class="btn-primary">
+                    Descargar en Google Play
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>NeuroPaso</h4>
+                    <p style="color: var(--on-surface-variant); font-size: 14px;">
+                        Productividad con compasión para mentes neurodivergentes.
+                    </p>
+                </div>
+                <div class="footer-section">
+                    <h4>Legal</h4>
+                    <ul>
+                        <li><a href="legal/privacy.html">Política de Privacidad</a></li>
+                        <li><a href="legal/terms.html">Términos de Uso</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Contacto</h4>
+                    <ul>
+                        <li><a href="mailto:maxsaeta@gmail.com">maxsaeta@gmail.com</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 NeuroPaso. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
 </body>
 </html>
