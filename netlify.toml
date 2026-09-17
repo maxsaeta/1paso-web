@@ -1,10 +1,22 @@
 [build]
-  command = "npm install && npx expo export --platform web && cp -r legal dist/legal"
+  command = "npm install && npx expo export --platform web && cp -r legal dist/legal && cp landing.html dist/landing.html"
   publish = "dist"
 
 [build.environment]
   NODE_VERSION = "20"
   EXPO_CLI_TELEMETRY_DISABLED = "1"
+
+# Landing page - no redirect
+[[redirects]]
+  from = "/landing.html"
+  to = "/landing.html"
+  status = 200
+
+# Legal pages - no redirect
+[[redirects]]
+  from = "/legal/*"
+  to = "/legal/:splat"
+  status = 200
 
 # SPA catch-all (must be last)
 [[redirects]]
