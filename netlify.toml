@@ -1,5 +1,5 @@
 [build]
-  command = "npm install && npx expo export --platform web && cp -r legal dist/legal && cp landing.html dist/landing.html && cp app.html dist/app.html"
+  command = "npm install && npx expo export --platform web && cp -r legal dist/legal && cp -r assets dist/assets && cp landing.html dist/landing.html && cp app.html dist/app.html"
   publish = "dist"
 
 [build.environment]
