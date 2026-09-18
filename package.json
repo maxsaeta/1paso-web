@@ -1,13 +1,37 @@
 {
-  "name": "neuropaso-astro",
+  "name": "neuropaso-web",
   "type": "module",
   "version": "1.0.0",
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
+    "build": "astro build && npx expo export --platform web --output-dir dist-expo && node scripts/merge-dist.js",
     "preview": "astro preview"
   },
   "dependencies": {
-    "astro": "^5.13.0"
+    "astro": "^5.13.0",
+    "expo": "~52.0.0",
+    "expo-asset": "~11.0.0",
+    "expo-constants": "~17.0.0",
+    "expo-file-system": "~18.0.0",
+    "expo-font": "~13.0.0",
+    "expo-keep-awake": "~14.0.0",
+    "expo-notifications": "~0.29.0",
+    "expo-status-bar": "~2.0.0",
+    "@expo/metro-runtime": "~4.0.1",
+    "@expo/vector-icons": "^14.0.0",
+    "@google/generative-ai": "^0.21.0",
+    "@react-native-async-storage/async-storage": "1.23.1",
+    "@react-native-firebase/app": "~21.12.0",
+    "@react-native-firebase/auth": "~21.12.0",
+    "@react-native-firebase/firestore": "~21.12.0",
+    "firebase": "^11.6.0",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "react-native": "0.76.9",
+    "react-native-safe-area-context": "~5.1.0",
+    "react-native-web": "~0.19.13"
+  },
+  "devDependencies": {
+    "@types/react": "~18.3.12"
   }
 }

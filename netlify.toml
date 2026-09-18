@@ -5,13 +5,31 @@
 [build.environment]
   NODE_VERSION = "20"
 
-# SPA fallback para rutas de Astro
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
-
+# Cache Astro assets
 [[headers]]
   for = "/_astro/*"
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
+
+# Cache Expo bundles
+[[headers]]
+  for = "/_expo/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Serve Astro static pages directly
+[[redirects]]
+  from = "/landing"
+  to = "/landing/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/app"
+  to = "/app/index.html"
+  status = 200
+
+# SPA fallback — Expo app handles all other routes
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
