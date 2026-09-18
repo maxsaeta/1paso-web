@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { 
   View, 
-  Text, 
+  Text,
+  ScrollView,
   StyleSheet, 
   TouchableOpacity,
   Modal,
@@ -80,7 +81,7 @@ export function DeleteAccountModal({ visible, onClose }: DeleteAccountModalProps
           </TouchableOpacity>
         </View>
 
-        <View style={styles.content}>
+        <ScrollView style={styles.content} contentContainerStyle={styles.contentContainer}>
           <View style={styles.warningIcon}>
             <Ionicons name="warning" size={64} color={COLORS.error} />
           </View>
@@ -152,7 +153,7 @@ export function DeleteAccountModal({ visible, onClose }: DeleteAccountModalProps
               )}
             </TouchableOpacity>
           </View>
-        </View>
+        </ScrollView>
       </View>
     </Modal>
   );
@@ -188,6 +189,9 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: SPACING.lg,
     paddingTop: SPACING.xl,
+  },
+  contentContainer: {
+    paddingBottom: SPACING.xl,
   },
   warningIcon: {
     alignItems: 'center',
