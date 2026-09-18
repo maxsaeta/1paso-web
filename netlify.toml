@@ -1,5 +1,5 @@
 [build]
-  command = "npm install && npx expo export --platform web && cp -r legal dist/legal && cp landing.html dist/landing.html"
+  command = "npm install && npx expo export --platform web && cp -r legal dist/legal && cp landing.html dist/landing.html && cp app.html dist/app.html"
   publish = "dist"
 
 [build.environment]
@@ -10,6 +10,12 @@
 [[redirects]]
   from = "/landing.html"
   to = "/landing.html"
+  status = 200
+
+# App description page - no redirect
+[[redirects]]
+  from = "/app.html"
+  to = "/app.html"
   status = 200
 
 # Legal pages - no redirect
