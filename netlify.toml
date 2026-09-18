@@ -1,38 +1,17 @@
 [build]
-  command = "npm install && npx expo export --platform web && cp -r legal dist/legal && cp -r assets dist/assets && cp landing.html dist/landing.html && cp app.html dist/app.html"
+  command = "npm run build"
   publish = "dist"
 
 [build.environment]
   NODE_VERSION = "20"
-  EXPO_CLI_TELEMETRY_DISABLED = "1"
 
-# Landing page - no redirect
-[[redirects]]
-  from = "/landing.html"
-  to = "/landing.html"
-  status = 200
-  force = true
-
-# App description page - no redirect
-[[redirects]]
-  from = "/app.html"
-  to = "/app.html"
-  status = 200
-  force = true
-
-# Legal pages - no redirect
-[[redirects]]
-  from = "/legal/*"
-  to = "/legal/:splat"
-  status = 200
-
-# SPA catch-all (must be last)
+# SPA fallback para rutas de Astro
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
 
 [[headers]]
-  for = "/static/*"
+  for = "/_astro/*"
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
