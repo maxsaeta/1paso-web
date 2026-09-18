@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeuroPaso - App de Productividad para TDAH</title>
+    <meta name="description" content="NeuroPaso: productividad con compasión. App diseñada para personas con TDAH y neurodivergencia. Una tarea a la vez, sin abrumarse.">
+    <link rel="icon" href="assets/favicon.png" type="image/png">
+    <style>
+        :root {
+            --primary: #e8a0bf;
+            --on-primary: #3e1028;
+            --primary-container: #5c1940;
+            --on-primary-container: #ffd8e4;
+            --secondary: #d0b8c9;
+            --secondary-container: #523f4f;
+            --tertiary: #c4c8ff;
+            --tertiary-container: #413d78;
+            --background: #1a1120;
+            --on-background: #ece0e7;
+            --surface: #1a1120;
+            --surface-container: #271e28;
+            --surface-container-high: #322832;
+            --on-surface: #ece0e7;
+            --on-surface-variant: #d0c2cc;
+            --outline: #9a8d97;
+            --outline-variant: #4e444c;
+            --success: #4ade80;
+            --warning: #fbbf24;
+            --info: #3b82f6;
+            --error: #f87171;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--background);
+            color: var(--on-background);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(26, 17, 32, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            border-bottom: 1px solid var(--outline-variant);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 24px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 24px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--on-surface-variant);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover { color: var(--primary); }
+
+        .back-link {
+            color: var(--on-surface-variant);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+
+        .back-link:hover { color: var(--primary); }
+
+        /* Hero */
+        .hero {
+            padding: 120px 0 60px;
+            text-align: center;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: var(--primary-container);
+            color: var(--on-primary-container);
+            padding: 8px 16px;
+            border-radius: 16px;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 24px;
+        }
+
+        .hero h1 {
+            font-size: clamp(32px, 5vw, 48px);
+            font-weight: 700;
+            line-height: 1.15;
+            margin-bottom: 20px;
+        }
+
+        .hero h1 span { color: var(--primary); }
+
+        .hero p {
+            font-size: 18px;
+            color: var(--on-surface-variant);
+            max-width: 600px;
+            margin: 0 auto 32px;
+        }
+
+        .hero-cta {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: var(--on-primary);
+            padding: 14px 28px;
+            border-radius: 24px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 16px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(232, 160, 191, 0.3);
+        }
+
+        .btn-secondary {
+            background: var(--surface-container);
+            color: var(--on-surface);
+            padding: 14px 28px;
+            border-radius: 24px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 16px;
+            border: 1px solid var(--outline-variant);
+            transition: background 0.2s;
+        }
+
+        .btn-secondary:hover { background: var(--surface-container-high); }
+
+        /* Section */
+        section {
+            padding: 60px 0;
+        }
+
+        section + section {
+            border-top: 1px solid var(--outline-variant);
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+
+        .section-title h2 {
+            font-size: 28px;
+            margin-bottom: 12px;
+        }
+
+        .section-title p {
+            color: var(--on-surface-variant);
+            font-size: 16px;
+        }
+
+        /* Purpose */
+        .purpose-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 24px;
+        }
+
+        .purpose-card {
+            background: var(--surface-container);
+            border-radius: 16px;
+            padding: 28px;
+            border: 1px solid var(--outline-variant);
+        }
+
+        .purpose-card h3 {
+            font-size: 18px;
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+
+        .purpose-card p {
+            color: var(--on-surface-variant);
+            font-size: 15px;
+        }
+
+        /* Features list */
+        .features-list {
+            display: grid;
+            gap: 16px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            padding: 20px;
+            background: var(--surface-container);
+            border-radius: 12px;
+        }
+
+        .feature-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            flex-shrink: 0;
+            background: var(--primary-container);
+        }
+
+        .feature-item h4 {
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+
+        .feature-item p {
+            color: var(--on-surface-variant);
+            font-size: 14px;
+        }
+
+        /* FAQ */
+        .faq-list {
+            display: grid;
+            gap: 12px;
+        }
+
+        .faq-item {
+            background: var(--surface-container);
+            border-radius: 12px;
+            border: 1px solid var(--outline-variant);
+            overflow: hidden;
+        }
+
+        .faq-question {
+            width: 100%;
+            background: none;
+            border: none;
+            padding: 20px 24px;
+            text-align: left;
+            color: var(--on-surface);
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: inherit;
+        }
+
+        .faq-question:hover { color: var(--primary); }
+
+        .faq-arrow {
+            transition: transform 0.2s;
+            font-size: 14px;
+            color: var(--outline);
+        }
+
+        .faq-item.open .faq-arrow { transform: rotate(180deg); }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .faq-item.open .faq-answer { max-height: 500px; }
+
+        .faq-answer-inner {
+            padding: 0 24px 20px;
+            color: var(--on-surface-variant);
+            font-size: 15px;
+            line-height: 1.7;
+        }
+
+        /* Manual */
+        .manual-section {
+            background: var(--surface-container);
+            border-radius: 16px;
+            padding: 28px;
+            margin-bottom: 20px;
+            border: 1px solid var(--outline-variant);
+        }
+
+        .manual-section h3 {
+            font-size: 18px;
+            margin-bottom: 12px;
+            color: var(--primary);
+        }
+
+        .manual-section p {
+            color: var(--on-surface-variant);
+            font-size: 15px;
+            margin-bottom: 12px;
+        }
+
+        .manual-section ol, .manual-section ul {
+            color: var(--on-surface-variant);
+            font-size: 15px;
+            padding-left: 20px;
+        }
+
+        .manual-section li {
+            margin-bottom: 8px;
+        }
+
+        .manual-section code {
+            background: var(--surface-container-high);
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 14px;
+            color: var(--primary);
+        }
+
+        /* Legal links */
+        .legal-links {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 32px;
+        }
+
+        .legal-links a {
+            color: var(--on-surface-variant);
+            text-decoration: none;
+            font-size: 14px;
+            padding: 10px 20px;
+            border: 1px solid var(--outline-variant);
+            border-radius: 20px;
+            transition: all 0.2s;
+        }
+
+        .legal-links a:hover {
+            color: var(--primary);
+            border-color: var(--primary);
+        }
+
+        /* Footer */
+        footer {
+            padding: 40px 0;
+            border-top: 1px solid var(--outline-variant);
+            text-align: center;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 24px;
+            justify-content: center;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: var(--on-surface-variant);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+
+        .footer-links a:hover { color: var(--primary); }
+
+        footer p {
+            color: var(--outline);
+            font-size: 13px;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .hero h1 { font-size: 28px; }
+            .purpose-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="landing.html" class="logo">NeuroPaso</a>
+            <ul class="nav-links">
+                <li><a href="#purpose">Propósito</a></li>
+                <li><a href="#features">Funciones</a></li>
+                <li><a href="#faq">FAQ</a></li>
+                <li><a href="#manual">Manual</a></li>
+            </ul>
+            <a href="landing.html" class="back-link">← Volver</a>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Hero -->
+        <section class="hero">
+            <div class="container">
+                <span class="hero-badge">Productividad con compasión</span>
+                <h1>Una tarea a la vez.<br><span>Sin abrumarse.</span></h1>
+                <p>NeuroPaso es una app diseñada para personas con TDAH y neurodivergencia. Divide tus tareas en pasos pequeños, enfócate en una cosa a la vez y celebra cada logro.</p>
+                <div class="hero-cta">
+                    <a href="https://play.google.com/store/apps/details?id=com.unpaso.app" class="btn-primary">Descargar en Google Play</a>
+                    <a href="#purpose" class="btn-secondary">Conoce más</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Purpose -->
+        <section id="purpose">
+            <div class="container">
+                <div class="section-title">
+                    <h2>¿Por qué NeuroPaso?</h2>
+                    <p>Entender el problema es el primer paso para resolverlo</p>
+                </div>
+                <div class="purpose-grid">
+                    <div class="purpose-card">
+                        <h3>El problema</h3>
+                        <p>Las apps de productividad tradicionales muestran listas interminables de tareas. Para una mente neurodivergente, eso es abrumador. Cada tarea parece igual de urgente, y no saber por dónde empezar genera parálisis.</p>
+                    </div>
+                    <div class="purpose-card">
+                        <h3>La solución</h3>
+                        <p>NeuroPaso muestra solo UNA tarea a la vez. La IA la divide en pasos pequeños de 5 minutos. No hay distracciones, no hay listas infinitas. Solo el paso que estás dando ahora.</p>
+                    </div>
+                    <div class="purpose-card">
+                        <h3>La filosofía</h3>
+                        <p>Diseñado con compasión, no con culpa. Cada paso completado es una victoria. No importa si ayer no pudiste: hoy es un nuevo día, y NeuroPaso está aquí para acompañarte.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features -->
+        <section id="features">
+            <div class="container">
+                <div class="section-title">
+                    <h2>Funciones principales</h2>
+                    <p>Cada función está pensada para reducir la carga cognitiva</p>
+                </div>
+                <div class="features-list">
+                    <div class="feature-item">
+                        <div class="feature-icon">🎯</div>
+                        <div>
+                            <h4>Una tarea a la vez</h4>
+                            <p>No más listas interminables. Enfócate en una cosa, completa, siguiente.</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">🤖</div>
+                        <div>
+                            <h4>Pasos con IA</h4>
+                            <p>Escribe tu tarea y la inteligencia artificial la divide en pasos pequeños y manejables.</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">⏱️</div>
+                        <div>
+                            <h4>Timer Pomodoro</h4>
+                            <p>25 minutos de enfoque, 5 de descanso. Automático, sin pensar.</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">📊</div>
+                        <div>
+                            <h4>Progreso visible</h4>
+                            <p>Siempre sabrás dónde estás: "Paso 3 de 5" visible en cada momento.</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">🎉</div>
+                        <div>
+                            <h4>Celebraciones</h4>
+                            <p>Cada paso completado se celebra. Porque los pequeños logros también cuentan.</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">🌙</div>
+                        <div>
+                            <h4>Cerrar día</h4>
+                            <p>Ritual de cierre para desconectar, reflexionar y preparar el día siguiente.</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">😊</div>
+                        <div>
+                            <h4>Tracker de ánimo</h4>
+                            <p>Registra cómo te sientes y recibe consejos personalizados según tu estado.</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">🧠</div>
+                        <div>
+                            <h4>Brain Dump</h4>
+                            <p>Saca todo lo que tienes en la cabeza. La IA te ayuda a organizarlo después.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ -->
+        <section id="faq">
+            <div class="container">
+                <div class="section-title">
+                    <h2>Preguntas Frecuentes</h2>
+                </div>
+                <div class="faq-list">
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            ¿NeuroPaso es solo para personas con TDAH?
+                            <span class="faq-arrow">▼</span>
+                        </button>
+                        <div class="faq-answer">
+                            <div class="faq-answer-inner">
+                                No. Aunque está diseñado pensando en mentes neurodivergentes, cualquier persona que se sienta abrumada por listas de tareas puede beneficiarse. Si alguna vez has sentido "no sé por dónde empezar", NeuroPaso es para ti.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            ¿Es gratis?
+                            <span class="faq-arrow">▼</span>
+                        </button>
+                        <div class="faq-answer">
+                            <div class="faq-answer-inner">
+                                Sí. Actualmente NeuroPaso es completamente gratuita. Todas las funciones están disponibles sin costo: crear tareas, dividirlas con IA, usar el timer Pomodoro, registrar tu ánimo, brain dump y cerrar el día. En el futuro habrá una versión Premium con funciones avanzadas, pero las funciones esenciales siempre serán gratuitas.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            ¿Mis datos están seguros?
+                            <span class="faq-arrow">▼</span>
+                        </button>
+                        <div class="faq-answer">
+                            <div class="faq-answer-inner">
+                                Sí. Tus tareas y datos personales se almacenan en tu dispositivo y en tu cuenta de Firebase (autenticada con Google). No vendemos ni compartimos tus datos con terceros. Lee nuestra <a href="legal/privacy.html" style="color: var(--primary);">Política de Privacidad</a> para más detalles.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            ¿Cómo funciona la división de tareas con IA?
+                            <span class="faq-arrow">▼</span>
+                        </button>
+                        <div class="faq-answer">
+                            <div class="faq-answer-inner">
+                                Escribes tu tarea (ej: "Llamar al médico") y la inteligencia artificial la analiza. automaticamente la divide en pasos pequeños y específicos, cada uno estimado en ~5 minutos. Tú decides si aceptar los pasos o ajustarlos.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            ¿Puedo usarla sin conexión?
+                            <span class="faq-arrow">▼</span>
+                        </button>
+                        <div class="faq-answer">
+                            <div class="faq-answer-inner">
+                                Las funciones básicas (ver tareas, completar pasos, timer) funcionan sin conexión. La división de tareas con IA y el sincronizado en la nube requieren conexión a internet.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            ¿Cómo cierro el día?
+                            <span class="faq-arrow">▼</span>
+                        </button>
+                        <div class="faq-answer">
+                            <div class="faq-answer-inner">
+                                Al final del día, NeuroPaso te invita a un ritual de cierre: revisar lo que lograste, guardar pendientes para mañana y desconectar. Es una forma de cerrar el ciclo y empezar el día siguiente con claridad.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            ¿Hay versión para iPhone?
+                            <span class="faq-arrow">▼</span>
+                        </button>
+                        <div class="faq-answer">
+                            <div class="faq-answer-inner">
+                                Actualmente NeuroPaso está disponible solo para Android. La versión web (1paso.netlify.app) funciona desde cualquier navegador, incluyendo iPhone.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Manual -->
+        <section id="manual">
+            <div class="container">
+                <div class="section-title">
+                    <h2>Manual de Uso</h2>
+                    <p>Guía rápida para empezar a usar NeuroPaso</p>
+                </div>
+
+                <div class="manual-section">
+                    <h3>1. Crear tu cuenta</h3>
+                    <p>Al abrir la app por primera vez, verás la pantalla de inicio de sesión. Puedes:</p>
+                    <ul>
+                        <li><strong>Iniciar sesión con Google</strong> — toca el botón y selecciona tu cuenta de Google</li>
+                        <li><strong>Crear cuenta con email</strong> — ingresa tu email y una contraseña</li>
+                    </ul>
+                    <p>Tus datos se sincronizan automáticamente en la nube.</p>
+                </div>
+
+                <div class="manual-section">
+                    <h3>2. Crear una tarea</h3>
+                    <p>En la pantalla principal, toca el botón <code>+</code> (nueva tarea). Escribe lo que necesitas hacer:</p>
+                    <ul>
+                        <li>"Llamar al médico"</li>
+                        <li>"Hacer la cena"</li>
+                        <li>"Organizar el cuarto"</li>
+                    </ul>
+                    <p>No necesitas escribir mucho. Un título corto es suficiente.</p>
+                </div>
+
+                <div class="manual-section">
+                    <h3>3. Dividir con IA</h3>
+                    <p>Después de escribir la tarea, toca <code>Dividir con IA</code>. La inteligencia artificial analizará tu tarea y la dividirá en pasos pequeños de aproximadamente 5 minutos cada uno.</p>
+                    <p>Puedes:</p>
+                    <ul>
+                        <li><strong>Aceptar</strong> — usa los pasos sugeridos</li>
+                        <li><strong>Editar</strong> — modifica, agrega o elimina pasos</li>
+                        <li><strong>Generar otra vez</strong> — pide una nueva división</li>
+                    </ul>
+                </div>
+
+                <div class="manual-section">
+                    <h3>4. Seguir los pasos</h3>
+                    <p>La app muestra UN solo paso a la vez. Cuando lo completas:</p>
+                    <ul>
+                        <li>Se marca como completado ✓</li>
+                        <li>Aparece una celebración 🎉</li>
+                        <li>Avanzas al siguiente paso automáticamente</li>
+                    </ul>
+                    <p>Siempre verás tu progreso: <code>Paso 3 de 5</code>.</p>
+                </div>
+
+                <div class="manual-section">
+                    <h3>5. Usar el Timer</h3>
+                    <p>Activa el timer para trabajar en intervalos:</p>
+                    <ol>
+                        <li>Toca el botón del timer</li>
+                        <li>Empieza tu sesión de trabajo (25 min por defecto)</li>
+                        <li>Cuando suena, toma un descanso (5 min)</li>
+                        <li>Repite hasta completar tu tarea</li>
+                    </ol>
+                </div>
+
+                <div class="manual-section">
+                    <h3>6. Registrar tu ánimo</h3>
+                    <p>Toca el ícono del corazón <code>♡</code> en el header. Selecciona cómo te sientes hoy. La app te dará consejos según tu estado emocional.</p>
+                </div>
+
+                <div class="manual-section">
+                    <h3>7. Cerrar el día</h3>
+                    <p>Cuando termines de trabajar, toca el ícono de moon <code>🌙</code>. El ritual de cierre te guiará para:</p>
+                    <ul>
+                        <li>Revisar lo que lograste hoy</li>
+                        <li>Guardar pendientes para mañana</li>
+                        <li>Desconectar y descansar</li>
+                    </ul>
+                </div>
+
+                <div class="manual-section">
+                    <h3>8. Brain Dump</h3>
+                    <p>¿Tienes mucho en la cabeza? Toca el ícono de bombilla <code>💡</code>. Escribe todo lo que se te ocurra sin ordenar. Después, la IA te ayudará a organizarlo en tareas accionables.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Legal -->
+        <section id="legal">
+            <div class="container">
+                <div class="section-title">
+                    <h2>Información Legal</h2>
+                </div>
+                <div class="legal-links">
+                    <a href="legal/privacy.html">Política de Privacidad</a>
+                    <a href="legal/terms.html">Términos de Uso</a>
+                    <a href="mailto:maxsaeta@gmail.com">Contacto</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-links">
+                <a href="landing.html">Inicio</a>
+                <a href="#purpose">Propósito</a>
+                <a href="#features">Funciones</a>
+                <a href="#faq">FAQ</a>
+                <a href="#manual">Manual</a>
+                <a href="legal/privacy.html">Privacidad</a>
+                <a href="legal/terms.html">Términos</a>
+            </div>
+            <p>&copy; 2026 NeuroPaso. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.querySelectorAll('.faq-question').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const item = btn.parentElement;
+                const wasOpen = item.classList.contains('open');
+                document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+                if (!wasOpen) item.classList.add('open');
+            });
+        });
+    </script>
+</body>
+</html>
