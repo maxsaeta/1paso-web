@@ -395,6 +395,41 @@
 
         .footer-links a:hover { color: var(--primary); }
 
+        .footer-contact {
+            display: flex;
+            gap: 24px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+
+        .footer-contact a {
+            color: var(--on-surface-variant);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+
+        .footer-contact a:hover { color: var(--primary); }
+
+        .footer-developer {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 16px 0;
+            border-top: 1px solid var(--outline-variant);
+        }
+
+        .footer-developer p {
+            color: var(--on-surface-variant);
+            font-size: 14px;
+        }
+
+        .footer-developer strong {
+            color: var(--on-surface);
+        }
+
         footer p {
             color: var(--outline);
             font-size: 13px;
@@ -724,6 +759,15 @@
                 <a href="#manual">Manual</a>
                 <a href="legal/privacy.html">Privacidad</a>
                 <a href="legal/terms.html">Términos</a>
+            </div>
+            <div class="footer-contact">
+                <a href="tel:+584246452936">📱 0424-6452936</a>
+                <a href="https://wa.me/584246452936" target="_blank">💬 WhatsApp</a>
+                <a href="mailto:max.saeta@gmail.com">✉️ max.saeta@gmail.com</a>
+            </div>
+            <div class="footer-developer">
+                <img src="assets/maxsaeta-logo.jpg" alt="Max Saeta" style="height: 32px; border-radius: 6px;">
+                <p>Desarrollado por <strong>Max Saeta</strong></p>
             </div>
             <p>&copy; 2026 NeuroPaso. Todos los derechos reservados.</p>
         </div>
