@@ -1,22 +1,24 @@
-import * as Notifications from 'expo-notifications';
 import { Platform } from 'react-native';
 
-// Configurar comportamiento de notificaciones
-Notifications.setNotificationHandler({
-  handleNotification: async () => ({
-    shouldShowAlert: true,
-    shouldPlaySound: true,
-    shouldSetBadge: false,
-    shouldShowBanner: true,
-    shouldShowList: true,
-  }),
-});
+let Notifications: any = null;
+if (Platform.OS !== 'web') {
+  Notifications = require('expo-notifications');
+  Notifications.setNotificationHandler({
+    handleNotification: async () => ({
+      shouldShowAlert: true,
+      shouldPlaySound: true,
+      shouldSetBadge: false,
+      shouldShowBanner: true,
+      shouldShowList: true,
+    }),
+  });
+}
 
-export const isPushNotificationsAvailable = (): boolean => true;
+export const isPushNotificationsAvailable = (): boolean => Platform.OS !== 'web';
 
 export const registerForPushNotifications = async (): Promise<string | null> => {
+  if (Platform.OS === 'web') return null;
   try {
-    // Verificar permisos
     const { status: existingStatus } = await Notifications.getPermissionsAsync();
     let finalStatus = existingStatus;
 
@@ -30,9 +32,8 @@ export const registerForPushNotifications = async (): Promise<string | null> => 
       return null;
     }
 
-    // Obtener token
     const token = await Notifications.getExpoPushTokenAsync({
-      projectId: '459204323613', // Project number de Firebase
+      projectId: '459204323613',
     });
 
     console.log('Push token:', token.data);
@@ -48,6 +49,7 @@ export const scheduleTimerNotification = async (
   title: string,
   body: string
 ): Promise<string | null> => {
+  if (Platform.OS === 'web') return null;
   try {
     const id = await Notifications.scheduleNotificationAsync({
       content: {
@@ -69,6 +71,7 @@ export const scheduleTimerNotification = async (
 };
 
 export const cancelNotification = async (notificationId: string): Promise<void> => {
+  if (Platform.OS === 'web') return;
   try {
     await Notifications.cancelScheduledNotificationAsync(notificationId);
   } catch (error) {
@@ -77,6 +80,7 @@ export const cancelNotification = async (notificationId: string): Promise<void> 
 };
 
 export const cancelAllNotifications = async (): Promise<void> => {
+  if (Platform.OS === 'web') return;
   try {
     await Notifications.cancelAllScheduledNotificationsAsync();
   } catch (error) {
@@ -84,10 +88,12 @@ export const cancelAllNotifications = async (): Promise<void> => {
   }
 };
 
-export const addNotificationListener = (handler: (notification: Notifications.Notification) => void) => {
+export const addNotificationListener = (handler: (notification: any) => void) => {
+  if (Platform.OS === 'web') return { remove: () => {} };
   return Notifications.addNotificationReceivedListener(handler);
 };
 
-export const addNotificationResponseListener = (handler: (response: Notifications.NotificationResponse) => void) => {
+export const addNotificationResponseListener = (handler: (response: any) => void) => {
+  if (Platform.OS === 'web') return { remove: () => {} };
   return Notifications.addNotificationResponseReceivedListener(handler);
 };
