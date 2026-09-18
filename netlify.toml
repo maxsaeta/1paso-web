@@ -11,12 +11,14 @@
   from = "/landing.html"
   to = "/landing.html"
   status = 200
+  force = true
 
 # App description page - no redirect
 [[redirects]]
   from = "/app.html"
   to = "/app.html"
   status = 200
+  force = true
 
 # Legal pages - no redirect
 [[redirects]]
