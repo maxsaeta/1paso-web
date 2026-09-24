@@ -158,6 +158,32 @@ import Layout from '../layouts/Layout.astro';
         </a>
       </div>
     </section>
+    <section class="data-deletion" id="data-deletion">
+      <div class="container">
+        <div class="section-title">
+          <h2>Solicitar Eliminación de Cuenta</h2>
+          <p>Tu privacidad es importante. Elimina tu cuenta y todos tus datos cuando quieras.</p>
+        </div>
+        <div class="deletion-grid">
+          <div class="deletion-card">
+            <div class="deletion-icon">🗑️</div>
+            <h3>Desde la app</h3>
+            <p>En la pantalla principal, baja hasta el enlace <strong>Eliminar Cuenta</strong> del pie de página y sigue las instrucciones. La eliminación es inmediata.</p>
+          </div>
+          <div class="deletion-card">
+            <div class="deletion-icon">✉️</div>
+            <h3>Por correo</h3>
+            <p>Escríbenos a <a href="mailto:maxsaeta@gmail.com">maxsaeta@gmail.com</a> con el asunto <em>"Solicitud de eliminación de cuenta"</em>. Procesamos tu solicitud en un máximo de 30 días.</p>
+          </div>
+          <div class="deletion-card">
+            <div class="deletion-icon">♻️</div>
+            <h3>Qué se elimina</h3>
+            <p>Tu cuenta, tareas, estadísticas y preferencias. <strong>Esta acción es irreversible.</strong></p>
+          </div>
+        </div>
+        <p class="deletion-note">Consulta nuestra <a href="/legal/privacy.html">Política de Privacidad</a> para conocer tus derechos.</p>
+      </div>
+    </section>
     <section class="contact-section" id="contact">
       <div class="container">
         <div class="section-title">
@@ -207,6 +233,7 @@ import Layout from '../layouts/Layout.astro';
           <ul>
             <li><a href="/legal/privacy.html">Política de Privacidad</a></li>
             <li><a href="/legal/terms.html">Términos de Uso</a></li>
+            <li><a href="#data-deletion">Eliminar Cuenta</a></li>
           </ul>
         </div>
       </div>
@@ -395,6 +422,52 @@ import Layout from '../layouts/Layout.astro';
   }
 
   .contact-section { padding: 80px 0; }
+
+  .data-deletion { padding: 80px 0; }
+
+  .deletion-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+    margin-bottom: 32px;
+  }
+
+  .deletion-card {
+    background: var(--surface-container);
+    border-radius: 16px;
+    padding: 32px;
+    border: 1px solid var(--outline-variant);
+    text-align: center;
+  }
+
+  .deletion-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 16px;
+    background: var(--primary-container);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    margin: 0 auto 16px;
+  }
+
+  .deletion-card h3 { font-size: 18px; margin-bottom: 10px; }
+
+  .deletion-card p {
+    color: var(--on-surface-variant);
+    font-size: 15px;
+  }
+
+  .deletion-card a { color: var(--primary); }
+
+  .deletion-note {
+    text-align: center;
+    color: var(--on-surface-variant);
+    font-size: 14px;
+  }
+
+  .deletion-note a { color: var(--primary); }
 
   .contact-grid {
     display: grid;

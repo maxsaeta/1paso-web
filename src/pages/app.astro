@@ -204,6 +204,17 @@ import Layout from '../layouts/Layout.astro';
               </div>
             </div>
           </div>
+          <div class="faq-item">
+            <button class="faq-question">
+              ¿Cómo elimino mi cuenta y mis datos?
+              <span class="faq-arrow">▼</span>
+            </button>
+            <div class="faq-answer">
+              <div class="faq-answer-inner">
+                En la app, baja hasta el enlace <strong>Eliminar Cuenta</strong> en el pie de la pantalla principal y sigue las instrucciones. También puedes solicitar la eliminación por correo a <a href="mailto:maxsaeta@gmail.com" style="color: var(--primary);">maxsaeta@gmail.com</a>. Consulta la sección <a href="#data-deletion" style="color: var(--primary);">Solicitar Eliminación de Cuenta</a> para más detalles.
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -299,10 +310,39 @@ import Layout from '../layouts/Layout.astro';
         <div class="legal-links">
           <a href="/legal/privacy.html">Política de Privacidad</a>
           <a href="/legal/terms.html">Términos de Uso</a>
+          <a href="#data-deletion">Eliminación de Cuenta</a>
           <a href="mailto:maxsaeta@gmail.com">Contacto</a>
         </div>
       </div>
     </section>
+
+    <section id="data-deletion">
+      <div class="container">
+        <div class="section-title">
+          <h2>Solicitar Eliminación de Cuenta</h2>
+          <p>Tu privacidad es importante. Puedes eliminar tu cuenta y todos tus datos en cualquier momento.</p>
+        </div>
+        <div class="deletion-grid">
+          <div class="deletion-card">
+            <div class="deletion-icon">🗑️</div>
+            <h3>Desde la app</h3>
+            <p>En la pantalla principal, baja hasta el enlace <strong>Eliminar Cuenta</strong> del pie de página y sigue las instrucciones. La eliminación es inmediata: se borran tareas, pasos, estadísticas y preferencias.</p>
+          </div>
+          <div class="deletion-card">
+            <div class="deletion-icon">✉️</div>
+            <h3>Por correo</h3>
+            <p>Escríbenos a <a href="mailto:maxsaeta@gmail.com">maxsaeta@gmail.com</a> con el asunto <em>"Solicitud de eliminación de cuenta"</em> y tu correo registrado. Procesamos tu solicitud en un máximo de 30 días.</p>
+          </div>
+          <div class="deletion-card">
+            <div class="deletion-icon">♻️</div>
+            <h3>Qué se elimina</h3>
+            <p>Tu cuenta de acceso, tareas, estadísticas de productividad y configuración. <strong>Esta acción es irreversible</strong> y no se puede deshacer.</p>
+          </div>
+        </div>
+        <p class="deletion-note">Consulta nuestra <a href="/legal/privacy.html">Política de Privacidad</a> para conocer tus derechos de acceso, eliminación y exportación de datos.</p>
+      </div>
+    </section>
+
     <section class="contact-section" id="contact">
       <div class="container">
         <div class="section-title">
@@ -342,6 +382,7 @@ import Layout from '../layouts/Layout.astro';
         <a href="/landing">Landing</a>
         <a href="/legal/privacy.html">Privacidad</a>
         <a href="/legal/terms.html">Términos</a>
+        <a href="#data-deletion">Eliminar Cuenta</a>
       </div>
       <div class="footer-contact">
         <a href="tel:+584246452936">📱 0424-6452936</a>
@@ -600,6 +641,50 @@ import Layout from '../layouts/Layout.astro';
   }
 
   .contact-section { padding: 80px 0; }
+
+  .deletion-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+    margin-bottom: 32px;
+  }
+
+  .deletion-card {
+    background: var(--surface-container);
+    border-radius: 16px;
+    padding: 28px;
+    border: 1px solid var(--outline-variant);
+    text-align: center;
+  }
+
+  .deletion-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 16px;
+    background: var(--primary-container);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    margin: 0 auto 16px;
+  }
+
+  .deletion-card h3 { font-size: 18px; margin-bottom: 10px; }
+
+  .deletion-card p {
+    color: var(--on-surface-variant);
+    font-size: 15px;
+  }
+
+  .deletion-card a { color: var(--primary); }
+
+  .deletion-note {
+    text-align: center;
+    color: var(--on-surface-variant);
+    font-size: 14px;
+  }
+
+  .deletion-note a { color: var(--primary); }
 
   .contact-grid {
     display: grid;
