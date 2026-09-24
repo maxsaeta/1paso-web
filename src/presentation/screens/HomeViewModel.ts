@@ -2,6 +2,8 @@ import { useState, useEffect, useCallback, useMemo } from 'react';
 import { container } from '../../di/container';
 import { Task, TimerSettings, DailyPriorities } from '../../domain/types';
 import { auth } from '../../config/firebase';
+import { FREE_MAX_ACTIVE_TASKS } from '../../constants/business';
+import { useSubscription } from '../../context/SubscriptionContext';
 
 export type CelebrationType = 'step' | 'task' | null;
 
@@ -28,9 +30,11 @@ export interface HomeState {
   showMoodTracker: boolean;
   taskToEdit: Task | null;
   dailyPriorities: DailyPriorities | null;
+  showPaywall: boolean;
 }
 
 export function useHomeViewModel() {
+  const { isPremium } = useSubscription();
   const [state, setState] = useState<HomeState>({
     tasks: [],
     currentTaskIndex: 0,
@@ -49,6 +53,7 @@ export function useHomeViewModel() {
     showMoodTracker: false,
     taskToEdit: null,
     dailyPriorities: null,
+    showPaywall: false,
   });
 
   // Ordenar tareas: prioridades primero, luego el resto
@@ -83,6 +88,7 @@ export function useHomeViewModel() {
 
   const completedTasks = state.tasks.filter(task => task.completed);
   const currentTask = activeTasks.length > 0 ? activeTasks[state.currentTaskIndex] || null : null;
+  const canAddTask = isPremium || activeTasks.length < FREE_MAX_ACTIVE_TASKS;
 
   useEffect(() => {
     loadSettings();
@@ -159,6 +165,10 @@ export function useHomeViewModel() {
 
   const setShowMoodTracker = useCallback((show: boolean) => {
     setState(prev => ({ ...prev, showMoodTracker: show }));
+  }, []);
+
+  const setShowPaywall = useCallback((show: boolean) => {
+    setState(prev => ({ ...prev, showPaywall: show }));
   }, []);
 
   const setTaskToEdit = useCallback((task: Task | null) => {
@@ -240,12 +250,15 @@ export function useHomeViewModel() {
     setShowShutdownRitual,
     setShowMoodTracker,
     setTaskToEdit,
+    setShowPaywall,
     handleAddTask,
     handleStartTask,
     handleCompleteStep,
     handleDeleteTask,
     handleSettingsSave,
     handleLogout,
+    canAddTask,
+    isPremium,
     refreshDailyPriorities,
   };
 }

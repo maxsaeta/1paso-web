@@ -1,7 +1,8 @@
-import { ITaskRepository, IAuthRepository, IStatsRepository, ISettingsRepository, IPlanRepository } from '../domain/repositories';
-import { FirebaseTaskRepository, FirebaseAuthRepository, FirebaseStatsRepository, FirebaseSettingsRepository, FirebasePlanRepository } from '../data/repositories';
+import { ITaskRepository, IAuthRepository, IStatsRepository, ISettingsRepository, IPlanRepository, ISubscriptionRepository } from '../domain/repositories';
+import { FirebaseTaskRepository, FirebaseAuthRepository, FirebaseStatsRepository, FirebaseSettingsRepository, FirebasePlanRepository, FirebaseSubscriptionRepository } from '../data/repositories';
 
 import { CreateTaskUseCase, GetTasksUseCase, CompleteStepUseCase, DeleteTaskUseCase, StartTaskUseCase } from '../domain/usecases/tasks';
+import { GetSubscriptionUseCase, PurchaseSubscriptionUseCase, RestorePurchasesUseCase } from '../domain/usecases/subscriptions';
 import { LoginUseCase, RegisterUseCase, LogoutUseCase, DeleteAccountUseCase } from '../domain/usecases/auth';
 import { IncrementPomodoroUseCase, IncrementTaskCompletedUseCase, GetStatsUseCase } from '../domain/usecases/stats';
 import { GetTimerSettingsUseCase, SaveTimerSettingsUseCase } from '../domain/usecases/settings';
@@ -15,6 +16,7 @@ class Container {
   private _statsRepository: IStatsRepository;
   private _settingsRepository: ISettingsRepository;
   private _planRepository: IPlanRepository;
+  private _subscriptionRepository: ISubscriptionRepository;
 
   private constructor() {
     this._taskRepository = new FirebaseTaskRepository();
@@ -22,6 +24,7 @@ class Container {
     this._statsRepository = new FirebaseStatsRepository();
     this._settingsRepository = new FirebaseSettingsRepository();
     this._planRepository = new FirebasePlanRepository();
+    this._subscriptionRepository = new FirebaseSubscriptionRepository();
   }
 
   static getInstance(): Container {
@@ -50,6 +53,10 @@ class Container {
 
   get planRepository(): IPlanRepository {
     return this._planRepository;
+  }
+
+  get subscriptionRepository(): ISubscriptionRepository {
+    return this._subscriptionRepository;
   }
 
   // Use Cases - Tasks
@@ -135,6 +142,19 @@ class Container {
 
   get getShutdownChecklistUseCase(): GetShutdownChecklistUseCase {
     return new GetShutdownChecklistUseCase(this._planRepository);
+  }
+
+  // Use Cases - Subscription
+  get getSubscriptionUseCase(): GetSubscriptionUseCase {
+    return new GetSubscriptionUseCase(this._subscriptionRepository);
+  }
+
+  get purchaseSubscriptionUseCase(): PurchaseSubscriptionUseCase {
+    return new PurchaseSubscriptionUseCase(this._subscriptionRepository);
+  }
+
+  get restorePurchasesUseCase(): RestorePurchasesUseCase {
+    return new RestorePurchasesUseCase(this._subscriptionRepository);
   }
 }
 

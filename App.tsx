@@ -7,6 +7,7 @@ import { LoginScreen } from './src/presentation/screens/LoginScreen';
 import { useAuth } from './src/hooks/useAuth';
 import { ThemeProvider, useTheme } from './src/context/ThemeContext';
 import { LanguageProvider } from './src/i18n';
+import { SubscriptionProvider } from './src/context/SubscriptionContext';
 
 function AppContent() {
   const { user, loading } = useAuth();
@@ -34,7 +35,9 @@ function AppContent() {
   return (
     <SafeAreaProvider>
       <StatusBar style={isDark ? 'light' : 'dark'} />
-      <HomeScreen />
+      <SubscriptionProvider userId={user.uid}>
+        <HomeScreen />
+      </SubscriptionProvider>
     </SafeAreaProvider>
   );
 }

@@ -15,11 +15,13 @@ import { getWeeklyStats, getTotalStats, DailyStats } from '../services/statsServ
 interface StatsModalProps {
   visible: boolean;
   onClose: () => void;
+  isPremium?: boolean;
+  onRequirePremium?: () => void;
 }
 
 const DAY_NAMES = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
 
-export function StatsModal({ visible, onClose }: StatsModalProps) {
+export function StatsModal({ visible, onClose, isPremium = false, onRequirePremium }: StatsModalProps) {
   const [weeklyStats, setWeeklyStats] = useState<DailyStats[]>([]);
   const [totalStats, setTotalStats] = useState({
     totalPomodoros: 0,
@@ -33,13 +35,16 @@ export function StatsModal({ visible, onClose }: StatsModalProps) {
     if (visible) {
       loadStats();
     }
-  }, [visible]);
+  }, [visible, isPremium]);
 
   const loadStats = async () => {
     setLoading(true);
-    const [weekly, total] = await Promise.all([getWeeklyStats(), getTotalStats()]);
+    const weekly = await getWeeklyStats();
     setWeeklyStats(weekly);
-    setTotalStats(total);
+    if (isPremium) {
+      const total = await getTotalStats();
+      setTotalStats(total);
+    }
     setLoading(false);
   };
 
@@ -70,29 +75,40 @@ export function StatsModal({ visible, onClose }: StatsModalProps) {
             <ActivityIndicator size="large" color={COLORS.accent} style={styles.loader} />
           ) : (
             <ScrollView showsVerticalScrollIndicator={false}>
-              {/* Summary Cards */}
-              <View style={styles.summaryGrid}>
-                <View style={styles.summaryCard}>
-                  <Ionicons name="flame" size={28} color={COLORS.accent} />
-                  <Text style={styles.summaryValue}>{totalStats.streak}</Text>
-                  <Text style={styles.summaryLabel}>Racha días</Text>
+              {isPremium ? (
+                /* Summary Cards */
+                <View style={styles.summaryGrid}>
+                  <View style={styles.summaryCard}>
+                    <Ionicons name="flame" size={28} color={COLORS.accent} />
+                    <Text style={styles.summaryValue}>{totalStats.streak}</Text>
+                    <Text style={styles.summaryLabel}>Racha días</Text>
+                  </View>
+                  <View style={styles.summaryCard}>
+                    <Ionicons name="timer" size={28} color={COLORS.warning} />
+                    <Text style={styles.summaryValue}>{totalStats.totalPomodoros}</Text>
+                    <Text style={styles.summaryLabel}>Pomodoros</Text>
+                  </View>
+                  <View style={styles.summaryCard}>
+                    <Ionicons name="checkmark-circle" size={28} color={COLORS.success} />
+                    <Text style={styles.summaryValue}>{totalStats.totalTasks}</Text>
+                    <Text style={styles.summaryLabel}>Tareas</Text>
+                  </View>
+                  <View style={styles.summaryCard}>
+                    <Ionicons name="time" size={28} color={COLORS.primary} />
+                    <Text style={styles.summaryValue}>{formatHours(totalStats.totalMinutes)}</Text>
+                    <Text style={styles.summaryLabel}>Enfoque total</Text>
+                  </View>
                 </View>
-                <View style={styles.summaryCard}>
-                  <Ionicons name="timer" size={28} color={COLORS.warning} />
-                  <Text style={styles.summaryValue}>{totalStats.totalPomodoros}</Text>
-                  <Text style={styles.summaryLabel}>Pomodoros</Text>
-                </View>
-                <View style={styles.summaryCard}>
-                  <Ionicons name="checkmark-circle" size={28} color={COLORS.success} />
-                  <Text style={styles.summaryValue}>{totalStats.totalTasks}</Text>
-                  <Text style={styles.summaryLabel}>Tareas</Text>
-                </View>
-                <View style={styles.summaryCard}>
-                  <Ionicons name="time" size={28} color={COLORS.primary} />
-                  <Text style={styles.summaryValue}>{formatHours(totalStats.totalMinutes)}</Text>
-                  <Text style={styles.summaryLabel}>Enfoque total</Text>
-                </View>
-              </View>
+              ) : (
+                <TouchableOpacity style={styles.upgradeCard} onPress={onRequirePremium}>
+                  <Ionicons name="diamond" size={24} color={COLORS.warning} />
+                  <View style={styles.upgradeTextWrap}>
+                    <Text style={styles.upgradeTitle}>Estadísticas completas</Text>
+                    <Text style={styles.upgradeSubtitle}>Desbloquea totales, racha e historial completo</Text>
+                  </View>
+                  <Ionicons name="chevron-forward" size={20} color={COLORS.textSecondary} />
+                </TouchableOpacity>
+              )}
 
               {/* Weekly Chart */}
               <View style={styles.chartSection}>
@@ -194,6 +210,28 @@ const styles = StyleSheet.create({
   },
   loader: {
     paddingVertical: SPACING.xxl,
+  },
+  upgradeCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: SPACING.md,
+    backgroundColor: COLORS.background,
+    borderRadius: 12,
+    padding: SPACING.md,
+    marginBottom: SPACING.lg,
+  },
+  upgradeTextWrap: {
+    flex: 1,
+  },
+  upgradeTitle: {
+    color: COLORS.textPrimary,
+    fontSize: FONTS.size.medium,
+    fontWeight: '600',
+  },
+  upgradeSubtitle: {
+    color: COLORS.textSecondary,
+    fontSize: FONTS.size.small,
+    marginTop: SPACING.xs,
   },
   summaryGrid: {
     flexDirection: 'row',

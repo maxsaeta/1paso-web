@@ -12,18 +12,21 @@ import { SPACING, FONTS, BORDER_RADIUS, TOUCH_TARGETS } from '../constants/theme
 import { Colors } from '../constants/theme';
 import { useTheme, ThemeMode } from '../context/ThemeContext';
 import { useLanguage, Language } from '../i18n';
+import { FREE_WORK_MINUTES, FREE_BREAK_MINUTES } from '../constants/business';
 import { TimerSettings, getTimerSettings, saveTimerSettings } from '../services/settingsService';
 
 interface SettingsModalProps {
   visible: boolean;
   onClose: () => void;
   onSave: (settings: TimerSettings) => void;
+  isPremium?: boolean;
+  onRequirePremium?: () => void;
 }
 
 const WORK_OPTIONS = [15, 20, 25, 30];
 const BREAK_OPTIONS = [3, 5, 10];
 
-export function SettingsModal({ visible, onClose, onSave }: SettingsModalProps) {
+export function SettingsModal({ visible, onClose, onSave, isPremium = false, onRequirePremium }: SettingsModalProps) {
   const [workMinutes, setWorkMinutes] = useState(25);
   const [breakMinutes, setBreakMinutes] = useState(5);
   const { colors, themeMode, setThemeMode } = useTheme();
@@ -65,23 +68,35 @@ export function SettingsModal({ visible, onClose, onSave }: SettingsModalProps) 
             <View style={styles.section}>
               <Text style={styles.sectionTitle}>{t('settings.workDuration')}</Text>
               <View style={styles.optionsRow}>
-                {WORK_OPTIONS.map((minutes) => (
-                  <TouchableOpacity
-                    key={minutes}
-                    style={[
-                      styles.option,
-                      workMinutes === minutes && styles.optionActive,
-                    ]}
-                    onPress={() => setWorkMinutes(minutes)}
-                  >
-                    <Text style={[
-                      styles.optionText,
-                      workMinutes === minutes && styles.optionTextActive,
-                    ]}>
-                      {minutes} min
-                    </Text>
-                  </TouchableOpacity>
-                ))}
+                {WORK_OPTIONS.map((minutes) => {
+                  const locked = !isPremium && minutes !== FREE_WORK_MINUTES;
+                  return (
+                    <TouchableOpacity
+                      key={minutes}
+                      style={[
+                        styles.option,
+                        !locked && workMinutes === minutes && styles.optionActive,
+                      ]}
+                      onPress={() => {
+                        if (locked) {
+                          onRequirePremium?.();
+                          return;
+                        }
+                        setWorkMinutes(minutes);
+                      }}
+                    >
+                      {locked && (
+                        <Ionicons name="lock-closed" size={12} color={colors.textSecondary} />
+                      )}
+                      <Text style={[
+                        styles.optionText,
+                        !locked && workMinutes === minutes && styles.optionTextActive,
+                      ]}>
+                        {minutes} min
+                      </Text>
+                    </TouchableOpacity>
+                  );
+                })}
               </View>
             </View>
 
@@ -89,23 +104,35 @@ export function SettingsModal({ visible, onClose, onSave }: SettingsModalProps) 
             <View style={styles.section}>
               <Text style={styles.sectionTitle}>{t('settings.breakDuration')}</Text>
               <View style={styles.optionsRow}>
-                {BREAK_OPTIONS.map((minutes) => (
-                  <TouchableOpacity
-                    key={minutes}
-                    style={[
-                      styles.option,
-                      breakMinutes === minutes && styles.optionActive,
-                    ]}
-                    onPress={() => setBreakMinutes(minutes)}
-                  >
-                    <Text style={[
-                      styles.optionText,
-                      breakMinutes === minutes && styles.optionTextActive,
-                    ]}>
-                      {minutes} min
-                    </Text>
-                  </TouchableOpacity>
-                ))}
+                {BREAK_OPTIONS.map((minutes) => {
+                  const locked = !isPremium && minutes !== FREE_BREAK_MINUTES;
+                  return (
+                    <TouchableOpacity
+                      key={minutes}
+                      style={[
+                        styles.option,
+                        !locked && breakMinutes === minutes && styles.optionActive,
+                      ]}
+                      onPress={() => {
+                        if (locked) {
+                          onRequirePremium?.();
+                          return;
+                        }
+                        setBreakMinutes(minutes);
+                      }}
+                    >
+                      {locked && (
+                        <Ionicons name="lock-closed" size={12} color={colors.textSecondary} />
+                      )}
+                      <Text style={[
+                        styles.optionText,
+                        !locked && breakMinutes === minutes && styles.optionTextActive,
+                      ]}>
+                        {minutes} min
+                      </Text>
+                    </TouchableOpacity>
+                  );
+                })}
               </View>
             </View>
 

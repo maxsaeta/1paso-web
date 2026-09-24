@@ -15,14 +15,18 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS, SPACING, FONTS, BORDER_RADIUS, TOUCH_TARGETS } from '../constants/theme';
 import { generateTaskSteps, TaskStep } from '../services/aiService';
+import { useLanguage } from '../i18n';
 
 interface AddTaskModalProps {
   visible: boolean;
   onClose: () => void;
   onAdd: (title: string, steps: { title: string; description: string }[]) => void;
+  isPremium?: boolean;
+  onRequirePremium?: () => void;
 }
 
-export function AddTaskModal({ visible, onClose, onAdd }: AddTaskModalProps) {
+export function AddTaskModal({ visible, onClose, onAdd, isPremium = false, onRequirePremium }: AddTaskModalProps) {
+  const { t } = useLanguage();
   const [title, setTitle] = useState('');
   const [manualStep, setManualStep] = useState('');
   const [aiSteps, setAiSteps] = useState<TaskStep[]>([]);
@@ -127,16 +131,24 @@ export function AddTaskModal({ visible, onClose, onAdd }: AddTaskModalProps) {
           {/* Botón de IA */}
           <TouchableOpacity 
             style={[styles.aiButton, loadingAI && styles.aiButtonDisabled]}
-            onPress={handleGenerateSteps}
+            onPress={() => {
+              if (!isPremium) {
+                onRequirePremium?.();
+                return;
+              }
+              handleGenerateSteps();
+            }}
             disabled={loadingAI}
           >
             {loadingAI ? (
               <ActivityIndicator color={COLORS.accent} size="small" />
             ) : (
-              <Ionicons name="sparkles" size={20} color={COLORS.accent} />
+              <Ionicons name={isPremium ? 'sparkles' : 'lock-closed'} size={20} color={COLORS.accent} />
             )}
             <Text style={styles.aiButtonText}>
-              {loadingAI ? 'Generando...' : 'Generar pasos con IA'}
+              {isPremium
+                ? (loadingAI ? 'Generando...' : 'Generar pasos con IA')
+                : t('premium.lock')}
             </Text>
           </TouchableOpacity>
 

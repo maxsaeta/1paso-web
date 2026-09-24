@@ -17,15 +17,19 @@ import { COLORS, SPACING, FONTS } from '../constants/theme';
 import { Task, TaskStep } from '../domain/types';
 import { generateTaskSteps } from '../services/aiService';
 import { container } from '../di/container';
+import { useLanguage } from '../i18n';
 
 interface EditTaskModalProps {
   visible: boolean;
   task: Task | null;
   onClose: () => void;
   onUpdate: (updatedTask: Task) => void;
+  isPremium?: boolean;
+  onRequirePremium?: () => void;
 }
 
-export function EditTaskModal({ visible, task, onClose, onUpdate }: EditTaskModalProps) {
+export function EditTaskModal({ visible, task, onClose, onUpdate, isPremium = false, onRequirePremium }: EditTaskModalProps) {
+  const { t } = useLanguage();
   const [title, setTitle] = useState('');
   const [steps, setSteps] = useState<TaskStep[]>([]);
   const [loadingAI, setLoadingAI] = useState(false);
@@ -143,16 +147,24 @@ export function EditTaskModal({ visible, task, onClose, onUpdate }: EditTaskModa
           {/* Botón de IA */}
           <TouchableOpacity 
             style={[styles.aiButton, loadingAI && styles.aiButtonDisabled]}
-            onPress={handleGenerateAISteps}
+            onPress={() => {
+              if (!isPremium) {
+                onRequirePremium?.();
+                return;
+              }
+              handleGenerateAISteps();
+            }}
             disabled={loadingAI}
           >
             {loadingAI ? (
               <ActivityIndicator color={COLORS.accent} size="small" />
             ) : (
-              <Ionicons name="sparkles" size={20} color={COLORS.accent} />
+              <Ionicons name={isPremium ? 'sparkles' : 'lock-closed'} size={20} color={COLORS.accent} />
             )}
             <Text style={styles.aiButtonText}>
-              {loadingAI ? 'Generando...' : 'Regenerar pasos con IA'}
+              {isPremium
+                ? (loadingAI ? 'Generando...' : 'Regenerar pasos con IA')
+                : t('premium.lock')}
             </Text>
           </TouchableOpacity>
 

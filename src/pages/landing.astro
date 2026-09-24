@@ -6,7 +6,7 @@ import Layout from '../layouts/Layout.astro';
     <nav>
       <div class="logo">NeuroPaso</div>
       <ul class="nav-links">
-        <li><a href="#features">Funciones</a></li>
+<li><a href="#features">Funciones</a></li>
         <li><a href="#how-it-works">Cómo funciona</a></li>
         <li><a href="#benefits">Beneficios</a></li>
         <li><a href="#pricing">Precios</a></li>
@@ -181,6 +181,73 @@ import Layout from '../layouts/Layout.astro';
             </ul>
             <a href="#download" class="btn-primary">Hacerte Full</a>
           </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="pricing" id="pricing">
+      <div class="container">
+        <div class="section-title">
+          <h2>Gratis vs Premium</h2>
+          <p>Empieza gratis y desbloquea todo tu potencial con NeuroPaso Premium</p>
+        </div>
+        <div class="pricing-table-wrapper">
+          <table class="pricing-table">
+            <thead>
+              <tr>
+                <th>Función</th>
+                <th class="col-free">Gratis</th>
+                <th class="col-premium">Premium<span class="price">$4.99/mes</span></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Tareas activas</td>
+                <td class="col-free">3</td>
+                <td class="col-premium"><strong>Ilimitadas</strong></td>
+              </tr>
+              <tr>
+                <td>Desglose de tareas con IA</td>
+                <td class="col-free no">✗</td>
+                <td class="col-premium yes">✓</td>
+              </tr>
+              <tr>
+                <td>Duración de timer personalizable</td>
+                <td class="col-free">Solo 25/5</td>
+                <td class="col-premium yes">✓</td>
+              </tr>
+              <tr>
+                <td>Estadísticas semanales (7 días)</td>
+                <td class="col-free yes">✓</td>
+                <td class="col-premium yes">✓</td>
+              </tr>
+              <tr>
+                <td>Estadísticas completas y racha</td>
+                <td class="col-free no">✗</td>
+                <td class="col-premium yes">✓</td>
+              </tr>
+              <tr>
+                <td>Prioridades del día (Brain Dump)</td>
+                <td class="col-free yes">✓</td>
+                <td class="col-premium yes">✓</td>
+              </tr>
+              <tr>
+                <td>Tracker de ánimo y consejos</td>
+                <td class="col-free yes">✓</td>
+                <td class="col-premium yes">✓</td>
+              </tr>
+              <tr>
+                <td>Ritual de cierre del día</td>
+                <td class="col-free yes">✓</td>
+                <td class="col-premium yes">✓</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="pricing-note">
+          <a href="https://play.google.com/store/apps/details?id=com.unpaso.app" class="btn-primary">
+            Descargar en Google Play
+          </a>
         </div>
       </div>
     </section>
@@ -534,6 +601,72 @@ import Layout from '../layouts/Layout.astro';
     padding: 80px 0;
     text-align: center;
   }
+
+  .pricing { padding: 80px 0; }
+
+  .pricing-table-wrapper {
+    overflow-x: auto;
+    border-radius: 16px;
+    border: 1px solid var(--outline-variant);
+    background: var(--surface-container);
+    margin-bottom: 40px;
+  }
+
+  .pricing-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 640px;
+  }
+
+  .pricing-table th,
+  .pricing-table td {
+    padding: 16px 20px;
+    text-align: left;
+    border-bottom: 1px solid var(--outline-variant);
+  }
+
+  .pricing-table thead th {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--on-surface);
+    background: var(--surface-container-high);
+  }
+
+  .pricing-table thead th:first-child { width: 40%; }
+
+  .pricing-table thead th:not(:first-child) { text-align: center; }
+
+  .pricing-table tbody tr:last-child td { border-bottom: none; }
+
+  .pricing-table td {
+    color: var(--on-surface-variant);
+    font-size: 15px;
+  }
+
+  .pricing-table td:not(:first-child) {
+    text-align: center;
+    width: 100px;
+  }
+
+  .pricing-table .col-premium {
+    background: rgba(232, 64, 87, 0.06);
+    border-left: 1px solid var(--outline-variant);
+  }
+
+  .pricing-table .price {
+    display: block;
+    font-size: 13px;
+    color: var(--primary);
+    font-weight: 600;
+  }
+
+  .pricing-table .yes { color: var(--success); font-size: 18px; font-weight: 700; }
+
+  .pricing-table .no { color: var(--outline); font-size: 18px; }
+
+  .pricing-table .col-premium strong { color: var(--primary); }
+
+  .pricing-note { text-align: center; }
 
   .cta-section h2 { font-size: 36px; margin-bottom: 16px; }
 

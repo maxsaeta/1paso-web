@@ -28,6 +28,7 @@ import { ReportAIModal } from '../../components/ReportAIModal';
 import { DailyBrainDump } from '../../components/DailyBrainDump';
 import { ShutdownRitual } from '../../components/ShutdownRitual';
 import { MoodTracker } from '../../components/MoodTracker';
+import { PaywallModal } from '../../components/PaywallModal';
 import { useTimer } from '../../hooks/useTimer';
 import { useHomeViewModel } from './HomeViewModel';
 import { registerForPushNotifications } from '../../services/notificationService';
@@ -61,12 +62,19 @@ export function HomeScreen() {
     handleDeleteTask,
     handleSettingsSave,
     handleLogout,
+    canAddTask,
+    isPremium,
+    setShowPaywall,
     refreshDailyPriorities,
   } = useHomeViewModel();
 
   const { colors } = useTheme();
   const { t } = useLanguage();
   const styles = useStyles(colors);
+
+  const handleRequirePremium = () => {
+    setShowPaywall(true);
+  };
 
   const longPressTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [celebrationMessage, setCelebrationMessage] = useState<string | null>(null);
@@ -428,7 +436,13 @@ export function HomeScreen() {
                 {/* Botón Agregar */}
                 <TouchableOpacity 
                   style={styles.addButton}
-                  onPress={() => setShowAddModal(true)}
+                  onPress={() => {
+                    if (canAddTask) {
+                      setShowAddModal(true);
+                    } else {
+                      handleRequirePremium();
+                    }
+                  }}
                 >
                   <Ionicons name="add" size={28} color={colors.textPrimary} />
                 </TouchableOpacity>
@@ -494,6 +508,17 @@ export function HomeScreen() {
                 </TouchableOpacity>
               </View>
 
+              {/* Límite de tareas gratis */}
+              {!isPremium && activeTasks.length >= 3 && (
+                <TouchableOpacity
+                  style={styles.limitHint}
+                  onPress={handleRequirePremium}
+                >
+                  <Ionicons name="lock-closed" size={14} color={colors.warning} />
+                  <Text style={styles.limitHintText}>{t('home.tasksLimit')}</Text>
+                </TouchableOpacity>
+              )}
+
               {/* AI Disclosure */}
               <View style={styles.aiDisclosure}>
                 <Ionicons name="sparkles" size={14} color={colors.textMuted} />
@@ -534,6 +559,8 @@ export function HomeScreen() {
         visible={state.showAddModal}
         onClose={() => setShowAddModal(false)}
         onAdd={handleAddTask}
+        isPremium={isPremium}
+        onRequirePremium={handleRequirePremium}
       />
 
       {/* Modal Modificar Tarea */}
@@ -545,6 +572,8 @@ export function HomeScreen() {
           setTaskToEdit(null);
         }}
         onUpdate={onUpdateTask}
+        isPremium={isPremium}
+        onRequirePremium={handleRequirePremium}
       />
 
       {/* Modal Configuración */}
@@ -552,12 +581,22 @@ export function HomeScreen() {
         visible={state.showSettingsModal}
         onClose={() => setShowSettingsModal(false)}
         onSave={handleSettingsSave}
+        isPremium={isPremium}
+        onRequirePremium={handleRequirePremium}
       />
 
       {/* Modal Estadísticas */}
       <StatsModal
         visible={state.showStatsModal}
         onClose={() => setShowStatsModal(false)}
+        isPremium={isPremium}
+        onRequirePremium={handleRequirePremium}
+      />
+
+      {/* Modal Premium */}
+      <PaywallModal
+        visible={state.showPaywall}
+        onClose={() => setShowPaywall(false)}
       />
 
       {/* Modal Política de Privacidad */}
@@ -879,6 +918,24 @@ const useStyles = (colors: Colors) => StyleSheet.create({
   aiDisclosureText: {
     color: colors.textMuted,
     fontSize: FONTS.size.xsmall,
+  },
+  limitHint: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: SPACING.xs,
+    backgroundColor: colors.tintedWarning,
+    borderRadius: BORDER_RADIUS.full,
+    paddingVertical: SPACING.sm,
+    paddingHorizontal: SPACING.md,
+    marginTop: SPACING.sm,
+    alignSelf: 'center',
+    minHeight: TOUCH_TARGETS.minSize,
+  },
+  limitHintText: {
+    color: colors.warning,
+    fontSize: FONTS.size.small,
+    fontWeight: FONTS.weight.semibold,
   },
   reportLink: {
     color: colors.accent,
