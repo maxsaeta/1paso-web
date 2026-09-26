@@ -155,6 +155,9 @@
     "benefitTitle": "Todo tu potencial, sin límites",
     "price": "$4.99",
     "period": "/mes",
+    "renewalInfo": "La suscripción se renueva automáticamente cada mes a través de Google Play hasta que la canceles.",
+    "optionalInfo": "No es obligatoria: NeuroPaso funciona gratis con sus funciones esenciales.",
+    "manage": "Gestionar o cancelar mi suscripción",
     "benefits": {
       "unlimitedTasks": "Tareas activas ilimitadas",
       "aiSteps": "Desglose de tareas con IA",

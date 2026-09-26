@@ -8,6 +8,7 @@ import {
   ActivityIndicator,
   ScrollView,
   Platform,
+  Linking,
   Animated
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -33,6 +34,7 @@ import { useTimer } from '../../hooks/useTimer';
 import { useHomeViewModel } from './HomeViewModel';
 import { registerForPushNotifications } from '../../services/notificationService';
 import { container } from '../../di/container';
+import { PLAY_SUBSCRIPTIONS_URL } from '../../constants/business';
 import { auth } from '../../config/firebase';
 
 const isWeb = Platform.OS === 'web';
@@ -499,6 +501,12 @@ export function HomeScreen() {
                   onPress={() => setShowPrivacyModal(true)}
                 >
                   <Text style={styles.footerLinkText}>Política de Privacidad</Text>
+                </TouchableOpacity>
+                <TouchableOpacity 
+                  style={styles.footerLink}
+                  onPress={() => Linking.openURL(PLAY_SUBSCRIPTIONS_URL)}
+                >
+                  <Text style={styles.footerLinkText}>Gestionar Suscripción</Text>
                 </TouchableOpacity>
                 <TouchableOpacity 
                   style={styles.footerLink}

@@ -153,43 +153,8 @@ import Layout from '../layouts/Layout.astro';
     <section class="pricing" id="pricing">
       <div class="container">
         <div class="section-title">
-          <h2>Gratis vs Full</h2>
-          <p>Empieza gratis. Mejora cuando quieras, sin permanencia.</p>
-        </div>
-        <div class="pricing-grid">
-          <div class="price-card">
-            <h3>GRATIS</h3>
-            <div class="price-amount">0 €</div>
-            <div class="price-period">para siempre</div>
-            <ul class="price-features">
-              <li><span class="check">✓</span> Hasta 3 tareas activas</li>
-              <li><span class="check">✓</span> Pomodoro estándar (25'/5')</li>
-              <li><span class="check">✓</span> Estadísticas de 7 días</li>
-              <li><span class="check">✓</span> Desglose manual en pasos</li>
-            </ul>
-            <a href="#download" class="btn-secondary">Descargar gratis</a>
-          </div>
-          <div class="price-card featured">
-            <h3>FULL <span class="price-badge">Popular</span></h3>
-            <div class="price-amount">4,99 €</div>
-            <div class="price-period">/mes · cancela cuando quieras</div>
-            <ul class="price-features">
-              <li><span class="check">✓</span> Tareas activas ilimitadas</li>
-              <li><span class="check">✓</span> Desglose automático con IA</li>
-              <li><span class="check">✓</span> Estadísticas completas + racha</li>
-              <li><span class="check">✓</span> Temporizador a tu medida</li>
-            </ul>
-            <a href="#download" class="btn-primary">Hacerte Full</a>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="pricing" id="pricing">
-      <div class="container">
-        <div class="section-title">
           <h2>Gratis vs Premium</h2>
-          <p>Empieza gratis y desbloquea todo tu potencial con NeuroPaso Premium</p>
+          <p>Empieza gratis y desbloquea todo tu potencial con NeuroPaso Premium. La suscripción es opcional: todas las funciones esenciales siempre serán gratuitas.</p>
         </div>
         <div class="pricing-table-wrapper">
           <table class="pricing-table">
@@ -244,9 +209,23 @@ import Layout from '../layouts/Layout.astro';
             </tbody>
           </table>
         </div>
+
+        <div class="subscription-terms">
+          <h3>Detalles de la suscripción</h3>
+          <ul>
+            <li><strong>Precio:</strong> $4.99 USD al mes.</li>
+            <li><strong>Renovación automática:</strong> tu suscripción se renueva automáticamente cada mes (a través de Google Play) hasta que la canceles.</li>
+            <li><strong>Cancelación:</strong> puedes cancelar cuando quieras desde el Centro de Suscripciones de Google Play. Si cancelas, el acceso Premium se mantiene hasta el final del periodo ya pagado.</li>
+            <li><strong>Opcional:</strong> NeuroPaso funciona sin suscripción. El plan Gratis incluye 3 tareas activas, Pomodoro estándar, estadísticas de 7 días y desglose manual en pasos.</li>
+          </ul>
+        </div>
+
         <div class="pricing-note">
           <a href="https://play.google.com/store/apps/details?id=com.unpaso.app" class="btn-primary">
             Descargar en Google Play
+          </a>
+          <a href="https://play.google.com/store/account/subscriptions" class="btn-secondary">
+            Gestionar o cancelar mi suscripción
           </a>
         </div>
       </div>
@@ -513,97 +492,6 @@ import Layout from '../layouts/Layout.astro';
     background: var(--surface-container);
   }
 
-  .pricing-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 24px;
-    margin-top: 48px;
-    max-width: 800px;
-    margin-left: auto;
-    margin-right: auto;
-  }
-
-  .price-card {
-    background: var(--surface-container-high);
-    border-radius: 16px;
-    padding: 32px;
-    border: 1px solid var(--outline-variant);
-    display: flex;
-    flex-direction: column;
-    transition: transform 0.2s, border-color 0.2s;
-  }
-
-  .price-card:hover {
-    transform: translateY(-4px);
-  }
-
-  .price-card.featured {
-    border-color: var(--primary);
-    box-shadow: 0 8px 24px rgba(232, 64, 87, 0.2);
-  }
-
-  .price-card h3 {
-    font-size: 20px;
-    margin-bottom: 8px;
-  }
-
-  .price-badge {
-    display: inline-block;
-    background: var(--primary);
-    color: var(--on-primary);
-    font-size: 12px;
-    font-weight: 600;
-    padding: 4px 12px;
-    border-radius: 12px;
-    margin-left: 8px;
-    vertical-align: middle;
-  }
-
-  .price-amount {
-    font-size: 36px;
-    font-weight: 700;
-    margin-bottom: 4px;
-  }
-
-  .price-period {
-    color: var(--on-surface-variant);
-    font-size: 14px;
-    margin-bottom: 20px;
-  }
-
-  .price-features {
-    list-style: none;
-    margin-bottom: 24px;
-    flex: 1;
-  }
-
-  .price-features li {
-    display: flex;
-    gap: 12px;
-    align-items: flex-start;
-    margin-bottom: 12px;
-    font-size: 15px;
-  }
-
-  .price-features .check {
-    color: var(--success);
-    font-weight: 700;
-    flex-shrink: 0;
-  }
-
-  .price-card .btn-primary,
-  .price-card .btn-secondary {
-    display: block;
-    text-align: center;
-  }
-
-  .cta-section {
-    padding: 80px 0;
-    text-align: center;
-  }
-
-  .pricing { padding: 80px 0; }
-
   .pricing-table-wrapper {
     overflow-x: auto;
     border-radius: 16px;
@@ -667,6 +555,42 @@ import Layout from '../layouts/Layout.astro';
   .pricing-table .col-premium strong { color: var(--primary); }
 
   .pricing-note { text-align: center; }
+
+  .pricing-note .btn-primary,
+  .pricing-note .btn-secondary {
+    margin: 6px 8px;
+  }
+
+  .subscription-terms {
+    max-width: 800px;
+    margin: 0 auto 32px;
+    padding: 24px;
+    background: var(--surface-container-high);
+    border-radius: 16px;
+    border: 1px solid var(--outline-variant);
+  }
+
+  .subscription-terms h3 {
+    font-size: 18px;
+    margin-bottom: 12px;
+    color: var(--on-surface);
+  }
+
+  .subscription-terms ul {
+    list-style: none;
+    display: grid;
+    gap: 10px;
+  }
+
+  .subscription-terms li {
+    color: var(--on-surface-variant);
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .subscription-terms li strong {
+    color: var(--on-surface);
+  }
 
   .cta-section h2 { font-size: 36px; margin-bottom: 16px; }
 

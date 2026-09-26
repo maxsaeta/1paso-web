@@ -12,7 +12,7 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { SPACING, FONTS, BORDER_RADIUS, TOUCH_TARGETS } from '../constants/theme';
 import { Colors } from '../constants/theme';
-import { PREMIUM_PRODUCT_ID, PLAY_STORE_APP_URL } from '../constants/business';
+import { PREMIUM_PRODUCT_ID, PLAY_STORE_APP_URL, PLAY_SUBSCRIPTIONS_URL } from '../constants/business';
 import { useTheme } from '../context/ThemeContext';
 import { useLanguage } from '../i18n';
 import { useSubscription } from '../context/SubscriptionContext';
@@ -111,6 +111,9 @@ export function PaywallModal({ visible, onClose }: PaywallModalProps) {
                 <Text style={styles.period}>{t('premium.period')}</Text>
               </View>
 
+              <Text style={styles.renewalText}>{t('premium.renewalInfo')}</Text>
+              <Text style={styles.optionalText}>{t('premium.optionalInfo')}</Text>
+
               {error && <Text style={styles.error}>{error}</Text>}
 
               <TouchableOpacity
@@ -136,6 +139,13 @@ export function PaywallModal({ visible, onClose }: PaywallModalProps) {
                 ) : (
                   <Text style={styles.restoreButtonText}>{t('premium.restore')}</Text>
                 )}
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.manageButton}
+                onPress={() => Linking.openURL(PLAY_SUBSCRIPTIONS_URL).catch(() => {})}
+              >
+                <Text style={styles.manageButtonText}>{t('premium.manage')}</Text>
               </TouchableOpacity>
 
               <TouchableOpacity style={styles.closeTextButton} onPress={onClose}>
@@ -228,6 +238,32 @@ function useStyles(colors: Colors) {
       fontSize: FONTS.size.small,
       textAlign: 'center',
       marginBottom: SPACING.md,
+    },
+    renewalText: {
+      color: colors.textSecondary,
+      fontSize: FONTS.size.xs,
+      textAlign: 'center',
+      lineHeight: 18,
+      marginBottom: SPACING.xs,
+    },
+    optionalText: {
+      color: colors.textSecondary,
+      fontSize: FONTS.size.xs,
+      textAlign: 'center',
+      lineHeight: 18,
+      marginBottom: SPACING.md,
+    },
+    manageButton: {
+      alignItems: 'center',
+      justifyContent: 'center',
+      paddingVertical: SPACING.sm,
+      minHeight: TOUCH_TARGETS.minSize,
+    },
+    manageButtonText: {
+      color: colors.textSecondary,
+      fontSize: FONTS.size.small,
+      fontWeight: FONTS.weight.medium,
+      textDecorationLine: 'underline',
     },
     subscribeButton: {
       flexDirection: 'row',
