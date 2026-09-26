@@ -8,6 +8,7 @@ import Layout from '../layouts/Layout.astro';
       <ul class="nav-links">
 <li><a href="#features">Funciones</a></li>
         <li><a href="#how-it-works">Cómo funciona</a></li>
+        <li><a href="#guia">Guía</a></li>
         <li><a href="#benefits">Beneficios</a></li>
         <li><a href="#pricing">Precios</a></li>
         <li><a href="#contact">Contacto</a></li>
@@ -92,6 +93,74 @@ import Layout from '../layouts/Layout.astro';
             <div class="step-number">3</div>
             <h3>Sigue los pasos</h3>
             <p>Uno a la vez. Sin saltar. Sin abrumarte.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="guide" id="guia">
+      <div class="container">
+        <div class="section-title">
+          <h2>Guía anti-parálisis ejecutiva</h2>
+          <p>Cuando tienes muchas tareas y no sabes por dónde comenzar, tu cerebro entra en parálisis por sobrecarga ejecutiva. Este plan de 4 fases aplica los principios de neurodivergencia integrados en NeuroPaso.</p>
+        </div>
+
+        <div class="guide-card">
+          <div class="guide-phase">
+            <span class="guide-badge">Fase 1</span>
+            <h3>Vaciado mental: externalizar la sobrecarga</h3>
+            <p>El cerebro es pésimo recordando 20 cosas a la vez bajo estrés, pero excelente procesando una sola.</p>
+            <ul>
+              <li><strong>No tomes decisiones todavía:</strong> no intentes priorizar mentalmente.</li>
+              <li><strong>Descarga todo:</strong> escribe todo lo que te preocupa o está pendiente, sin juzgar si es urgente, grande o pequeño. Al sacarlo de tu cabeza y ponerlo en la app o en un papel, el nivel de cortisol y la ansiedad bajan de inmediato.</li>
+            </ul>
+          </div>
+
+          <div class="guide-phase">
+            <span class="guide-badge">Fase 2</span>
+            <h3>Aplica la «Regla del 3»: filtro anti-parálisis</h3>
+            <p>En lugar de mirar una lista de 15 pendientes, abre la pestaña <strong>Regla 3</strong> de la aplicación y asigna únicamente tres lugares:</p>
+            <div class="rule3">
+              <div class="rule3-item">
+                <span class="dot dot-red"></span>
+                <p><strong>LA Prioridad (solo 1 cosa):</strong> pregúntate «si solo hiciera una cosa hoy y nada más, ¿cuál me quitaría el 80% del peso de encima?». Esa se convierte en LA Prioridad.</p>
+              </div>
+              <div class="rule3-item">
+                <span class="dot dot-yellow"></span>
+                <p><strong>Estaría Bien (solo 1 cosa):</strong> una tarea secundaria importante, pero que no te causará problemas graves si queda para mañana.</p>
+              </div>
+              <div class="rule3-item">
+                <span class="dot dot-green"></span>
+                <p><strong>Si Estoy Encendido (solo 1 cosa):</strong> un extra opcional. Si se agota tu batería, no se toca y no hay culpa.</p>
+              </div>
+            </div>
+            <p>Oculta todo lo demás: las otras tareas no desaparecen, simplemente no compiten por tu atención ahora mismo.</p>
+          </div>
+
+          <div class="guide-phase">
+            <span class="guide-badge">Fase 3</span>
+            <h3>Desarma la resistencia con micro-pasos (IA)</h3>
+            <p>El cerebro con TDAH o sobrecarga rechaza tareas abstractas como "hacer reporte" o "limpiar oficina" porque no sabe cuál es el primer movimiento físico.</p>
+            <ul>
+              <li><strong>Usa el Desglose Inteligente:</strong> en la pestaña <strong>Pasos</strong>, añade tu tarea prioritaria y activa el desglose con IA. La app dividirá la tarea en micro-pasos de 3 a 10 minutos (por ejemplo, paso 1: abrir el documento en blanco y ponerle título).</li>
+              <li><strong>El principio de «un paso a la vez»:</strong> prohíbete mirar el paso 4 o el resultado final. Solo concéntrate en el paso actual visible en pantalla. Un paso de 3 minutos no activa la alarma de amenaza del cerebro.</li>
+            </ul>
+          </div>
+
+          <div class="guide-phase">
+            <span class="guide-badge">Fase 4</span>
+            <h3>Inicia con fricción cero en el timer</h3>
+            <p>La parte más difícil nunca es hacer la tarea, sino hacer la transición hacia ella.</p>
+            <ul>
+              <li><strong>Pulsa «Iniciar Timer»:</strong> la app se abrirá en la pantalla Timer con el título de tu tarea en grande y el micro-paso de ahora.</li>
+              <li><strong>El truco de los 5 minutos:</strong> no te comprometas a terminar toda la tarea. Comprométete únicamente a trabajar durante el temporizador de ese micro-paso.</li>
+              <li><strong>El check de avance (✓):</strong> al terminar ese pequeño paso, pulsa el botón ✓ al lado del botón de pausa. El cerebro recibe una descarga inmediata de dopamina y la app te mostrará el siguiente micro-paso sin que tengas que volver a pensar ni decidir.</li>
+              <li><strong>Respeta los descansos:</strong> cuando suene la campana de descanso (☕ 5 min o 🌿 15 min), levántate de la silla. La energía ejecutiva es un músculo que necesita recuperar oxígeno.</li>
+            </ul>
+          </div>
+
+          <div class="guide-summary">
+            <strong>Resumen para arrancar ya:</strong> elige una sola tarea, divídela en su primer paso ridículamente pequeño (de 3 minutos) y dale play al temporizador. La inercia hará el resto.
           </div>
         </div>
       </div>
@@ -449,6 +518,131 @@ import Layout from '../layouts/Layout.astro';
     font-size: 15px;
   }
 
+  .guide {
+    padding: 80px 0;
+  }
+
+  .guide-card {
+    max-width: 820px;
+    margin: 0 auto;
+    background: var(--surface-container);
+    border: 1px solid var(--outline-variant);
+    border-radius: 16px;
+    padding: 40px;
+  }
+
+  .guide-phase {
+    padding-bottom: 32px;
+    margin-bottom: 32px;
+    border-bottom: 1px solid var(--outline-variant);
+  }
+
+  .guide-phase:last-of-type {
+    padding-bottom: 0;
+    margin-bottom: 0;
+    border-bottom: none;
+  }
+
+  .guide-badge {
+    display: inline-block;
+    background: var(--primary-container);
+    color: var(--on-primary-container);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 12px;
+    margin-bottom: 12px;
+  }
+
+  .guide-phase h3 {
+    font-size: 20px;
+    margin-bottom: 12px;
+    color: var(--on-surface);
+  }
+
+  .guide-phase p {
+    color: var(--on-surface-variant);
+    font-size: 15px;
+    line-height: 1.7;
+    margin-bottom: 12px;
+  }
+
+  .guide-phase ul {
+    list-style: none;
+    display: grid;
+    gap: 8px;
+    color: var(--on-surface-variant);
+    font-size: 15px;
+    line-height: 1.7;
+  }
+
+  .guide-phase ul li {
+    padding-left: 20px;
+    position: relative;
+  }
+
+  .guide-phase ul li::before {
+    content: "→";
+    position: absolute;
+    left: 0;
+    color: var(--primary);
+  }
+
+  .guide-phase strong { color: var(--on-surface); }
+
+  .rule3 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    margin: 16px 0;
+  }
+
+  .rule3-item {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    padding: 16px;
+    background: var(--surface-container-high);
+    border: 1px solid var(--outline-variant);
+    border-radius: 12px;
+  }
+
+  .rule3-item .dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    margin-top: 4px;
+    flex-shrink: 0;
+  }
+
+  .rule3-item .dot-red { background: #e84057; }
+
+  .rule3-item .dot-yellow { background: #f0b429; }
+
+  .rule3-item .dot-green { background: #2e9e5b; }
+
+  .rule3-item p {
+    margin: 0;
+    font-size: 14px;
+    color: var(--on-surface-variant);
+    line-height: 1.7;
+  }
+
+  .rule3-item strong { color: var(--on-surface); }
+
+  .guide-summary {
+    margin-top: 28px;
+    padding: 20px 24px;
+    background: var(--primary-container);
+    color: var(--on-primary-container);
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 1.7;
+  }
+
   .benefits { padding: 80px 0; }
 
   .benefits-list {
@@ -702,6 +896,7 @@ import Layout from '../layouts/Layout.astro';
   @media (max-width: 768px) {
     .hero h1 { font-size: 32px; }
     .hero p { font-size: 16px; }
-    .features-grid, .steps, .benefits-list { grid-template-columns: 1fr; }
+    .features-grid, .steps, .benefits-list, .rule3 { grid-template-columns: 1fr; }
+    .guide-card { padding: 24px; }
   }
 </style>
