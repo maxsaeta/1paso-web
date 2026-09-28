@@ -1,10 +1,48 @@
 ---
 import Layout from '../layouts/Layout.astro';
 ---
-<Layout title="NeuroPaso - Un micro-paso a la vez">
+<Layout title="NeuroPaso - Un micro-paso a la vez" ogImage="/assets/og-image.png">
   <header>
     <nav>
-      <div class="logo">NeuroPaso</div>
+      <a href="/" class="logo" aria-label="NeuroPaso - Inicio">
+        <svg class="logo-mark" viewBox="0 0 1024 1024" width="36" height="36" aria-hidden="true" fill="none">
+          <defs>
+            <linearGradient id="neuroGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style="stop-color:#006E54;stop-opacity:1" />
+              <stop offset="100%" style="stop-color:#84DAB9;stop-opacity:1" />
+            </linearGradient>
+          </defs>
+          <path d="M 280 680 
+                   L 280 344 
+                   Q 280 280 344 280 
+                   L 680 280 
+                   Q 744 280 744 344 
+                   L 744 680" 
+               fill="none" 
+               stroke="url(#neuroGrad)" 
+               stroke-width="56" 
+               stroke-linecap="round"
+               stroke-linejoin="round"/>
+          <path d="M 760 512 
+                   L 880 512 
+                   L 880 472 
+                   L 960 512 
+                   L 880 552 
+                   L 880 512 
+                   L 760 512" 
+               fill="url(#neuroGrad)" 
+               stroke="none"/>
+          <path d="M 344 472 
+                   L 440 568 
+                   L 624 368" 
+               fill="none" 
+               stroke="#FDFDF8" 
+               stroke-width="40" 
+               stroke-linecap="round"
+               stroke-linejoin="round"/>
+        </svg>
+        <span class="logo-text">NeuroPaso</span>
+      </a>
       <ul class="nav-links">
 <li><a href="#features">Funciones</a></li>
         <li><a href="#how-it-works">Cómo funciona</a></li>
@@ -367,7 +405,42 @@ import Layout from '../layouts/Layout.astro';
         </div>
       </div>
       <div class="footer-developer">
-        <img src="/assets/maxsaeta-logo.jpg" alt="Max Saeta" style="height: 32px; border-radius: 6px;">
+        <svg viewBox="0 0 1024 1024" width="32" height="32" aria-hidden="true" fill="none">
+          <defs>
+            <linearGradient id="neuroGradFooter" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style="stop-color:#006E54;stop-opacity:1" />
+              <stop offset="100%" style="stop-color:#84DAB9;stop-opacity:1" />
+            </linearGradient>
+          </defs>
+          <path d="M 280 680 
+                   L 280 344 
+                   Q 280 280 344 280 
+                   L 680 280 
+                   Q 744 280 744 344 
+                   L 744 680" 
+               fill="none" 
+               stroke="url(#neuroGradFooter)" 
+               stroke-width="56" 
+               stroke-linecap="round"
+               stroke-linejoin="round"/>
+          <path d="M 760 512 
+                   L 880 512 
+                   L 880 472 
+                   L 960 512 
+                   L 880 552 
+                   L 880 512 
+                   L 760 512" 
+               fill="url(#neuroGradFooter)" 
+               stroke="none"/>
+          <path d="M 344 472 
+                   L 440 568 
+                   L 624 368" 
+               fill="none" 
+               stroke="#FDFDF8" 
+               stroke-width="40" 
+               stroke-linecap="round"
+               stroke-linejoin="round"/>
+        </svg>
         <p>Desarrollado por <strong>Max Saeta</strong></p>
       </div>
       <div class="footer-bottom">

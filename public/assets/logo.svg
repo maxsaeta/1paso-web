@@ -1,58 +1,59 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
   <defs>
-    <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#00BCD4;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#0097A7;stop-opacity:1" />
+    <linearGradient id="neuroGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#006E54;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#84DAB9;stop-opacity:1" />
     </linearGradient>
-    <linearGradient id="grad2" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" style="stop-color:#00BCD4;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#00E5FF;stop-opacity:1" />
+    <linearGradient id="neuroGradText" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#006E54;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#84DAB9;stop-opacity:1" />
     </linearGradient>
   </defs>
-  
+
   <!-- Background circle -->
-  <circle cx="512" cy="512" r="480" fill="#1a1a2e"/>
-  
-  <!-- Outer ring - clock/timer reference -->
-  <circle cx="512" cy="512" r="420" fill="none" stroke="url(#grad1)" stroke-width="12" stroke-linecap="round" stroke-dasharray="200 50 100 50"/>
-  
-  <!-- Inner circle glow -->
-  <circle cx="512" cy="512" r="350" fill="none" stroke="#00BCD4" stroke-width="4" opacity="0.3"/>
-  
-  <!-- Stylized U shape -->
-  <path d="M 320 380 
-           L 320 580 
-           Q 320 700 440 700 
-           L 584 700 
-           Q 704 700 704 580 
-           L 704 380" 
-        fill="none" 
-        stroke="url(#grad2)" 
-        stroke-width="48" 
-        stroke-linecap="round"
-        stroke-linejoin="round"/>
-  
-  <!-- Arrow pointing right (progress) -->
-  <path d="M 720 540 
-           L 820 540 
-           L 820 500 
-           L 900 560 
-           L 820 620 
-           L 820 580 
-           L 720 580" 
-        fill="#00E5FF" 
-        stroke="none"/>
-  
-  <!-- Check mark inside U -->
-  <path d="M 440 520 
-           L 500 580 
-           L 620 440" 
-        fill="none" 
-        stroke="#FFFFFF" 
-        stroke-width="32" 
-        stroke-linecap="round"
-        stroke-linejoin="round"/>
-  
-  <!-- Small dot accent -->
-  <circle cx="350" cy="350" r="20" fill="#00E5FF" opacity="0.8"/>
+  <circle cx="512" cy="512" r="512" fill="#FDFDF8"/>
+
+  <!-- Outer ring - progress/timer reference -->
+  <circle cx="512" cy="512" r="450" fill="none" stroke="url(#neuroGrad)" stroke-width="16" stroke-linecap="round" stroke-dasharray="300 100 150 100" opacity="0.3"/>
+
+  <!-- Inner accent circle -->
+  <circle cx="512" cy="512" r="380" fill="none" stroke="url(#neuroGrad)" stroke-width="4" opacity="0.2"/>
+
+  <!-- Stylized N shape (NeuroPaso) -->
+  <path d="M 280 680 
+           L 280 344 
+           Q 280 280 344 280 
+           L 680 280 
+           Q 744 280 744 344 
+           L 744 680" 
+       fill="none" 
+       stroke="url(#neuroGrad)" 
+       stroke-width="56" 
+       stroke-linecap="round"
+       stroke-linejoin="round"/>
+
+  <!-- Right arrow (progress forward) -->
+  <path d="M 760 512 
+           L 880 512 
+           L 880 472 
+           L 960 512 
+           L 880 552 
+           L 880 512 
+           L 760 512" 
+       fill="url(#neuroGrad)" 
+       stroke="none"/>
+
+  <!-- Check mark inside N (completion) -->
+  <path d="M 344 472 
+           L 440 568 
+           L 624 368" 
+       fill="none" 
+       stroke="#FDFDF8" 
+       stroke-width="40" 
+       stroke-linecap="round"
+       stroke-linejoin="round"/>
+
+  <!-- Wordmark -->
+  <text x="512" y="820" text-anchor="middle" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif" font-size="96" font-weight="800" fill="url(#neuroGradText)">NEUROPASO</text>
+  <text x="512" y="880" text-anchor="middle" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif" font-size="32" font-weight="400" fill="#404944">Un paso a la vez</text>
 </svg>
