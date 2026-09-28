@@ -43,10 +43,9 @@ export function SubscriptionProvider({
     };
   }, [userId]);
 
-  const isPremium =
-    subscription?.status === 'active' &&
-    subscription.expiresAt != null &&
-    subscription.expiresAt > Date.now();
+  // No hay Billing en la web: la compra era un no-op y el precio no existe en
+  // ninguna parte. El plan es gratuito y completo, igual que en la app release.
+  const isPremium = true;
 
   const purchase = useCallback(
     async (productId: string): Promise<boolean> => {

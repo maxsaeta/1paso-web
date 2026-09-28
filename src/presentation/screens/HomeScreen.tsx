@@ -8,7 +8,6 @@ import {
   ActivityIndicator,
   ScrollView,
   Platform,
-  Linking,
   Animated
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -28,12 +27,10 @@ import { DeleteAccountModal } from '../../components/DeleteAccountModal';
 import { ReportAIModal } from '../../components/ReportAIModal';
 import { DailyBrainDump } from '../../components/DailyBrainDump';
 import { ShutdownRitual } from '../../components/ShutdownRitual';
-import { PaywallModal } from '../../components/PaywallModal';
 import { useTimer } from '../../hooks/useTimer';
 import { useHomeViewModel } from './HomeViewModel';
 import { registerForPushNotifications } from '../../services/notificationService';
 import { container } from '../../di/container';
-import { PLAY_SUBSCRIPTIONS_URL } from '../../constants/business';
 import { auth } from '../../config/firebase';
 
 const isWeb = Platform.OS === 'web';
@@ -62,19 +59,13 @@ export function HomeScreen() {
     handleDeleteTask,
     handleSettingsSave,
     handleLogout,
-    canAddTask,
     isPremium,
-    setShowPaywall,
     refreshDailyPriorities,
   } = useHomeViewModel();
 
   const { colors } = useTheme();
   const { t } = useLanguage();
   const styles = useStyles(colors);
-
-  const handleRequirePremium = () => {
-    setShowPaywall(true);
-  };
 
   const longPressTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [celebrationMessage, setCelebrationMessage] = useState<string | null>(null);
@@ -430,13 +421,7 @@ export function HomeScreen() {
                 {/* Botón Agregar */}
                 <TouchableOpacity 
                   style={styles.addButton}
-                  onPress={() => {
-                    if (canAddTask) {
-                      setShowAddModal(true);
-                    } else {
-                      handleRequirePremium();
-                    }
-                  }}
+                  onPress={() => setShowAddModal(true)}
                 >
                   <Ionicons name="add" size={28} color={colors.textPrimary} />
                 </TouchableOpacity>
@@ -488,28 +473,11 @@ export function HomeScreen() {
                 </TouchableOpacity>
                 <TouchableOpacity 
                   style={styles.footerLink}
-                  onPress={() => Linking.openURL(PLAY_SUBSCRIPTIONS_URL)}
-                >
-                  <Text style={styles.footerLinkText}>Gestionar Suscripción</Text>
-                </TouchableOpacity>
-                <TouchableOpacity 
-                  style={styles.footerLink}
                   onPress={() => setShowDeleteAccountModal(true)}
                 >
                   <Text style={[styles.footerLinkText, styles.footerLinkDanger]}>Eliminar Cuenta</Text>
                 </TouchableOpacity>
               </View>
-
-              {/* Límite de tareas gratis */}
-              {!isPremium && activeTasks.length >= 3 && (
-                <TouchableOpacity
-                  style={styles.limitHint}
-                  onPress={handleRequirePremium}
-                >
-                  <Ionicons name="lock-closed" size={14} color={colors.warning} />
-                  <Text style={styles.limitHintText}>{t('home.tasksLimit')}</Text>
-                </TouchableOpacity>
-              )}
 
               {/* AI Disclosure */}
               <View style={styles.aiDisclosure}>
@@ -552,7 +520,6 @@ export function HomeScreen() {
         onClose={() => setShowAddModal(false)}
         onAdd={handleAddTask}
         isPremium={isPremium}
-        onRequirePremium={handleRequirePremium}
       />
 
       {/* Modal Modificar Tarea */}
@@ -565,7 +532,6 @@ export function HomeScreen() {
         }}
         onUpdate={onUpdateTask}
         isPremium={isPremium}
-        onRequirePremium={handleRequirePremium}
       />
 
       {/* Modal Configuración */}
@@ -574,7 +540,6 @@ export function HomeScreen() {
         onClose={() => setShowSettingsModal(false)}
         onSave={handleSettingsSave}
         isPremium={isPremium}
-        onRequirePremium={handleRequirePremium}
       />
 
       {/* Modal Estadísticas */}
@@ -582,13 +547,6 @@ export function HomeScreen() {
         visible={state.showStatsModal}
         onClose={() => setShowStatsModal(false)}
         isPremium={isPremium}
-        onRequirePremium={handleRequirePremium}
-      />
-
-      {/* Modal Premium */}
-      <PaywallModal
-        visible={state.showPaywall}
-        onClose={() => setShowPaywall(false)}
       />
 
       {/* Modal Política de Privacidad */}
