@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Política de Privacidad - UnPaso</title>
+    <title>Política de Privacidad - NeuroPaso</title>
     <style>
         * {
             margin: 0;
@@ -46,6 +46,13 @@
             margin-bottom: 15px;
             border-bottom: 1px solid #2a3a5c;
             padding-bottom: 10px;
+        }
+        
+        h3 {
+            color: #e0e0e0;
+            font-size: 1.1rem;
+            margin-top: 20px;
+            margin-bottom: 10px;
         }
         
         p {
@@ -118,96 +125,122 @@
     <div class="container">
         <div class="logo">
             <div style="width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(135deg, #00BCD4, #0097A7); display: flex; align-items: center; justify-content: center; margin: 0 auto;">
-                <span style="font-size: 36px; font-weight: bold; color: white;">U</span>
+                <span style="font-size: 36px; font-weight: bold; color: white;">N</span>
             </div>
         </div>
         
         <h1>Política de Privacidad</h1>
-        <p class="subtitle">Última actualización: 17 de septiembre de 2026</p>
+        <p class="subtitle">Última actualización: 28 de septiembre de 2026</p>
         
         <section>
-            <h2>1. Información que Recopilamos</h2>
-            <p>UnPaso recopila la siguiente información para proporcionar y mejorar nuestro servicio:</p>
+            <h2>1. Responsable del Tratamiento</h2>
+            <p>El responsable del tratamiento de tus datos personales es:</p>
             <ul>
-                <li><strong>Información de cuenta:</strong> Dirección de correo electrónico y contraseña (encriptada) utilizada para crear y acceder a tu cuenta.</li>
+                <li><strong>Nombre:</strong> NeuroPaso</li>
+                <li><strong>Correo de contacto:</strong> <a href="mailto:maxsaeta@gmail.com">maxsaeta@gmail.com</a></li>
+            </ul>
+            <p>Puedes contactar con el responsable para ejercer tus derechos en <a href="mailto:maxsaeta@gmail.com">maxsaeta@gmail.com</a>.</p>
+        </section>
+        
+        <section>
+            <h2>2. Información que Recopilamos</h2>
+            <p>NeuroPaso recopila la siguiente información para proporcionar y mejorar nuestro servicio:</p>
+            <ul>
+                <li><strong>Información de cuenta:</strong> Dirección de correo electrónico y contraseña (hasheada con bcrypt/Firebase Auth) utilizada para crear y acceder a tu cuenta.</li>
                 <li><strong>Datos de tareas:</strong> Títulos, pasos, estado de completado, timestamps de inicio y finalización, y duración total de las tareas que creas en la aplicación.</li>
                 <li><strong>Estadísticas de uso:</strong> Datos de productividad como pomodoros completados, tareas finalizadas, minutos de concentración y rachas diarias.</li>
                 <li><strong>Configuración:</strong> Preferencias de temporizador (minutos de trabajo y descanso) y preferencia de tema (claro/oscuro/sistema).</li>
+                <li><strong>Datos de sincronización:</strong> Identificador de usuario (UID) y timestamps de última sincronización.</li>
             </ul>
         </section>
         
         <section>
-            <h2>2. Uso de Inteligencia Artificial</h2>
-            <p>UnPaso utiliza Google Gemini (modelo gemini-flash-lite-latest) para generar pasos de tareas de forma automática. Cuando usas esta función:</p>
+            <h2>3. Uso de Inteligencia Artificial</h2>
+            <p>NeuroPaso utiliza modelos de la familia <strong>Google Gemini</strong> para generar pasos de tareas de forma automática. El sistema emplea una cadena de fallback que intenta, en orden: <code>gemini-3.5-flash-lite</code> → <code>gemini-3.5-flash</code> → <code>gemini-3.8-flash</code> → <code>gemini-flash-latest</code>, utilizando el primero disponible. Cuando usas esta función:</p>
             <ul>
-                <li>El título de tu tarea se envía a los servidores de Google para procesamiento.</li>
-                <li>Los datos enviados NO se almacenan permanentemente en los servidores de Google.</li>
-                <li>Google procesa estos datos según su propia política de privacidad.</li>
-                <li>Puedes reportar contenido ofensivo o inapropiado generado por la IA utilizando el botón de reporte disponible en cada respuesta de la IA.</li>
+                <li>El título y descripción de tu tarea se envían a los servidores de Google para procesamiento.</li>
+                <li>Los datos enviados <strong>NO se almacenan permanentemente</strong> en los servidores de Google.</li>
+                <li>Google procesa estos datos según su propia <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">política de privacidad</a>.</li>
+                <li>Puedes reportar contenido ofensivo o inapropiado generado por la IA utilizando el botón de reporte (icono de bandera) disponible junto a cada paso generado.</li>
             </ul>
         </section>
         
         <section>
-            <h2>3. Uso de la Información</h2>
-            <p>Utilizamos tu información exclusivamente para:</p>
+            <h2>4. Finalidad y Base Legal del Tratamiento</h2>
+            <p>Tratamos tus datos exclusivamente para las siguientes finalidades, con sus respectivas bases legales:</p>
             <ul>
-                <li>Proporcionar y mantener el servicio de productividad</li>
-                <li>Generar pasos de tareas mediante inteligencia artificial</li>
-                <li>Calcular y almacenar tus estadísticas de productividad</li>
-                <li>Sincronizar tus datos entre dispositivos</li>
+                <li><strong>Prestación del servicio:</strong> Ejecución del contrato de uso (Art. 6.1.b RGPD).</li>
+                <li><strong>Generación de micro-pasos con IA:</strong> Interés legítimo / consentimiento implícito al usar la función (Art. 6.1.f RGPD).</li>
+                <li><strong>Estadísticas y sincronización:</strong> Ejecución del contrato (Art. 6.1.b RGPD).</li>
+                <li><strong>Seguridad y prevención de fraude:</strong> Interés legítimo (Art. 6.1.f RGPD).</li>
             </ul>
         </section>
         
         <section>
-            <h2>4. Almacenamiento y Seguridad</h2>
-            <p>Tus datos se almacenan en Firebase (Google Cloud), servidores seguros con encriptación en tránsito y en reposo.</p>
+            <h2>5. Almacenamiento y Seguridad</h2>
+            <p>Tus datos se almacenan en <strong>Firebase (Google Cloud)</strong>, servidores seguros ubicados en la Unión Europea y EE. UU., con encriptación en tránsito (TLS 1.2+) y en reposo (AES-256).</p>
             <div class="highlight">
-                <p><strong>Seguridad:</strong> Las contraseñas se almacenan de forma hasheada y nunca son accesibles de forma directa. No vendemos ni compartimos tu información personal con terceros para fines de marketing.</p>
+                <p><strong>Seguridad:</strong> Las contraseñas se almacenan de forma hasheada (Firebase Auth) y nunca son accesibles de forma directa. No vendemos ni compartimos tu información personal con terceros para fines de marketing.</p>
             </div>
         </section>
         
         <section>
-            <h2>5. Compartición con Terceros</h2>
+            <h2>6. Compartición con Terceros y Transferencias Internacionales</h2>
             <p>Compartimos datos únicamente con los siguientes proveedores de servicios que procesan información bajo nuestras instrucciones:</p>
             <ul>
-                <li><strong>Firebase (Google):</strong> Autenticación, base de datos y almacenamiento en la nube.</li>
-                <li><strong>Google Gemini:</strong> Procesamiento de IA para generación de pasos de tareas.</li>
+                <li><strong>Firebase / Google Cloud:</strong> Autenticación, base de datos (Firestore), almacenamiento y hosting. Google actúa como encargado del tratamiento. Las transferencias a EE. UU. se amparan en las <strong>Cláusulas Contractuales Tipo (SCC)</strong> aprobadas por la Comisión Europea.</li>
+                <li><strong>Google Gemini (Vertex AI / Generative Language API):</strong> Procesamiento de IA para generación de micro-pasos. No se entrenan modelos con tus datos. Las transferencias se rigen por los mismos mecanismos SCC.</li>
             </ul>
         </section>
         
         <section>
-            <h2>6. Tus Derechos</h2>
-            <p>Tienes derecho a:</p>
+            <h2>7. Tus Derechos</h2>
+            <p>Como interesado, tienes derecho a:</p>
             <ul>
-                <li><strong>Acceder:</strong> Ver toda la información que tenemos sobre ti.</li>
-                <li><strong>Eliminar:</strong> Solicitar la eliminación completa de tu cuenta y todos tus datos.</li>
-                <li><strong>Exportar:</strong> Descargar una copia de tus datos.</li>
-                <li><strong>Reportar:</strong> Denunciar contenido generado por IA que consideres ofensivo.</li>
+                <li><strong>Acceso (Art. 15 RGPD):</strong> Obtener confirmación de si tratamos tus datos y acceder a ellos.</li>
+                <li><strong>Rectificación (Art. 16 RGPD):</strong> Solicitar la corrección de datos inexactos.</li>
+                <li><strong>Supresión / Derecho al olvido (Art. 17 RGPD):</strong> Solicitar la eliminación completa de tu cuenta y todos tus datos.</li>
+                <li><strong>Limitación del tratamiento (Art. 18 RGPD):</strong> Solicitar la restricción del tratamiento en determinados supuestos.</li>
+                <li><strong>Portabilidad (Art. 20 RGPD):</strong> Recibir tus datos en formato estructurado, de uso común y lectura mecánica.</li>
+                <li><strong>Oposición (Art. 21 RGPD):</strong> Oponerte al tratamiento basado en interés legítimo.</li>
+                <li><strong>No ser objeto de decisiones automatizadas (Art. 22 RGPD):</strong> NeuroPaso no toma decisiones automatizadas con efectos jurídicos.</li>
             </ul>
+            <p>Para ejercer estos derechos, escríbenos a <a href="mailto:maxsaeta@gmail.com">maxsaeta@gmail.com</a> indicando el derecho que deseas ejercer y adjuntando prueba de identidad (DNI o similar). Responderemos en un plazo máximo de 30 días.</p>
         </section>
         
         <section>
-            <h2>7. Eliminación de Cuenta</h2>
-            <p>Puedes eliminar tu cuenta y todos tus datos asociados en cualquier momento desde la configuración de la app. Al eliminar tu cuenta:</p>
+            <h2>8. Menores de Edad</h2>
+            <p>NeuroPaso no está dirigido a menores de 16 años. No recopilamos intencionadamente datos de menores. Si detectamos que un menor nos ha proporcionado datos sin consentimiento paterno, los eliminaremos tan pronto como tengamos conocimiento.</p>
+        </section>
+        
+        <section>
+            <h2>9. Cookies y Tecnologías Similares</h2>
+            <p>La aplicación web (versión PWA) utiliza <strong>cookies estrictamente necesarias</strong> para la sesión de usuario (Firebase Auth) y el almacenamiento de preferencias locales (tema, temporizador). No utilizamos cookies de análisis, publicidad ni seguimiento entre sitios. Puedes gestionar o eliminar estas cookies desde la configuración de tu navegador.</p>
+        </section>
+        
+        <section>
+            <h2>10. Eliminación de Cuenta</h2>
+            <p>Puedes eliminar tu cuenta y todos tus datos asociados en cualquier momento desde la configuración de la app (pestaña Progreso → Cuenta → Eliminar Cuenta). Al eliminar tu cuenta:</p>
             <ul>
                 <li>Se eliminarán permanentemente tus datos de autenticación</li>
-                <li>Se eliminarán todas tus tareas y estadísticas</li>
+                <li>Se eliminarán todas tus tareas, pasos, estadísticas y configuración</li>
+                <li>Se revocará tu sesión y no podrás recuperarla</li>
                 <li>Esta acción es irreversible</li>
             </ul>
         </section>
         
         <section>
-            <h2>8. Retención de Datos</h2>
-            <p>Conservamos tus datos mientras tu cuenta esté activa. Si eliminas tu cuenta, todos los datos se eliminan permanentemente de nuestros servidores de forma inmediata.</p>
+            <h2>11. Retención de Datos</h2>
+            <p>Conservamos tus datos mientras tu cuenta esté activa. Si eliminas tu cuenta, todos los datos se eliminan permanentemente de nuestros servidores de forma inmediata. Los registros de auditoría de seguridad (logs de acceso) se conservan 90 días por obligación legal de seguridad.</p>
         </section>
         
         <section>
-            <h2>9. Cambios en esta Política</h2>
-            <p>Nos reservamos el derecho de actualizar esta política de privacidad. Te notificaremos de cualquier cambio significativo a través de la aplicación o por correo electrónico.</p>
+            <h2>12. Cambios en esta Política</h2>
+            <p>Nos reservamos el derecho de actualizar esta política de privacidad. Te notificaremos de cualquier cambio significativo a través de la aplicación o por correo electrónico con al menos 30 días de antelación.</p>
         </section>
         
         <section>
-            <h2>10. Contacto</h2>
+            <h2>13. Contacto</h2>
             <div class="contact">
                 <p>Si tienes preguntas sobre esta política de privacidad o sobre el manejo de tus datos, contáctanos:</p>
                 <p><strong>Email:</strong> <a href="mailto:maxsaeta@gmail.com">maxsaeta@gmail.com</a></p>
