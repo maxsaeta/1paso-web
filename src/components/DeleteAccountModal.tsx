@@ -14,6 +14,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { COLORS, SPACING, FONTS, BORDER_RADIUS, TOUCH_TARGETS } from '../constants/theme';
 import { container } from '../di/container';
 import { auth } from '../config/firebase';
+import { EmailAuthProvider, reauthenticateWithCredential, deleteUser } from 'firebase/auth';
 
 interface DeleteAccountModalProps {
   visible: boolean;
@@ -22,28 +23,32 @@ interface DeleteAccountModalProps {
 
 export function DeleteAccountModal({ visible, onClose }: DeleteAccountModalProps) {
   const [loading, setLoading] = useState(false);
-  const [confirmText, setConfirmText] = useState('');
+  const [password, setPassword] = useState('');
 
   const handleDelete = async () => {
-    if (confirmText !== 'ELIMINAR') {
-      Alert.alert('Error', 'Debes escribir "ELIMINAR" para confirmar');
+    if (!password.trim()) {
+      Alert.alert('Error', 'Debes ingresar tu contraseña para confirmar');
       return;
     }
 
     setLoading(true);
     try {
-      const userId = auth.currentUser?.uid;
-      if (!userId) {
+      const user = auth.currentUser;
+      if (!user || !user.email) {
         Alert.alert('Error', 'No se encontró la sesión del usuario');
         return;
       }
 
+      // Re-authenticate with password before deleting
+      const credential = EmailAuthProvider.credential(user.email, password);
+      await reauthenticateWithCredential(user, credential);
+
       // Delete all user data from Firestore
+      const userId = user.uid;
       await container.deleteAccountUseCase.execute(userId);
 
       // Delete Firebase Auth account
-      const { deleteUser } = await import('firebase/auth');
-      await deleteUser(auth.currentUser!);
+      await deleteUser(user);
 
       Alert.alert(
         'Cuenta eliminada',
@@ -52,18 +57,20 @@ export function DeleteAccountModal({ visible, onClose }: DeleteAccountModalProps
       );
     } catch (error: any) {
       console.error('Error deleting account:', error);
-      if (error.code === 'auth/requires-recent-login') {
+      if (error.code === 'auth/wrong-password') {
+        Alert.alert('Error', 'Contraseña incorrecta. Inténtalo de nuevo.');
+      } else if (error.code === 'auth/requires-recent-login') {
         Alert.alert(
           'Sesión expirada',
           'Para eliminar tu cuenta, necesitas iniciar sesión nuevamente. Cierra sesión y vuelve a entrar.',
           [{ text: 'OK' }]
         );
       } else {
-        Alert.alert('Error', 'No se pudo eliminar la cuenta. Intenta de nuevo.');
+        Alert.alert('Error', error.message || 'No se pudo eliminar la cuenta. Intenta de nuevo.');
       }
-    } finally {
+} finally {
       setLoading(false);
-      setConfirmText('');
+      setPassword('');
     }
   };
 
@@ -116,17 +123,19 @@ export function DeleteAccountModal({ visible, onClose }: DeleteAccountModalProps
           </Text>
 
           <Text style={styles.confirmLabel}>
-            Escribe <Text style={styles.bold}>ELIMINAR</Text> para confirmar:
+            Escribe tu contraseña para confirmar:
           </Text>
 
           <TextInput
             style={styles.confirmInput}
-            value={confirmText}
-            onChangeText={setConfirmText}
-            placeholder="ELIMINAR"
+            value={password}
+            onChangeText={setPassword}
+            placeholder="Contraseña"
             placeholderTextColor={COLORS.textMuted}
-            autoCapitalize="characters"
+            secureTextEntry
+            autoCapitalize="none"
             autoCorrect={false}
+            textContentType="password"
           />
 
           <View style={styles.actions}>
@@ -141,10 +150,10 @@ export function DeleteAccountModal({ visible, onClose }: DeleteAccountModalProps
             <TouchableOpacity 
               style={[
                 styles.deleteButton,
-                (confirmText !== 'ELIMINAR' || loading) && styles.deleteButtonDisabled
+                (!password.trim() || loading) && styles.deleteButtonDisabled
               ]}
               onPress={handleDelete}
-              disabled={confirmText !== 'ELIMINAR' || loading}
+              disabled={!password.trim() || loading}
             >
               {loading ? (
                 <ActivityIndicator color={COLORS.textPrimary} />
