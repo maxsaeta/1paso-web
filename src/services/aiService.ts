@@ -23,7 +23,7 @@ export async function generateTaskSteps(taskTitle: string): Promise<TaskStep[]> 
 
   const model = genAI.getGenerativeModel({ model: 'gemini-flash-lite-latest' });
 
-  const prompt = `Eres un asistente productivo especializado en ayudar personas con TDAH a dividir tareas en pasos pequeños y manejables.
+  const prompt = `Eres un asistente productivo especializado en dividir tareas en pasos pequeños y manejables.
 
 Tarea: "${taskTitle}"
 

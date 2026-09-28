@@ -1,6 +1,6 @@
 # UnPaso Web
 
-Aplicación de productividad para personas con TDAH. Una tarea a la vez.
+Aplicación de productividad: una tarea a la vez, en pasos pequeños.
 
 ## Deploy
 
