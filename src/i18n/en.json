@@ -22,7 +22,6 @@
     "emptySubtitle": "Tap + to add your first task",
     "taskCounter": "Task {current} of {total}",
     "priorities": "Priorities",
-    "mood": "Mood",
     "closeDay": "End Day",
     "history": "Task History",
     "emptyHistory": "No completed tasks yet",
@@ -68,23 +67,6 @@
     "ifOnFirePlaceholder": "Something extra if you have energy?",
     "save": "Save Priorities",
     "saved": "Saved!"
-  },
-  "mood": {
-    "title": "💚 How are you feeling?",
-    "subtitle": "There are no bad days, just different days. Your brain works differently and that's okay.",
-    "great": "Great",
-    "good": "Good",
-    "okay": "Okay",
-    "low": "Low",
-    "bad": "Bad",
-    "tipGreat": "Use this energy for THE important thing!",
-    "tipGood": "Great time to make progress!",
-    "tipOkay": "That's fine. Do what you can and rest.",
-    "tipLow": "Today is maintenance day: eat, hydrate, rest. Don't force it.",
-    "tipBad": "Just focus on the basics: eat, rest, be kind to yourself.",
-    "save": "Log mood",
-    "saved": "Saved!",
-    "historyTitle": "Last few days"
   },
   "shutdown": {
     "title": "🌙 Shutdown Ritual",

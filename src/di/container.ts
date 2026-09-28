@@ -6,7 +6,7 @@ import { GetSubscriptionUseCase, PurchaseSubscriptionUseCase, RestorePurchasesUs
 import { LoginUseCase, RegisterUseCase, LogoutUseCase, DeleteAccountUseCase } from '../domain/usecases/auth';
 import { IncrementPomodoroUseCase, IncrementTaskCompletedUseCase, GetStatsUseCase } from '../domain/usecases/stats';
 import { GetTimerSettingsUseCase, SaveTimerSettingsUseCase } from '../domain/usecases/settings';
-import { GetDailyPrioritiesUseCase, SaveDailyPrioritiesUseCase, SaveMoodUseCase, GetMoodHistoryUseCase, SaveShutdownChecklistUseCase, GetShutdownChecklistUseCase } from '../domain/usecases/plan';
+import { GetDailyPrioritiesUseCase, SaveDailyPrioritiesUseCase, SaveShutdownChecklistUseCase, GetShutdownChecklistUseCase } from '../domain/usecases/plan';
 
 class Container {
   private static instance: Container;
@@ -126,14 +126,6 @@ class Container {
 
   get saveDailyPrioritiesUseCase(): SaveDailyPrioritiesUseCase {
     return new SaveDailyPrioritiesUseCase(this._planRepository);
-  }
-
-  get saveMoodUseCase(): SaveMoodUseCase {
-    return new SaveMoodUseCase(this._planRepository);
-  }
-
-  get getMoodHistoryUseCase(): GetMoodHistoryUseCase {
-    return new GetMoodHistoryUseCase(this._planRepository);
   }
 
   get saveShutdownChecklistUseCase(): SaveShutdownChecklistUseCase {

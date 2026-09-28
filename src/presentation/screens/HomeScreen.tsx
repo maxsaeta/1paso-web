@@ -28,7 +28,6 @@ import { DeleteAccountModal } from '../../components/DeleteAccountModal';
 import { ReportAIModal } from '../../components/ReportAIModal';
 import { DailyBrainDump } from '../../components/DailyBrainDump';
 import { ShutdownRitual } from '../../components/ShutdownRitual';
-import { MoodTracker } from '../../components/MoodTracker';
 import { PaywallModal } from '../../components/PaywallModal';
 import { useTimer } from '../../hooks/useTimer';
 import { useHomeViewModel } from './HomeViewModel';
@@ -56,7 +55,6 @@ export function HomeScreen() {
     setShowReportAIModal,
     setShowBrainDump,
     setShowShutdownRitual,
-    setShowMoodTracker,
     setTaskToEdit,
     handleAddTask,
     handleStartTask,
@@ -269,12 +267,6 @@ export function HomeScreen() {
           <Text style={styles.headerTitle}>NeuroPaso</Text>
           <View style={styles.headerActions}>
             <TouchableOpacity 
-              onPress={() => setShowMoodTracker(true)} 
-              style={styles.headerButton}
-            >
-              <Ionicons name="heart-outline" size={24} color={colors.textSecondary} />
-            </TouchableOpacity>
-            <TouchableOpacity 
               onPress={() => setShowBrainDump(true)} 
               style={styles.headerButton}
             >
@@ -451,7 +443,7 @@ export function HomeScreen() {
               </View>
             </View>
 
-            {/* Quick Actions - Brain Dump, Shutdown, Mood */}
+            {/* Quick Actions - Brain Dump, Shutdown */}
             <View style={styles.quickActions}>
               <TouchableOpacity 
                 style={styles.quickAction}
@@ -459,14 +451,6 @@ export function HomeScreen() {
               >
                 <Ionicons name="bulb" size={20} color={colors.warning} />
                 <Text style={styles.quickActionText}>Prioridades</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity 
-                style={styles.quickAction}
-                onPress={() => setShowMoodTracker(true)}
-              >
-                <Ionicons name="heart" size={20} color={colors.error} />
-                <Text style={styles.quickActionText}>Ánimo</Text>
               </TouchableOpacity>
 
               <TouchableOpacity 
@@ -640,12 +624,6 @@ export function HomeScreen() {
         visible={state.showShutdownRitual}
         onClose={() => setShowShutdownRitual(false)}
         tasks={activeTasks}
-      />
-
-      {/* Modal Mood Tracker - Ánimo */}
-      <MoodTracker
-        visible={state.showMoodTracker}
-        onClose={() => setShowMoodTracker(false)}
       />
     </SafeAreaView>
   );

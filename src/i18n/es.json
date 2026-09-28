@@ -22,7 +22,6 @@
     "emptySubtitle": "Toca + para agregar tu primera tarea",
     "taskCounter": "Tarea {current} de {total}",
     "priorities": "Prioridades",
-    "mood": "Ánimo",
     "closeDay": "Cerrar Día",
     "history": "Historial de Tareas",
     "emptyHistory": "No hay tareas completadas aún",
@@ -68,23 +67,6 @@
     "ifOnFirePlaceholder": "¿Algo extra si tienes energía?",
     "save": "Guardar Prioridades",
     "saved": "¡Guardado!"
-  },
-  "mood": {
-    "title": "💚 ¿Cómo te sientes?",
-    "subtitle": "No hay días malos, solo días diferentes. Tu cerebro funciona distinto y está bien.",
-    "great": "Genial",
-    "good": "Bien",
-    "okay": "Regular",
-    "low": "Bajo",
-    "bad": "Mal",
-    "tipGreat": "¡Aprovecha esta energía para LA cosa importante!",
-    "tipGood": "¡Buen momento para avanzar!",
-    "tipOkay": "Está bien. Haz lo que puedas y descansa.",
-    "tipLow": "Hoy es día de mantenimiento: come, hidrátate, descansa. No fuerces.",
-    "tipBad": "Solo enfócate en lo básico: come, descansa, sé amable contigo.",
-    "save": "Registrar ánimo",
-    "saved": "¡Guardado!",
-    "historyTitle": "Últimos días"
   },
   "shutdown": {
     "title": "🌙 Ritual de Cierre",

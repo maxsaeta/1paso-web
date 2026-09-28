@@ -4,15 +4,6 @@ export interface DailyPriorities {
   completedPriorities: [boolean, boolean, boolean];
 }
 
-export type MoodLevel = 'great' | 'good' | 'okay' | 'low' | 'bad';
-
-export interface MoodEntry {
-  date: string; // YYYY-MM-DD
-  mood: MoodLevel;
-  note?: string;
-  timestamp: Date;
-}
-
 export interface ShutdownChecklist {
   tomorrowThing: string;
   calendarChecked: boolean;

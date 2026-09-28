@@ -27,7 +27,6 @@ export interface HomeState {
   showReportAIModal: boolean;
   showBrainDump: boolean;
   showShutdownRitual: boolean;
-  showMoodTracker: boolean;
   taskToEdit: Task | null;
   dailyPriorities: DailyPriorities | null;
   showPaywall: boolean;
@@ -50,7 +49,6 @@ export function useHomeViewModel() {
     showReportAIModal: false,
     showBrainDump: false,
     showShutdownRitual: false,
-    showMoodTracker: false,
     taskToEdit: null,
     dailyPriorities: null,
     showPaywall: false,
@@ -163,10 +161,6 @@ export function useHomeViewModel() {
     setState(prev => ({ ...prev, showShutdownRitual: show }));
   }, []);
 
-  const setShowMoodTracker = useCallback((show: boolean) => {
-    setState(prev => ({ ...prev, showMoodTracker: show }));
-  }, []);
-
   const setShowPaywall = useCallback((show: boolean) => {
     setState(prev => ({ ...prev, showPaywall: show }));
   }, []);
@@ -248,7 +242,6 @@ export function useHomeViewModel() {
     setShowReportAIModal,
     setShowBrainDump,
     setShowShutdownRitual,
-    setShowMoodTracker,
     setTaskToEdit,
     setShowPaywall,
     handleAddTask,
