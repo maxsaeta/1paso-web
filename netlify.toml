@@ -11,31 +11,32 @@
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
 
-# Cache Expo bundles
-[[headers]]
-  for = "/_expo/*"
-  [headers.values]
-    Cache-Control = "public, max-age=31536000, immutable"
-
 # Cache font files and assets
 [[headers]]
   for = "/assets/*"
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
 
-# Serve Astro static pages directly
+# Landing page
 [[redirects]]
   from = "/landing"
   to = "/landing/index.html"
   status = 200
 
+# App info page
 [[redirects]]
   from = "/app"
   to = "/app/index.html"
   status = 200
 
-# SPA fallback — Expo app handles all other routes
+# Root redirects to landing
 [[redirects]]
-  from = "/*"
+  from = "/"
   to = "/index.html"
   status = 200
+
+# 404 for everything else (no SPA fallback)
+[[redirects]]
+  from = "/*"
+  to = "/404.html"
+  status = 404
