@@ -1,15 +1,29 @@
 /**
  * Comprueba que los PNG derivados de public/assets/ estan al dia.
  *
- * Se ejecuta cada generador y se comprueba si el resultado cambia.
- * Si cambia, alguien edito un SVG o cambio sharp sin volver a commitear
- * el resultado, y el repositorio y dist/ dejarian de coincidir.
+ * Que pasara: se ejecuta cada generador y se comprueba si el resultado
+ * cambia. Si cambia, alguien edito un SVG o cambio sharp sin volver a
+ * commitear el resultado, y el repositorio y dist/ dejarian de coincidir.
  *
- * La comparacion es de PIXELES, no de bytes: los binarios precompilados
- * de sharp son especificos de plataforma y codifican el mismo PNG con
- * bytes distintos en Windows y en Linux. Comparar el archivo entero
- * hacia fallar el CI siempre, aunque la imagen sea identica. Asi que se
- * decodifica y se hashea el buffer raw, que si es estable entre sistemas.
+ * Por que NO se comparan bytes ni pixeles
+ * ---------------------------------------
+ * Los SVG se rasterizan con sharp, y los SVG llevan <text> con
+ * font-family "system-ui, -apple-system, Segoe UI, Roboto, sans-serif".
+ * En Windows eso resuelve a Segoe UI y en Linux cae a la sans-serif del
+ * sistema, de modo que los glifos se dibujan con metricas distintas. La
+ * imagen resultante es visualmente equivalente pero NO identica pixel a
+ * pixel ni byte a byte, en el mismo sistema y entre sistemas.
+ *
+ * Por eso el control no intenta comparar la imagen. Compara dos cosas
+ * que si son reproducibles en cualquier plataforma:
+ *
+ *   1. El hash sha256 de cada SVG de origen. Si alguien edita un SVG y no
+ *      vuelve a generar las PNG, el hash cambia y aqui se ve.
+ *   2. Las dimensiones de cada PNG derivada. Si falta un archivo o el
+ *      generador cambio el tamano, tambien se ve.
+ *
+ * Para actualizar el manifiesto de forma deliberada:
+ *   npm run assets:manifest
  */
 const { execFileSync } = require('child_process');
 const { createHash } = require('crypto');
@@ -19,6 +33,7 @@ const sharp = require('sharp');
 
 const root = path.resolve(__dirname, '..');
 const assetsDir = path.join(root, 'public', 'assets');
+const manifestPath = path.join(assetsDir, 'manifest.json');
 
 const generators = [
   'scripts/generate-assets.cjs',
@@ -27,64 +42,91 @@ const generators = [
   'scripts/generate-feature-graphic.cjs',
 ];
 
-function listDerived() {
+function listFiles(exts) {
   if (!fs.existsSync(assetsDir)) return [];
   return fs
     .readdirSync(assetsDir)
-    .filter((f) => f.endsWith('.png') || f.endsWith('.ico'))
+    .filter((f) => exts.some((e) => f.endsWith(e)))
     .sort();
 }
 
-async function fingerprint(file) {
-  // ensureAlpha + srgb hace que dos imagenes visualmente iguales den el
-  // mismo hash aunque una traiga canal alfa y la otra no.
-  const { data, info } = await sharp(file)
-    .ensureAlpha()
-    .toColourspace('srgb')
-    .raw()
-    .toBuffer({ resolveWithObject: true });
-  const hash = createHash('sha256').update(data).digest('hex');
-  return `${info.width}x${info.height}:${hash}`;
+function sha256(file) {
+  return createHash('sha256').update(fs.readFileSync(file)).digest('hex');
 }
 
-async function snapshot(files) {
-  const out = new Map();
-  for (const f of files) {
-    out.set(f, await fingerprint(path.join(assetsDir, f)));
+/** current() devuelve el estado que hay que contrastar con el manifiesto. */
+async function current() {
+  const sources = {};
+  for (const f of listFiles(['.svg'])) {
+    sources[f] = sha256(path.join(assetsDir, f));
   }
-  return out;
+
+  const derived = {};
+  for (const f of listFiles(['.png', '.ico'])) {
+    const meta = await sharp(path.join(assetsDir, f)).metadata();
+    derived[f] = `${meta.width}x${meta.height}`;
+  }
+
+  return { sources, derived };
+}
+
+function diff(expected, actual, label, problems) {
+  for (const [name, value] of Object.entries(expected)) {
+    if (!(name in actual)) {
+      problems.push(`${label} ${name}: estaba en el manifiesto y ya no existe`);
+    } else if (actual[name] !== value) {
+      problems.push(`${label} ${name}: manifiesto ${value}, ahora ${actual[name]}`);
+    }
+  }
+  for (const name of Object.keys(actual)) {
+    if (!(name in expected)) problems.push(`${label} ${name}: no estaba en el manifiesto`);
+  }
 }
 
 async function main() {
-  const before = await snapshot(listDerived());
+  const writeManifest = process.argv.includes('--write');
+
+  if (writeManifest) {
+    for (const gen of generators) {
+      console.log(`> ${gen}`);
+      execFileSync(process.execPath, [path.join(root, gen)], { stdio: 'inherit' });
+    }
+    const state = await current();
+    fs.writeFileSync(manifestPath, JSON.stringify(state, null, 2) + '\n', 'utf8');
+    console.log(
+      `\nManifiesto actualizado: ${Object.keys(state.sources).length} fuentes, ${Object.keys(state.derived).length} derivadas.`,
+    );
+    return;
+  }
+
+  if (!fs.existsSync(manifestPath)) {
+    console.error('\nNo existe public/assets/manifest.json.');
+    console.error('Generalo una vez con: npm run assets:manifest');
+    process.exit(1);
+  }
 
   for (const gen of generators) {
     console.log(`> ${gen}`);
     execFileSync(process.execPath, [path.join(root, gen)], { stdio: 'inherit' });
   }
 
-  const after = await snapshot(listDerived());
+  const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+  const state = await current();
 
-  const changed = [];
-  for (const [file, fp] of after) {
-    if (!before.has(file)) {
-      changed.push(`${file} (nuevo, sin versionar)`);
-    } else if (before.get(file) !== fp) {
-      changed.push(`${file} (pixeles distintos)`);
-    }
-  }
-  for (const file of before.keys()) {
-    if (!after.has(file)) changed.push(`${file} (ya no se genera)`);
-  }
+  const problems = [];
+  diff(manifest.sources, state.sources, 'SVG', problems);
+  diff(manifest.derived, state.derived, 'PNG', problems);
 
-  if (changed.length) {
-    console.error('\nAssets desactualizados en el repositorio:');
-    for (const c of changed) console.error(`  ${c}`);
-    console.error('\nEjecuta los generadores y commitea el resultado.');
+  if (problems.length) {
+    console.error('\nLos assets derivados no cuadran con el manifiesto:');
+    for (const p of problems) console.error(`  ${p}`);
+    console.error('\nSi el cambio es intencionado, regenera y actualiza con:');
+    console.error('  npm run assets:manifest');
     process.exit(1);
   }
 
-  console.log(`\nAssets al dia (${after.size} imagenes por pixeles).`);
+  const n = Object.keys(state.derived).length;
+  console.log(`\nAssets al dia (${n} derivadas, ${Object.keys(state.sources).length} fuentes).`);
 }
 
 main().catch((err) => {

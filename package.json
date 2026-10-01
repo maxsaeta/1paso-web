@@ -15,6 +15,7 @@
     "og": "node scripts/generate-og.cjs",
     "feature-graphic": "node scripts/generate-feature-graphic.cjs",
     "check:assets": "node scripts/check-assets.cjs",
+    "assets:manifest": "node scripts/check-assets.cjs --write",
     "verify": "npm run format:check && npm run lint && npm run typecheck && npm run check:assets && npm run build"
   },
   "dependencies": {
