@@ -20,7 +20,7 @@ const {
   faq = [],
 } = Astro.props;
 
-const site = Astro.site ?? new URL('https://neuropaso.app');
+const site = Astro.site ?? new URL('https://neuropaso.netlify.app');
 const canonicalURL = new URL(Astro.url.pathname, site);
 const ogImageURL = new URL(ogImage, site);
 

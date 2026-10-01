@@ -116,7 +116,7 @@ Todo se escribe en `public/assets/`, que es lo único que Astro copia a `dist/`.
 
 | Pieza                             | Dónde                                                    |
 | --------------------------------- | -------------------------------------------------------- |
-| `site: 'https://neuropaso.app'`   | `astro.config.mjs`, obligatorio para canonical y sitemap |
+| `site: 'https://neuropaso.netlify.app'` | `astro.config.mjs`, obligatorio para canonical y sitemap |
 | canonical                         | todas las páginas menos las `noindex`                    |
 | `noindex`                         | `404.astro`, y `Layout` acepta `noindex` como prop       |
 | `google-play-app:android:package` | `com.unpaso.app`                                         |

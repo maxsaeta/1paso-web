@@ -94,7 +94,7 @@ const ogSvg = `
   </g>
 
   <!-- Bottom attribution -->
-  <text x="1100" y="600" text-anchor="end" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif" font-size="18" font-weight="400" fill="#707974" opacity="0.7">neuropaso.app</text>
+  <text x="1100" y="600" text-anchor="end" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif" font-size="18" font-weight="400" fill="#707974" opacity="0.7">neuropaso.netlify.app</text>
 </svg>
 `;
 

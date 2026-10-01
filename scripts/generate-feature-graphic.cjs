@@ -141,7 +141,7 @@ const featureSvg = `
   </g>
 
   <!-- Small attribution -->
-  <text x="944" y="475" text-anchor="end" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif" font-size="13" font-weight="400" fill="#707974" opacity="0.7">neuropaso.app</text>
+  <text x="944" y="475" text-anchor="end" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif" font-size="13" font-weight="400" fill="#707974" opacity="0.7">neuropaso.netlify.app</text>
 </svg>
 `;
 
