@@ -149,133 +149,11 @@ const faqSchema = faq.length
 </html>
 
 <style is:global>
-  :root {
-    /* NeuroPaso Green Palette (from Android Color.kt) */
-    --primary: #006E54;
-    --on-primary: #FFFFFF;
-    --primary-container: #D2E8D4;
-    --on-primary-container: #002116;
-    --secondary: #4A635C;
-    --on-secondary: #FFFFFF;
-    --secondary-container: #CDE5DF;
-    --on-secondary-container: #092018;
-    --tertiary: #006B73;
-    --on-tertiary: #FFFFFF;
-    --tertiary-container: #D0E4E6;
-    --on-tertiary-container: #001F21;
-    --error: #BA1A1A;
-    --on-error: #FFFFFF;
-    --error-container: #FFDAD6;
-    --on-error-container: #410002;
-    --background: #FDFDF8;
-    --on-background: #1A1C1B;
-    --surface: #FDFDF8;
-    --on-surface: #1A1C1B;
-    --surface-variant: #DCE5DF;
-    --on-surface-variant: #404944;
-    --surface-container: #F2EFEB;
-    --surface-container-high: #E6E3DF;
-    --surface-container-highest: #DAD7D3;
-    --outline: #707974;
-    --outline-variant: #C0C9C3;
-    --shadow: rgba(0, 0, 0, 0.1);
-    --shadow-elevated: rgba(0, 0, 0, 0.15);
+  /* Color, tipografia, espaciado, radios y breakpoints viven en tokens.css.
+     Los valores vienen de Color.kt de la app Android. */
+  @import '../styles/tokens.css';
 
-    /* Semantic colors from Android */
-    --mood-great: #107C41;
-    --mood-good: #2E7D32;
-    --mood-okay: #D97706;
-    --mood-low: #0284C7;
-    --mood-bad: #8B5CF6;
-    --priority-amber: #E69A0B;
-    --container-red: #FFDAD6;
-    --container-amber: #FFF3D6;
-    --container-green: #D2E8D4;
-
-    /* Typography scale (Material 3) */
-    --font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    --font-mono: ui-monospace, SFMono-Regular, 'Fira Code', monospace;
-    --text-display-large: clamp(3.5rem, 4vw + 1rem, 4.5rem);
-    --text-display-medium: clamp(2.8rem, 3vw + 1rem, 3.5rem);
-    --text-display-small: clamp(2.2rem, 2.5vw + 1rem, 2.8rem);
-    --text-headline-large: clamp(2rem, 2vw + 1rem, 2.5rem);
-    --text-headline-medium: clamp(1.75rem, 1.5vw + 1rem, 2rem);
-    --text-headline-small: clamp(1.5rem, 1.2vw + 1rem, 1.75rem);
-    --text-title-large: clamp(1.375rem, 1vw + 1rem, 1.5rem);
-    --text-title-medium: clamp(1.125rem, 0.8vw + 1rem, 1.25rem);
-    --text-title-small: clamp(1rem, 0.6vw + 1rem, 1.125rem);
-    --text-body-large: 1rem;
-    --text-body-medium: 0.875rem;
-    --text-body-small: 0.75rem;
-    --text-label-large: 0.875rem;
-    --text-label-medium: 0.75rem;
-    --text-label-small: 0.6875rem;
-
-    /* Spacing scale (8dp grid) */
-    --space-1: 4px;
-    --space-2: 8px;
-    --space-3: 12px;
-    --space-4: 16px;
-    --space-5: 20px;
-    --space-6: 24px;
-    --space-8: 32px;
-    --space-10: 40px;
-    --space-12: 48px;
-    --space-16: 64px;
-    --space-20: 80px;
-    --space-24: 96px;
-
-    /* Border radius */
-    --radius-xs: 4px;
-    --radius-sm: 8px;
-    --radius-md: 12px;
-    --radius-lg: 16px;
-    --radius-xl: 20px;
-    --radius-full: 9999px;
-
-    /* Elevation shadows */
-    --elevation-1: 0 1px 2px var(--shadow), 0 1px 3px var(--shadow);
-    --elevation-2: 0 2px 4px var(--shadow), 0 2px 6px var(--shadow);
-    --elevation-3: 0 4px 8px var(--shadow), 0 4px 12px var(--shadow);
-    --elevation-4: 0 8px 16px var(--shadow), 0 8px 24px var(--shadow);
-    --elevation-5: 0 16px 32px var(--shadow), 0 16px 48px var(--shadow);
-  }
-
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --primary: #84DAB9;
-      --on-primary: #003829;
-      --primary-container: #00523A;
-      --on-primary-container: #A7F3D0;
-      --secondary: #B5CCC3;
-      --on-secondary: #1D352F;
-      --secondary-container: #3A4E45;
-      --on-secondary-container: #C8E6D7;
-      --tertiary: #86DCE5;
-      --on-tertiary: #00373C;
-      --tertiary-container: #004F53;
-      --on-tertiary-container: #B8E8EB;
-      --error: #FFB4AB;
-      --on-error: #690005;
-      --error-container: #93000A;
-      --on-error-container: #FFDAD6;
-      --background: #1A1C1B;
-      --on-background: #E2E3DE;
-      --surface: #1A1C1B;
-      --on-surface: #E2E3DE;
-      --surface-variant: #404944;
-      --on-surface-variant: #C0C9C3;
-      --surface-container: #222423;
-      --surface-container-high: #2D2F2E;
-      --surface-container-highest: #383A39;
-      --outline: #8A938D;
-      --outline-variant: #404944;
-      --shadow: rgba(0, 0, 0, 0.3);
-      --shadow-elevated: rgba(0, 0, 0, 0.4);
-    }
-  }
-
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
 
   html {
     scroll-behavior: smooth;
@@ -565,16 +443,102 @@ const faqSchema = faq.length
     outline-offset: 2px;
   }
 
-  /* Mobile nav */
-  @media (max-width: 768px) {
-    .nav-links { display: none; }
-    
-    .logo-text { display: none; }
-    
-    nav { padding: var(--space-3) var(--space-4); }
+  /* Menu movil
+   Sin JavaScript: un checkbox oculto y su label. Al marcarlo se despliega
+   el panel de enlaces. El breakpoint literal replica --breakpoint-md,
+   porque las media queries no admiten var(). */
+.nav-toggle,
+.nav-toggle-label { display: none; }
+
+@media (max-width: 768px) {
+    nav {
+      padding: var(--space-3) var(--space-4);
+      position: relative;
+      flex-wrap: wrap;
+      gap: var(--space-3);
+    }
+
+    .nav-toggle-label {
+      display: inline-flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 5px;
+      width: var(--touch-target-min);
+      height: var(--touch-target-min);
+      padding: 0 9px;
+      margin-left: auto;
+      cursor: pointer;
+      border: 1px solid var(--outline-variant);
+      border-radius: var(--radius-sm);
+      background: var(--surface);
+    }
+
+    .nav-toggle-label span {
+      display: block;
+      height: 2px;
+      background: var(--on-surface);
+      border-radius: 2px;
+    }
+
+    .nav-toggle:focus-visible + .nav-toggle-label {
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
+    }
+
+    .nav-toggle:checked + .nav-toggle-label span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .nav-toggle:checked + .nav-toggle-label span:nth-child(2) { opacity: 0; }
+    .nav-toggle:checked + .nav-toggle-label span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    /* Panel desplegable: a ancho completo, encima del contenido */
+    .nav-links {
+      display: none;
+      flex-basis: 100%;
+      flex-direction: column;
+      gap: var(--space-1);
+      margin: var(--space-2) 0 0;
+      padding: var(--space-2) 0 0;
+      border-top: 1px solid var(--outline-variant);
+    }
+
+    .nav-toggle:checked ~ .nav-links { display: flex; }
+
+    .nav-links a {
+      display: block;
+      padding: var(--space-3) var(--space-2);
+      min-height: var(--touch-target-min);
+      border-bottom: none;
+      border-radius: var(--radius-sm);
+    }
+
+    /* El logo y el CTA tambien deben ser alcanzables con el dedo */
+    .cta-button {
+      min-height: var(--touch-target-min);
+      padding: var(--space-2) var(--space-4);
+    }
+
+    .nav-links a:hover,
+    .nav-links a:focus {
+      background: var(--surface-container);
+      border-bottom-color: transparent;
+    }
   }
 
-  /* Reduced motion */
+  /* Objetivos tactiles: minimo 44px en cualquier control interactivo */
+a,
+button,
+summary,
+input[type='checkbox'] + label {
+  touch-action: manipulation;
+}
+
+.btn-primary,
+.btn-secondary,
+.cta-button,
+button {
+  min-height: max(48px, var(--touch-target-min));
+}
+
+/* Reduced motion */
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {
       animation-duration: 0.01ms !important;

@@ -8,8 +8,8 @@ import Layout from '../layouts/Layout.astro';
         <svg class="logo-mark" viewBox="0 0 1024 1024" width="36" height="36" aria-hidden="true" fill="none">
           <defs>
             <linearGradient id="neuroGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" style="stop-color:#006E54;stop-opacity:1" />
-              <stop offset="100%" style="stop-color:#84DAB9;stop-opacity:1" />
+              <stop offset="0%" style="stop-color:var(--primary);stop-opacity:1" />
+              <stop offset="100%" style="stop-color:var(--primary-bright);stop-opacity:1" />
             </linearGradient>
           </defs>
           <path d="M 280 680 
@@ -36,13 +36,19 @@ import Layout from '../layouts/Layout.astro';
                    L 440 568 
                    L 624 368" 
                fill="none" 
-               stroke="#FDFDF8" 
+               style="stroke:var(--surface)" 
                stroke-width="40" 
                stroke-linecap="round"
                stroke-linejoin="round"/>
         </svg>
         <span class="logo-text">NeuroPaso</span>
       </a>
+      <input type="checkbox" id="nav-toggle" class="nav-toggle" />
+      <label class="nav-toggle-label" for="nav-toggle" aria-label="Abrir el menú de navegación">
+        <span></span>
+        <span></span>
+        <span></span>
+      </label>
       <ul class="nav-links">
 <li><a href="#features">Funciones</a></li>
         <li><a href="#how-it-works">Cómo funciona</a></li>
@@ -464,8 +470,8 @@ import Layout from '../layouts/Layout.astro';
         <svg viewBox="0 0 1024 1024" width="32" height="32" aria-hidden="true" fill="none">
           <defs>
             <linearGradient id="neuroGradFooter" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" style="stop-color:#006E54;stop-opacity:1" />
-              <stop offset="100%" style="stop-color:#84DAB9;stop-opacity:1" />
+              <stop offset="0%" style="stop-color:var(--primary);stop-opacity:1" />
+              <stop offset="100%" style="stop-color:var(--primary-bright);stop-opacity:1" />
             </linearGradient>
           </defs>
           <path d="M 280 680 
@@ -492,7 +498,7 @@ import Layout from '../layouts/Layout.astro';
                    L 440 568 
                    L 624 368" 
                fill="none" 
-               stroke="#FDFDF8" 
+               style="stroke:var(--surface)" 
                stroke-width="40" 
                stroke-linecap="round"
                stroke-linejoin="round"/>
@@ -724,11 +730,11 @@ import Layout from '../layouts/Layout.astro';
     flex-shrink: 0;
   }
 
-  .rule3-item .dot-red { background: #e84057; }
+.rule3-item .dot-red { background: var(--priority-high); }
 
-  .rule3-item .dot-yellow { background: #f0b429; }
+    .rule3-item .dot-yellow { background: var(--priority-medium); }
 
-  .rule3-item .dot-green { background: #2e9e5b; }
+    .rule3-item .dot-green { background: var(--priority-low); }
 
   .rule3-item p {
     margin: 0;
@@ -772,8 +778,8 @@ import Layout from '../layouts/Layout.astro';
     width: 28px;
     height: 28px;
     border-radius: 50%;
-    background: var(--success);
-    color: #000;
+    background: var(--primary);
+    color: var(--on-primary);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -838,7 +844,7 @@ import Layout from '../layouts/Layout.astro';
   }
 
   .pricing-table .col-premium {
-    background: rgba(232, 64, 87, 0.06);
+    background: color-mix(in srgb, var(--priority-high) 6%, transparent);
     border-left: 1px solid var(--outline-variant);
   }
 
@@ -849,7 +855,7 @@ import Layout from '../layouts/Layout.astro';
     font-weight: 600;
   }
 
-  .pricing-table .yes { color: var(--success); font-size: 18px; font-weight: 700; }
+  .pricing-table .yes { color: var(--primary); font-size: 18px; font-weight: 700; }
 
   .pricing-table .no { color: var(--outline); font-size: 18px; }
 

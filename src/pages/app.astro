@@ -52,6 +52,12 @@ const faq = [
   <header>
     <nav>
       <a href="/" class="logo">NeuroPaso</a>
+      <input type="checkbox" id="nav-toggle" class="nav-toggle" />
+      <label class="nav-toggle-label" for="nav-toggle" aria-label="Abrir el menú de navegación">
+        <span></span>
+        <span></span>
+        <span></span>
+      </label>
       <ul class="nav-links">
         <li><a href="#purpose">Propósito</a></li>
         <li><a href="#features">Funciones</a></li>
@@ -425,8 +431,8 @@ const faq = [
         <svg viewBox="0 0 1024 1024" width="32" height="32" aria-hidden="true" fill="none">
           <defs>
             <linearGradient id="neuroGradFooter" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" style="stop-color:#006E54;stop-opacity:1" />
-              <stop offset="100%" style="stop-color:#84DAB9;stop-opacity:1" />
+              <stop offset="0%" style="stop-color:var(--primary);stop-opacity:1" />
+              <stop offset="100%" style="stop-color:var(--primary-bright);stop-opacity:1" />
             </linearGradient>
           </defs>
           <path d="M 280 680 
@@ -453,7 +459,7 @@ const faq = [
                    L 440 568 
                    L 624 368" 
                fill="none" 
-               stroke="#FDFDF8" 
+               style="stroke:var(--surface)" 
                stroke-width="40" 
                stroke-linecap="round"
                stroke-linejoin="round"/>

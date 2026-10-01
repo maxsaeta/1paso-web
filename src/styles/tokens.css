@@ -1,0 +1,134 @@
+/**
+ * NeuroPaso · tokens de diseno
+ *
+ * Fuente unica de color, tipografia, espaciado y radios del sitio.
+ *
+ * Los valores vienen de la paleta M3 que usa la app Android, en
+ * `app/src/main/java/com/unpaso/app/ui/theme/Color.kt`. Cuando cambie alla,
+ * cambia aqui. Este archivo es solo lectura desde el repo Android: no se
+ * edita el codigo de la app para adaptar la web.
+ *
+ * Decisiones que no se revierten sin acuerdo:
+ * - Modo claro unicamente. No hay toggle ni `prefers-color-scheme`.
+ * - Sin datos de salud: no hay tokens de estado de animo.
+ */
+
+:root {
+  /* ---- Color ----
+     La app Android construye su esquema con `lightColorScheme()` al que
+     solo le pasa 15 colores, los de Color.kt. Todo lo demas lo hereda de
+     los tokens de Material 3 (compose-bom 2024.09.00 -> material3 1.3.0),
+     que son de una paleta tonal violeta. Estos valores estan extraidos de
+     `ColorLightTokens` de ese AAR, no copiados de memoria, para que la web
+     se vea igual que la app. */
+
+  /* Los 15 que si define Color.kt */
+  --primary: #006e54;
+  --on-primary: #ffffff;
+  /* PrimaryDark de Color.kt. Solo se usa como acento en el degradado del
+     logotipo; no es un token de modo oscuro, la web no tiene modo oscuro. */
+  --primary-bright: #84dab9;
+  --secondary: #4a635c;
+  --on-secondary: #ffffff;
+  --tertiary: #006b73;
+  --on-tertiary: #ffffff;
+  --error: #ba1a1a;
+  --on-error: #ffffff;
+  --background: #fdfdf8;
+  --on-background: #1a1c1b;
+  --surface: #fdfdf8;
+  --on-surface: #1a1c1b;
+  --surface-variant: #dce5df;
+  --on-surface-variant: #404944;
+  --outline: #707974;
+
+  /* Los que caen en los defaults de Material 3: Primary90, Primary10... */
+  --primary-container: #eaddff;
+  --on-primary-container: #21005d;
+  --secondary-container: #e8def8;
+  --on-secondary-container: #1d192b;
+  --tertiary-container: #ffd8e4;
+  --on-tertiary-container: #31111d;
+  --error-container: #f9dedc;
+  --on-error-container: #410e0b;
+  --outline-variant: #cac4d0;
+
+  /* Superficies: Neutral94 / Neutral92 / Neutral90. Android no las usa en
+     ninguna pantalla, pero se dejan fielmente para no mixingar un container
+     lavanda sobre una superficie calida. */
+  --surface-container: #f3edf7;
+  --surface-container-high: #ece6f0;
+  --surface-container-highest: #e6e0e9;
+
+  --shadow: rgb(0 0 0 / 10%);
+  --shadow-elevated: rgb(0 0 0 / 15%);
+
+  --elevation-1: 0 1px 2px var(--shadow), 0 1px 3px var(--shadow);
+  --elevation-2: 0 2px 4px var(--shadow), 0 2px 6px var(--shadow);
+  --elevation-3: 0 4px 8px var(--shadow), 0 4px 12px var(--shadow);
+  --elevation-4: 0 8px 16px var(--shadow), 0 8px 24px var(--shadow);
+  --elevation-5: 0 16px 32px var(--shadow), 0 16px 48px var(--shadow);
+
+  /* ---- Regla del 3 ----
+     Los dots de prioridad replican `PrioritiesScreen.kt`:
+       alta   -> colorScheme.error     = ErrorLight     #BA1A1A
+       media  -> AmberPriority         #E69A0B
+       baja   -> colorScheme.tertiary  = TertiaryLight  #006B73
+     Ojo: `PriorityRedContainer`, `PriorityAmberContainer` y
+     `PriorityGreenContainer` estan declarados en Color.kt pero no los usa
+     ninguna pantalla, asi que no son la fuente de estos tres tonos. */
+  --priority-high: #ba1a1a;
+  --priority-medium: #e69a0b;
+  --priority-low: #006b73;
+
+  /* ---- Tipografía (escala Material 3) ---- */
+  --font-family: system-ui, -apple-system, 'Segoe UI', roboto, helvetica, arial, sans-serif;
+  --font-mono: ui-monospace, sfmono-regular, 'fira code', monospace;
+
+  --text-display-large: clamp(3.5rem, 4vw + 1rem, 4.5rem);
+  --text-display-medium: clamp(2.8rem, 3vw + 1rem, 3.5rem);
+  --text-display-small: clamp(2.2rem, 2.5vw + 1rem, 2.8rem);
+  --text-headline-large: clamp(2rem, 2vw + 1rem, 2.5rem);
+  --text-headline-medium: clamp(1.75rem, 1.5vw + 1rem, 2rem);
+  --text-headline-small: clamp(1.5rem, 1.2vw + 1rem, 1.75rem);
+  --text-title-large: clamp(1.375rem, 1vw + 1rem, 1.5rem);
+  --text-title-medium: clamp(1.125rem, 0.8vw + 1rem, 1.25rem);
+  --text-title-small: clamp(1rem, 0.6vw + 1rem, 1.125rem);
+  --text-body-large: 1rem;
+  --text-body-medium: 0.875rem;
+  --text-body-small: 0.75rem;
+  --text-label-large: 0.875rem;
+  --text-label-medium: 0.75rem;
+  --text-label-small: 0.6875rem;
+
+  /* ---- Espaciado (rejilla de 8dp) ---- */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-20: 80px;
+  --space-24: 96px;
+
+  /* ---- Radios ---- */
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-full: 9999px;
+
+  /* ---- Breakpoints ----
+     El unico sitio donde se declara el ancho de corte. Las media queries
+     no admiten variables CSS, asi que los ficheros .astro lo importan y
+     lo repiten en el `@media`; este token es la referencia a contrastar. */
+  --breakpoint-md: 768px;
+
+  /* ---- Objetivos tactiles ---- */
+  --touch-target-min: 44px;
+}
