@@ -1,0 +1,16 @@
+dist/
+node_modules/
+.astro/
+package-lock.json
+PLAN_MIGRACION_WEB.md
+
+# Documentos publicados. Se suben a Google Play Console y son la copia
+# servida en /legal/... y /manual/.... No se reformatean automaticamente.
+legal/
+public/legal/
+public/manual/
+docs/manual/
+
+# Los .astro los formatea quien los edita, no prettier. Reformatear el
+# markup genera un diff enorme que esconde el cambio real.
+src/**/*.astro

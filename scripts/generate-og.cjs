@@ -1,5 +1,4 @@
 const sharp = require('sharp');
-const fs = require('fs');
 const path = require('path');
 
 // Create OG image (1200x630) programmatically
@@ -102,12 +101,9 @@ const ogSvg = `
 async function generateOg() {
   const outputDir = path.resolve(__dirname, '..', 'public', 'assets');
   const outputPng = path.join(outputDir, 'og-image.png');
-  
-  await sharp(Buffer.from(ogSvg))
-    .resize(1200, 630, { fit: 'fill' })
-    .png()
-    .toFile(outputPng);
-  
+
+  await sharp(Buffer.from(ogSvg)).resize(1200, 630, { fit: 'fill' }).png().toFile(outputPng);
+
   console.log('✓ og-image.png (1200x630) generado en', outputPng);
 }
 

@@ -6,16 +6,34 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
+    "typecheck": "astro check",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "assets": "node scripts/generate-assets.cjs",
     "favicons": "node scripts/generate-favicons.cjs",
     "og": "node scripts/generate-og.cjs",
-    "feature-graphic": "node scripts/generate-feature-graphic.cjs"
+    "feature-graphic": "node scripts/generate-feature-graphic.cjs",
+    "check:assets": "node scripts/check-assets.cjs",
+    "verify": "npm run lint && npm run typecheck && npm run check:assets && npm run build"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.4",
     "astro": "^5.13.0"
   },
   "devDependencies": {
-    "sharp": "^0.35.5"
+    "@astrojs/check": "^0.9.10",
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.11.0",
+    "eslint-plugin-astro": "^3.2.1",
+    "globals": "^17.13.0",
+    "prettier": "^3.9.9",
+    "prettier-plugin-astro": "^1.1.0",
+    "sharp": "^0.35.5",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.71.0"
+  },
+  "engines": {
+    "node": ">=20"
   }
 }

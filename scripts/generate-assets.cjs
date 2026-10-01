@@ -54,10 +54,7 @@ const jobs = [
     label: 'android-icon-monochrome.png (432x432)',
     output: 'android-icon-monochrome.png',
     run: () =>
-      sharp(logoMark)
-        .resize(432, 432, { fit: 'contain', background: BRAND_BG })
-        .greyscale()
-        .png(),
+      sharp(logoMark).resize(432, 432, { fit: 'contain', background: BRAND_BG }).greyscale().png(),
   },
 ];
 
@@ -72,7 +69,7 @@ async function generateAssets() {
   console.log(`\nListo: ${jobs.length} archivos en public/assets/`);
 }
 
-generateAssets().catch(err => {
+generateAssets().catch((err) => {
   console.error('Error generando los assets:', err);
   process.exit(1);
 });

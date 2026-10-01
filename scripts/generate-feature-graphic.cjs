@@ -148,14 +148,14 @@ const featureSvg = `
 async function generateFeatureGraphic() {
   const outputDir = path.resolve(__dirname, '..', 'public', 'assets');
   const outputPng = path.join(outputDir, 'feature-graphic.png');
-  
+
   await sharp(Buffer.from(featureSvg))
     .resize(1024, 500, { fit: 'fill' })
     .png({ compressionLevel: 9 })
     .toFile(outputPng);
-  
+
   console.log('✓ feature-graphic.png (1024x500) generado en', outputPng);
-  
+
   // Verify size
   const stats = fs.statSync(outputPng);
   const sizeMB = (stats.size / (1024 * 1024)).toFixed(2);

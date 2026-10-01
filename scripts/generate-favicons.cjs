@@ -11,12 +11,12 @@ async function generateFavicons() {
   console.log('Generando favicons desde logo.svg...');
   console.log('Input:', inputSvg);
   console.log('Output dir:', outputDir);
-  
+
   if (!fs.existsSync(inputSvg)) {
     console.error('ERROR: No existe el archivo SVG:', inputSvg);
     process.exit(1);
   }
-  
+
   for (const size of sizes) {
     const outputPng = path.join(outputDir, `favicon-${size}.png`);
     await sharp(inputSvg)
