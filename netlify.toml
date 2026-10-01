@@ -25,11 +25,12 @@
     Cache-Control = "public, max-age=86400"
     X-Content-Type-Options = "nosniff"
 
-# Landing: la portada vive en / (src/pages/index.astro). /landing es un alias
-# permanente para no romper los enlaces antiguos que lo usaban.
+# La pagina principal redirige a la landing, que vive en /landing
+# (src/pages/landing/index.astro). El orden importa: esta regla tiene que
+# ir antes del 404 general, porque Netlify aplica la primera que coincide.
 [[redirects]]
-  from = "/landing"
-  to = "/"
+  from = "/"
+  to = "/landing/"
   status = 301
 
 # App info page

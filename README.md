@@ -66,8 +66,8 @@ Node 20 es obligatorio: está fijado en `.nvmrc`, en `netlify.toml` y en la CI, 
 ## Estructura
 
 ```
-src/pages/index.astro     portada (la landing)
-src/pages/app.astro       página de información de la app
+src/pages/landing/index.astro  portada (la landing)
+src/pages/app.astro            página de información de la app
 src/pages/404.astro       404
 src/layouts/Layout.astro  head compartido, JSON-LD y nav
 public/assets/            iconos, favicons y Open Graph
@@ -80,7 +80,7 @@ docs/                     manual y notas
 
 `public/assets/` y `public/manual/` están versionados a propósito: los PNG se commitean para que Netlify despliegue sin depender de `sharp` en build, y el manual se sube tal cual a Play Console. Lo que no se versiona es `dist/` y `node_modules/`.
 
-La portada vive en `/`. `/landing` responde 301 hacia `/` para no romper enlaces antiguos. `/app` lleva a la página de información.
+La portada vive en `/landing/`. `/` responde 301 hacia `/landing/` desde `netlify.toml`, así que la raíz del dominio lleva a la landing. `/app` lleva a la página de información. Los enlaces internos apuntan ya a `/landing/` para no pasar por el redirect.
 
 ## Assets
 
