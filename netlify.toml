@@ -17,30 +17,25 @@
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
 
-# Manual de uso en PDF: se cachea 1 dia, no un ano, porque cambia con cada version
-# de la app y no lleva hash en el nombre.
+# Manual de uso en PDF: se cachea 1 día, no un año, porque cambia con cada
+# versión de la app y no lleva hash en el nombre.
 [[headers]]
   for = "/manual/*"
     [headers.values]
     Cache-Control = "public, max-age=86400"
     X-Content-Type-Options = "nosniff"
 
-# Landing page
+# Landing: la portada vive en / (src/pages/index.astro). /landing es un alias
+# permanente para no romper los enlaces antiguos que lo usaban.
 [[redirects]]
   from = "/landing"
-  to = "/landing/index.html"
-  status = 200
+  to = "/"
+  status = 301
 
 # App info page
 [[redirects]]
   from = "/app"
   to = "/app/index.html"
-  status = 200
-
-# Root redirects to landing
-[[redirects]]
-  from = "/"
-  to = "/index.html"
   status = 200
 
 # 404 for everything else (no SPA fallback)
