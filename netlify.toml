@@ -41,5 +41,5 @@
 # 404 for everything else (no SPA fallback)
 [[redirects]]
   from = "/*"
-  to = "/404.html"
+  to = "/landing"
   status = 404
