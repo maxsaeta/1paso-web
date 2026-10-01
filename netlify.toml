@@ -17,6 +17,14 @@
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
 
+# Manual de uso en PDF: se cachea 1 dia, no un ano, porque cambia con cada version
+# de la app y no lleva hash en el nombre.
+[[headers]]
+  for = "/manual/*"
+    [headers.values]
+    Cache-Control = "public, max-age=86400"
+    X-Content-Type-Options = "nosniff"
+
 # Landing page
 [[redirects]]
   from = "/landing"

@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>NeuroPaso — Manual de uso rápido</title>
+<style>
+  @page { size: A4; margin: 0; }
+  * { box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  html, body { margin:0; padding:0; background:#fff; }
+  body {
+    font-family: "Segoe UI", system-ui, -apple-system, "Helvetica Neue", sans-serif;
+    color: #14181F;
+    font-size: 10.5pt;
+    line-height: 1.5;
+  }
+
+  /* ---------- paleta ---------- */
+  :root {
+    --ink:#14181F; --muted:#5C6575; --soft:#8A93A3;
+    --rule:#E2E7EF; --wash:#F5F7FA;
+    --brand:#1B5E54; --brand-soft:#E6F1EF;
+    --red:#BA1A1A;   --amber:#C77A06;   --green:#107C41;
+    --red-wash:#FBEDEC; --amber-wash:#FDF3E2; --green-wash:#E8F5EE;
+  }
+
+  /* ---------- pagina ---------- */
+  .page {
+    position: relative;
+    width: 210mm; height: 297mm;
+    padding: 20mm 17mm 16mm;
+    page-break-after: always;
+    overflow: hidden;
+    display: flex; flex-direction: column;
+  }
+  .page:last-child { page-break-after: auto; }
+
+  .foot {
+    position: absolute; left: 17mm; right: 17mm; bottom: 9mm;
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 7.6pt; color: var(--soft);
+    border-top: 1px solid var(--rule); padding-top: 3mm;
+  }
+  .foot b { color: var(--muted); font-weight: 600; }
+
+  /* ---------- portada ---------- */
+  .cover { padding: 0; }
+  .cover-top { flex:1; background: var(--brand); color:#fff; padding: 26mm 17mm 16mm; display:flex; flex-direction:column; }
+  .cover-logo {
+    width: 34mm; height: 34mm; border-radius: 50%;
+    box-shadow: 0 1mm 5mm rgba(0,0,0,.35);
+    align-self: flex-start;
+  }
+  .cover h1 { font-size: 34pt; margin: 12mm 0 0; letter-spacing:-.8pt; font-weight:700; }
+  .cover .sub { font-size: 13pt; opacity:.92; margin-top: 2mm; font-weight:300; }
+  .cover .tag { margin-top:auto; font-size: 10pt; background: rgba(255,255,255,.16); border-radius: 2mm; padding: 2.5mm 4mm; width: max-content; }
+  .cover-bottom { flex:0 0 118mm; padding: 14mm 17mm 0; }
+  .cover-bottom .quote { font-size: 15pt; font-weight:600; color: var(--ink); line-height:1.35; }
+  .cover-bottom .meta { margin-top: 6mm; font-size: 9pt; color: var(--muted); }
+  .cover-bottom .meta div { margin-bottom: 1.2mm; }
+
+  /* ---------- imagenes reales de la app ---------- */
+  .shot {
+    display:block; width:100%; height:auto; object-fit:cover;
+    border-radius: 3mm; border:1px solid var(--rule);
+  }
+  /* la banda de Cierre, igual que el header de ShutdownScreen */
+  .band {
+    display:block; width:100%; height:44mm; object-fit:cover;
+    border-radius: 3mm 3mm 0 0; border:1px solid var(--rule); border-bottom:none;
+  }
+  .band-card { border:1px solid var(--rule); border-radius: 3mm; overflow:hidden; margin-bottom:5mm; }
+  .band-cap {
+    font-size:8.4pt; color:var(--muted); background:var(--wash);
+    padding: 2.5mm 4mm; border-top:1px solid var(--rule);
+  }
+  .ident { display:flex; align-items:center; gap:5mm; }
+  .ident img { width:19mm; height:19mm; border-radius:4.5mm; flex:0 0 auto; }
+  .ident .t { font-weight:650; }
+  .ident .d { font-size:8.8pt; color:var(--muted); }
+
+  /* ---------- tipografia ---------- */
+  h2.sec { font-size: 20pt; margin: 0 0 1.5mm; letter-spacing:-.4pt; font-weight:700; }
+  .lead { color: var(--muted); margin: 0 0 6mm; font-size: 11pt; }
+  h3 { font-size: 12pt; margin: 0 0 1mm; font-weight:650; }
+  .kicker { font-size: 8pt; letter-spacing: 1.4pt; text-transform: uppercase; color: var(--brand); font-weight:700; margin-bottom: 2mm; }
+
+  /* ---------- iconos ---------- */
+  .ic { width: 6.4mm; height: 6.4mm; color: var(--brand); flex:0 0 auto; }
+  .ic-lg { width: 9mm; height: 9mm; }
+  .ic-badge {
+    width: 11mm; height: 11mm; border-radius: 3mm;
+    background: var(--brand-soft); color: var(--brand);
+    display:flex; align-items:center; justify-content:center; flex:0 0 auto;
+  }
+  .ic-badge.red   { background: var(--red-wash);   color: var(--red); }
+  .ic-badge.amber { background: var(--amber-wash); color: var(--amber); }
+  .ic-badge.green { background: var(--green-wash); color: var(--green); }
+
+  /* ---------- bloques ---------- */
+  .card { border:1px solid var(--rule); border-radius: 3mm; padding: 4.5mm 5mm; background:#fff; }
+  .card.wash { background: var(--wash); border-color: transparent; }
+  .row { display:flex; gap: 4mm; align-items: flex-start; }
+  .row + .row { margin-top: 3.6mm; }
+  .row p { margin: 0; }
+  .row .t { font-weight:600; }
+
+  .grid { display:grid; gap: 4mm; }
+  .g2 { grid-template-columns: 1fr 1fr; }
+  .g3 { grid-template-columns: 1fr 1fr 1fr; }
+  .g5 { grid-template-columns: repeat(5, 1fr); }
+
+  .tile { border:1px solid var(--rule); border-radius: 3mm; padding: 4mm; text-align:center; }
+  .tile .lbl { font-weight:650; font-size: 9.5pt; margin-top: 2.5mm; }
+  .tile .sub { font-size: 7.8pt; color: var(--muted); margin-top: 1mm; line-height:1.35; }
+
+  .steps { counter-reset: s; }
+  .steps .row { counter-increment: s; }
+  .steps .num {
+    width: 7mm; height: 7mm; border-radius: 50%;
+    background: var(--brand); color:#fff;
+    display:flex; align-items:center; justify-content:center;
+    font-size: 9pt; font-weight:700; flex:0 0 auto;
+  }
+  .steps .num::before { content: counter(s); }
+
+  ul.bullets { margin: 0; padding-left: 4.6mm; }
+  ul.bullets li { margin-bottom: 1.6mm; }
+  ul.bullets li::marker { color: var(--brand); }
+
+  .note {
+    border-left: 1mm solid var(--brand); background: var(--brand-soft);
+    padding: 3.5mm 4mm; border-radius: 0 2mm 2mm 0; font-size: 9.5pt;
+  }
+  .note.warn { border-left-color: var(--red); background: var(--red-wash); }
+
+  .slot { border-radius: 3mm; padding: 4mm; color:#fff; }
+  .slot h3 { color:#fff; }
+  .slot .ic { color:#fff; }
+  .slot p { margin:0; font-size: 9pt; opacity:.95; }
+  .s-red { background: var(--red); }
+  .s-amber { background: var(--amber); }
+  .s-green { background: var(--green); }
+
+  table { width:100%; border-collapse: collapse; font-size: 9.5pt; }
+  th, td { text-align:left; padding: 2.6mm 3mm; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  th { color: var(--muted); font-weight:600; font-size: 8.4pt; text-transform: uppercase; letter-spacing:.6pt; }
+  tr:last-child td { border-bottom: none; }
+  td.k { font-weight:600; white-space:nowrap; }
+  .spacer { flex:1; }
+  h2.sec + .lead { margin-bottom: 5mm; }
+</style>
+</head>
+<body>
+
+<!-- ============ ICONOS ============ -->
+<svg style="display:none">
+  <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="12" r="8.6"/><path d="M8.2 12.3l2.6 2.6L16 9.6"/>
+  </symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="13.4" r="7.6"/><path d="M12 9.4v4.1l2.9 1.8M9.4 3.4h5.2"/>
+  </symbol>
+  <symbol id="i-bars" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="4.2" y="13.4" width="4" height="6.6" rx="1.1"/>
+    <rect x="10" y="9.6" width="4" height="10.4" rx="1.1"/>
+    <rect x="15.8" y="5.4" width="4" height="14.6" rx="1.1"/>
+  </symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M20.3 14.6A8.6 8.6 0 019.7 4a8.6 8.6 0 1010.6 10.6z"/>
+  </symbol>
+  <symbol id="i-chart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M4 19.4h16"/><rect x="6.6" y="12" width="3" height="5.6" rx=".8"/>
+    <rect x="11" y="8.6" width="3" height="9" rx=".8"/><rect x="15.4" y="5.2" width="3" height="12.4" rx=".8"/>
+  </symbol>
+  <symbol id="i-spark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M10.6 3l1.7 4.4 4.4 1.7-4.4 1.7-1.7 4.4-1.7-4.4L4.5 9.1l4.4-1.7z"/>
+    <path d="M17.6 14.6l.9 2.2 2.2.9-2.2.9-.9 2.2-.9-2.2-2.2-.9 2.2-.9z"/>
+  </symbol>
+  <symbol id="i-pen" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M4 20l4.6-1.2L20 7.4a2.1 2.1 0 00-3-3L5.8 16z"/><path d="M14.4 6.6l3 3"/>
+  </symbol>
+  <symbol id="i-tag" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M3.6 11.3V4.4h6.9l9.9 9.9-6.9 6.9z"/><circle cx="7.9" cy="8.3" r="1.35"/>
+  </symbol>
+  <symbol id="i-link" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M10.2 13.6a4.2 4.2 0 006 .5l2.4-2.4a4.2 4.2 0 00-5.9-5.9l-1.3 1.3"/>
+    <path d="M13.8 10.4a4.2 4.2 0 00-6-.5L5.4 12.3a4.2 4.2 0 005.9 5.9l1.3-1.3"/>
+  </symbol>
+  <symbol id="i-sync" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M3.6 12a8.4 8.4 0 0114.5-5.8"/><path d="M20.4 12a8.4 8.4 0 01-14.5 5.8"/>
+    <path d="M18.4 2.6v4.2h-4.2"/><path d="M5.6 21.4v-4.2h4.2"/>
+  </symbol>
+  <symbol id="i-trash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M4.6 7h14.8"/><path d="M9.6 7V4.9h4.8V7"/>
+    <path d="M6.6 7l1 12.9h8.8L17.4 7"/><path d="M10.6 10.6v6M13.4 10.6v6"/>
+  </symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 3.2l7 2.6v5.3c0 4.3-3 8.1-7 9.2-4-1.1-7-4.9-7-9.2V5.8z"/><path d="M9 12l2.2 2.2L15.4 9.9"/>
+  </symbol>
+  <symbol id="i-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="8.4" r="3.8"/><path d="M4.6 20c1.4-3.7 4.1-5.5 7.4-5.5s6 1.8 7.4 5.5"/>
+  </symbol>
+  <symbol id="i-flame" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 3.2c.4 3-1.3 4.3-2.5 5.6C8 10.3 7 11.4 7 13.4a5 5 0 0010 0c0-2.3-1.2-3.9-2.3-5.2-.3 1-1 1.7-1.9 2 .5-2.6-.2-5-.8-7z"/>
+  </symbol>
+  <symbol id="i-refresh" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M20 12a8 8 0 11-2.4-5.7"/><path d="M20.2 3.6V9h-5.4"/>
+  </symbol>
+  <symbol id="i-flag" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M6 21.2V3.6"/><path d="M6 4.4h11.4l-2.1 3.6 2.1 3.6H6"/>
+  </symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 5.2v13.6M5.2 12h13.6"/>
+  </symbol>
+  <symbol id="i-target" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="12" r="8.4"/><circle cx="12" cy="12" r="3.6"/><circle cx="12" cy="12" r=".6" fill="currentColor"/>
+  </symbol>
+  <symbol id="i-cal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="3.8" y="5" width="16.4" height="15.2" rx="2.2"/>
+    <path d="M3.8 9.8h16.4M8.2 3.4v3.2M15.8 3.4v3.2"/>
+  </symbol>
+</svg>
+
+<!-- ============ 1 · PORTADA ============ -->
+<section class="page cover">
+  <div class="cover-top">
+    <img class="cover-logo" src="img/logo.png" alt="Logo de NeuroPaso">
+    <h1>NeuroPaso</h1>
+    <div class="sub">Manual de uso rápido</div>
+    <div class="tag">Un micro-paso a la vez</div>
+  </div>
+  <div class="cover-bottom">
+    <div class="quote">Deja de cargar una lista de tareas.<br>Elige una, dála en pasos pequeños y avanza.</div>
+    <div class="meta" style="margin-top:10mm">
+      <div><b style="color:#14181F">Versión</b> 1.0.1 · versión 2</div>
+      <div><b style="color:#14181F">Para</b> Android 7.0 o superior</div>
+      <div><b style="color:#14181F">Requiere</b> cuenta con correo y contraseña</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 2 · EMPEZAR ============ -->
+<section class="page">
+  <div class="kicker">Primeros pasos</div>
+  <h2 class="sec">Empieza en un minuto</h2>
+  <p class="lead">NeuroPaso no pretende que hagas todo. Pretende que hagas <b>una cosa</b>.</p>
+
+  <div class="steps">
+    <div class="row">
+      <div class="num"></div>
+      <div>
+        <p class="t">Crea tu cuenta</p>
+        <p style="color:var(--muted)">Correo y contraseña. Tus datos se guardan primero en el teléfono y se replican a tu cuenta cuando hay conexión.</p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="num"></div>
+      <div>
+        <p class="t">Escribe una tarea</p>
+        <p style="color:var(--muted)">Por ejemplo «Preparar la presentación del lunes». Elige su categoría y la conviertes en pasos de menos de cinco minutos.</p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="num"></div>
+      <div>
+        <p class="t">Arranca el temporizador</p>
+        <p style="color:var(--muted)">Cuando estés en un micro-paso, abre el <b>Timer</b> y pulsa iniciar. El anillo te dice cuánto queda.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="spacer"></div>
+
+  <div class="kicker">Mapa de la app</div>
+  <h2 class="sec">Dónde está cada cosa</h2>
+  <p class="lead">Cuatro pestañas abajo y un icono de gráfico arriba a la derecha.</p>
+
+  <div class="grid g5">
+    <div class="tile">
+      <div class="ic-badge"><svg class="ic ic-lg"><use href="#i-check"/></svg></div>
+      <div class="lbl">Pasos</div><div class="sub">Tus tareas y micro-pasos</div>
+    </div>
+    <div class="tile">
+      <div class="ic-badge"><svg class="ic ic-lg"><use href="#i-clock"/></svg></div>
+      <div class="lbl">Timer</div><div class="sub">Pomodoro y descansos</div>
+    </div>
+    <div class="tile">
+      <div class="ic-badge red"><svg class="ic ic-lg"><use href="#i-bars"/></svg></div>
+      <div class="lbl">Regla 3</div><div class="sub">Lo importante de hoy</div>
+    </div>
+    <div class="tile">
+      <div class="ic-badge amber"><svg class="ic ic-lg"><use href="#i-moon"/></svg></div>
+      <div class="lbl">Cierre</div><div class="sub">Terminar el día</div>
+    </div>
+    <div class="tile">
+      <div class="ic-badge green"><svg class="ic ic-lg"><use href="#i-chart"/></svg></div>
+      <div class="lbl">Progreso</div><div class="sub">Estadísticas y cuenta</div>
+    </div>
+  </div>
+
+  <div class="note" style="margin-top:7mm">
+    <b>Progreso no es una pestaña.</b> Se abre con el icono del gráfico de barras, en la
+    barra superior de la app, junto al logo.
+  </div>
+
+  <div class="foot"><span>NeuroPas · Manual de uso rápido</span><span><b>2</b></span></div>
+</section>
+
+<!-- ============ 3 · PASOS ============ -->
+<section class="page">
+  <div class="kicker">Pantalla principal</div>
+  <h2 class="sec">Pasos: una tarea a la vez</h2>
+  <p class="lead">Aquí vive el trabajo. Las demás pantallas son apoyo para ésta.</p>
+
+  <div class="grid g2">
+    <div class="card">
+      <div class="row">
+        <div class="ic-badge"><svg class="ic ic-lg"><use href="#i-target"/></svg></div>
+        <div>
+          <h3>Una sola en foco</h3>
+          <p style="color:var(--muted);font-size:9.5pt">La app enseña una única tarea activa, grande y sin distracciones. Las demás quedan a la espera, no abandonadas.</p>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="row">
+        <div class="ic-badge amber"><svg class="ic ic-lg"><use href="#i-plus"/></svg></div>
+        <div>
+          <h3>Crear una tarea</h3>
+          <p style="color:var(--muted);font-size:9.5pt">Pulsa <b>+</b>, escribe el título y, si quieres, una descripción. Un título claro produce mejores pasos.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="kicker" style="margin-top:9mm">Convertirla en micro-pasos</div>
+  <h2 class="sec">Dos caminos</h2>
+  <p class="lead">Los dos funcionan. El primero es más rápido; el segundo lo controlas tú.</p>
+
+  <div class="grid g2">
+    <div class="card">
+      <div class="row">
+        <div class="ic-badge"><svg class="ic ic-lg"><use href="#i-spark"/></svg></div>
+        <div>
+          <h3>Desglose Inteligente (IA)</h3>
+          <p style="color:var(--muted);font-size:9.5pt">La app propone entre 3 y 10 pasos concretos con una estimación de minutos en cada uno.</p>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="row">
+        <div class="ic-badge amber"><svg class="ic ic-lg"><use href="#i-pen"/></svg></div>
+        <div>
+          <h3>A mano</h3>
+          <p style="color:var(--muted);font-size:9.5pt">Escribe, reordena y edita cada paso. Siempre disponible, incluso sin conexión.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="note warn" style="margin-top:5mm">
+    <b>Un detalle que conviene saber.</b> Si la IA no puede responder, la app no te avisa:
+    genera unos pasos genéricos según las palabras de tu tarea. Verás pasos igual de
+    normativas, pero no serán los del modelo. Si necesitas distinguirlo, fíjate en si
+    encajan con tu caso concreto.
+  </div>
+
+  <div class="spacer"></div>
+
+  <table>
+    <tr><td class="k" style="width:34mm"><svg class="ic" style="vertical-align:-1.5mm"><use href="#i-tag"/></svg> Categorías</td>
+        <td>Trabajo, Estudio, Hogar, Cuidado y General. Se eligen al crear la tarea y ordenan tus pasos por color.</td></tr>
+    <tr><td class="k"><svg class="ic" style="vertical-align:-1.5mm"><use href="#i-link"/></svg> Vincular</td>
+        <td>Desde un micro-paso puedes abrir el <b>Timer</b> ya poner sobre esa tarea y ese paso concretos.</td></tr>
+    <tr><td class="k"><svg class="ic" style="vertical-align:-1.5mm"><use href="#i-refresh"/></svg> Regenerar</td>
+        <td>Si el desglose no encaja, pídele otra versión y quédate con la que sirva.</td></tr>
+    <tr><td class="k"><svg class="ic" style="vertical-align:-1.5mm"><use href="#i-flag"/></svg> Reportar</td>
+        <td>Cada micro-paso tiene una bandera para señalar contenido generado por IA que no te cuadra.</td></tr>
+  </table>
+
+  <div class="foot"><span>NeuroPaso · Manual de uso rápido</span><span><b>3</b></span></div>
+</section>
+
+<!-- ============ 4 · TIMER ============ -->
+<section class="page">
+  <div class="kicker">Pomodoro</div>
+  <h2 class="sec">Timer: trabajar sin mirar el reloj</h2>
+  <p class="lead">Un temporizador pensado para que la decisión de cuándo parar ya esté tomada de antemano.</p>
+
+  <div class="card wash">
+    <div class="row">
+      <div class="ic-badge"><svg class="ic ic-lg"><use href="#i-clock"/></svg></div>
+      <div>
+        <h3>25 minutos de trabajo, 5 de descanso</h3>
+        <p style="color:var(--muted);font-size:9.5pt">Es el punto de partida. Puedes cambiar ambas duraciones a tu gusto en esta versión.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid g3" style="margin-top:6mm">
+    <div class="tile">
+      <div class="lbl" style="margin-top:0">Anillo</div>
+      <div class="sub">El avance se dibuja como un arco alrededor del reloj. Es el único elemento que necesitas mirar.</div>
+    </div>
+    <div class="tile">
+      <div class="lbl" style="margin-top:0">Avisos</div>
+      <div class="sub">Al terminar vibra y suena un tono suave. No tienes que estar mirando la pantalla.</div>
+    </div>
+    <div class="tile">
+      <div class="lbl" style="margin-top:0">Pausa</div>
+      <div class="sub">Se pausa y se reanuda sin perder la cuenta del tiempo.</div>
+    </div>
+  </div>
+
+  <div class="kicker" style="margin-top:9mm">Ciclo largo</div>
+  <h2 class="sec">Un descanso que de verdad descansa</h2>
+  <p class="lead">Cada cuatro sesiones de trabajo, el descanso se alarga a 15 minutos.</p>
+
+  <div class="card">
+    <div class="row">
+      <div class="ic-badge green"><svg class="ic ic-lg"><use href="#i-cal"/></svg></div>
+      <div>
+        <h3>Por qué el cuarto</h3>
+        <p style="color:var(--muted);font-size:9.5pt">Las tres primeras son cortas para mantener el ritmo; la cuarta es el punto donde el cansancio se acumula de verdad. Saltártelo con un descanso de cinco minutos es lo que hace que la cuarta hora sea casi imposible.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="kicker" style="margin-top:9mm">Vinculado a tu trabajo</div>
+  <h2 class="sec">El temporizador sabe qué estás haciendo</h2>
+
+  <table>
+    <tr><td class="k" style="width:38mm">Micro-paso enlazado</td>
+        <td>La app muestra el paso que estás ejecutando y de qué tarea sale. El trabajo del día aparece con nombre, no como «tiempo de concentración».</td></tr>
+    <tr><td class="k">Sin tareas</td>
+        <td>Si no hay nada en foco, el temporizador te recuerda que vayas a Pasos a elegir una.</td></tr>
+    <tr><td class="k">Cada sesión cuenta</td>
+        <td>Las sesiones se suman en Progreso. Con cuatro o más seguidas se construye la racha.</td></tr>
+  </table>
+
+  <div class="spacer"></div>
+  <div class="note"><b>Consejo.</b> Empieza un temporizador sobre un micro-paso concreto, nunca sobre
+  «trabajar en el proyecto». El nombre del paso es lo que te mantiene la atención cuando la
+  motivación baja.</div>
+
+  <div class="foot"><span>NeuroPaso · Manual de uso rápido</span><span><b>4</b></span></div>
+</section>
+
+<!-- ============ 5 · REGLA 3 ============ -->
+<section class="page">
+  <div class="kicker">Prioridades diarias</div>
+  <h2 class="sec">Regla 3: qué merece tu día</h2>
+  <p class="lead">Tres huecos y nada más. La restricción es el objetivo: obliga a decidir.</p>
+
+  <div class="grid g3">
+    <div class="slot s-red">
+      <svg class="ic ic-lg"><use href="#i-target"/></svg>
+      <h3 style="margin-top:2.5mm">La Cosa</h3>
+      <p>Lo que, si no lo haces hoy, importa de verdad.</p>
+    </div>
+    <div class="slot s-amber">
+      <svg class="ic ic-lg"><use href="#i-target"/></svg>
+      <h3 style="margin-top:2.5mm">Estaría Bien</h3>
+      <p>Lo que te quitaría peso si saliera adelante.</p>
+    </div>
+    <div class="slot s-green">
+      <svg class="ic ic-lg"><use href="#i-target"/></svg>
+      <h3 style="margin-top:2.5mm">Si Estoy Encendido</h3>
+      <p>Lo que haces cuando ya has cumplido lo anterior.</p>
+    </div>
+  </div>
+
+  <div class="spacer"></div>
+
+  <div class="grid g2">
+    <div class="card">
+      <div class="row">
+        <div class="ic-badge"><svg class="ic ic-lg"><use href="#i-link"/></svg></div>
+        <div>
+          <h3>Tareas reales, no texto</h3>
+          <p style="color:var(--muted);font-size:9.5pt">Arrastra una tarea que ya tienes en Pasos. La prioridad queda ligada a esa tarea, así que al completarla sabes que la has hecho.</p>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="row">
+        <div class="ic-badge"><svg class="ic ic-lg"><use href="#i-cal"/></svg></div>
+        <div>
+          <h3>Un día, tres huecos</h3>
+          <p style="color:var(--muted);font-size:9.5pt">Las prioridades se guardan por fecha. Mañana empiezas de cero, sin arrastrar las de hoy.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="note" style="margin-top:6mm">
+    <b>Las tres tienen que estar llenas.</b> Si te faltan huecos, el día se te ha llenado solo.
+    La pregunta útil no es «¿qué podría añadir?», sino «¿qué saco?».
+  </div>
+
+  <div class="foot"><span>NeuroPaso · Manual de uso rápido</span><span><b>5</b></span></div>
+</section>
+
+<!-- ============ 6 · CIERRE ============ -->
+<section class="page">
+  <div class="kicker">Final del día</div>
+  <h2 class="sec">Cierre: cerrar el día de verdad</h2>
+  <p class="lead">Un ritual corto que evita llegar a la medianoche con la cabeza llena de tareas abiertas.</p>
+
+  <div class="band-card">
+    <img class="band" src="img/cierre.jpg" alt="Ilustración del ritual de Cierre">
+    <div class="band-cap">La pantalla de <b>Cierre</b> abre siempre con esta imagen. Es el mismo recurso que lleva la app, no un dibujo del manual.</div>
+  </div>
+
+  <div class="steps">
+    <div class="row">
+      <div class="num"></div>
+      <div>
+        <p class="t">Prioridad de mañana</p>
+        <p style="color:var(--muted)">Eliges qué va primero al día siguiente. Queda escrito, así que mañana no empiezas decidiendo.</p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="num"></div>
+      <div>
+        <p class="t">Revisar el calendario</p>
+        <p style="color:var(--muted)">Un vistazo a lo que ya tienes comprometido mañana. Si hay colisión, ahora es el momento fácil de detectarlo.</p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="num"></div>
+      <div>
+        <p class="t">Limpiar el escritorio</p>
+        <p style="color:var(--muted)">Cierras lo que está abierto de verdad: pestañas, documentos, medio. Media hora de escritorio limpio ahorra media hora de mañana.</p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="num"></div>
+      <div>
+        <p class="t">Declaración de cierre</p>
+        <p style="color:var(--muted)">«Hoy terminé» queda registrado. Da por cerrada la sesión, aunque haya días que no hayas hecho casi nada.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="spacer"></div>
+
+  <div class="kicker">La racha</div>
+  <h2 class="sec">Racha que no castiga</h2>
+
+  <div class="card">
+    <div class="row">
+      <div class="ic-badge amber"><svg class="ic ic-lg"><use href="#i-flame"/></svg></div>
+      <div>
+        <h3>Si hoy no has hecho nada, cuenta desde ayer</h3>
+        <p style="color:var(--muted);font-size:9.5pt">La racha no se reinicia a cero por un día flojo: se queda donde estaba y te da un día de margen. Romperla tiene que costar un acto, no un despiste.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="note" style="margin-top:5mm">
+    <b>El cierre también es un micro-paso.</b> Está en la lista como cualquier otro, y el
+    temporizador puede correr sobre él. Cuatro pasos guiados son menos de cinco minutos.
+  </div>
+
+  <div class="foot"><span>NeuroPaso · Manual de uso rápido</span><span><b>6</b></span></div>
+</section>
+
+<!-- ============ 7 · PROGRESO ============ -->
+<section class="page">
+  <div class="kicker">Progreso y cuenta</div>
+  <h2 class="sec">Progreso: datos y ajustes</h2>
+  <p class="lead">Se abre con el icono de gráfico de barras, arriba a la derecha.</p>
+
+  <div class="kicker">Lo que se mide</div>
+  <div class="grid g2">
+    <div class="tile">
+      <svg class="ic ic-lg" style="color:var(--red)"><use href="#i-clock"/></svg>
+      <div class="lbl">Pomodoros</div><div class="sub">Sesiones completadas, acumuladas.</div>
+    </div>
+    <div class="tile">
+      <svg class="ic ic-lg" style="color:var(--amber)"><use href="#i-check"/></svg>
+      <div class="lbl">Tareas completadas</div><div class="sub">Cuántas has cerrado de verdad.</div>
+    </div>
+    <div class="tile">
+      <svg class="ic ic-lg" style="color:var(--green)"><use href="#i-flame"/></svg>
+      <div class="lbl">Racha</div><div class="sub">Días seguidos de cierre.</div>
+    </div>
+    <div class="tile">
+      <svg class="ic ic-lg" style="color:var(--brand)"><use href="#i-cal"/></svg>
+      <div class="lbl">Minutos</div><div class="sub">Tiempo total invertido.</div>
+    </div>
+  </div>
+
+  <p style="color:var(--muted);font-size:9.5pt;margin-top:4mm">Debajo, un gráfico de barras de los
+  últimos siete días para ver de un vistazo qué día fue el bueno.</p>
+
+  <div class="kicker" style="margin-top:8mm">Cuenta</div>
+  <h2 class="sec">Sincronización y borrado</h2>
+
+  <div class="grid g2">
+    <div class="card">
+      <div class="row">
+        <div class="ic-badge"><svg class="ic ic-lg"><use href="#i-sync"/></svg></div>
+        <div>
+          <h3>Sincronizar</h3>
+          <p style="color:var(--muted);font-size:9.5pt">La app trabaja en el teléfono. Si pulsas Sincronizar, sube lo pendiente a tu cuenta.</p>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="row">
+        <div class="ic-badge red"><svg class="ic ic-lg"><use href="#i-trash"/></svg></div>
+        <div>
+          <h3>Eliminar Cuenta</h3>
+          <p style="color:var(--muted);font-size:9.5pt">Borra todo y cierra la sesión. Pide tu contraseña para confirmar: no basta con un botón.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="kicker" style="margin-top:8mm">Al eliminar tu cuenta se borra</div>
+  <table>
+    <tr><td class="k" style="width:52mm">Tu correo y tu sesión</td><td>Se revoca el acceso a la cuenta.</td></tr>
+    <tr><td class="k">Tareas y micro-pasos</td><td>En el teléfono y en la nube.</td></tr>
+    <tr><td class="k">Estadísticas, racha y cierres</td><td>Incluido el histórico.</td></tr>
+    <tr><td class="k">Tu configuración del temporizador</td><td>Duraciones y ajustes.</td></tr>
+  </table>
+
+  <div class="foot"><span>NeuroPaso · Manual de uso rápido</span><span><b>7</b></span></div>
+</section>
+
+<!-- ============ 8 · PRIVACIDAD + FAQ ============ -->
+<section class="page">
+  <div class="kicker">Tus datos</div>
+  <h2 class="sec">Qué guardamos y por qué</h2>
+  <p class="lead">Sin letra pequeña: esto es lo que hace la app con lo que escribes.</p>
+
+  <div class="grid g2">
+    <div class="card">
+      <div class="row">
+        <div class="ic-badge green"><svg class="ic ic-lg"><use href="#i-shield"/></svg></div>
+        <div>
+          <h3>Primero en tu teléfono</h3>
+          <p style="color:var(--muted);font-size:9.5pt">Cada cuenta tiene su propia base de datos local. Puedes trabajar sin conexión; la nube es una réplica, no el origen.</p>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="row">
+        <div class="ic-badge"><svg class="ic ic-lg"><use href="#i-user"/></svg></div>
+        <div>
+          <h3>Solo tu cuenta</h3>
+          <p style="color:var(--muted);font-size:9.5pt">Cada usuario ve y escribe únicamente en su espacio. Nadie más ve tus tareas ni tus pasos.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="note" style="margin-top:5mm">
+    <b>No guardamos datos de salud.</b> NeuroPaso no registra ánimo, sueño ni ningún dato
+    clínico. Solo tareas, micro-pasos, prioridades y tus propias sesiones de temporizador.
+  </div>
+
+  <div class="kicker" style="margin-top:8mm">Preguntas frecuentes</div>
+  <h2 class="sec">Lo que más se pregunta</h2>
+
+  <table>
+    <tr><td class="k" style="width:44mm">¿Hay límite de tareas?</td>
+        <td>No. Puedes tener todas las tareas activas que quieras; no hay planes ni suscripciones en esta versión.</td></tr>
+    <tr><td class="k">¿Puedo cambiar el 25/5?</td>
+        <td>Sí. El temporizador es configurable, y el descanso largo de cada 4 sesiones se mantiene.</td></tr>
+    <tr><td class="k">¿Funciona sin internet?</td>
+        <td>Sí. Todo se guarda en el teléfono. Solo se necesita conexión para sincronizar y para el desglose con IA.</td></tr>
+    <tr><td class="k">¿Cómo entro con Google?</td>
+        <td>De momento, solo con correo y contraseña. El acceso con Google está deshabilitado en esta versión.</td></tr>
+    <tr><td class="k">¿Los pasos los hace la IA siempre?</td>
+        <td>No necesariamente. Si la IA no responde, la app genera pasos genéricos por palabras clave sin avisar. Si te parecen demasiado correctos y genéricos, es probable que no los haya generado el modelo.</td></tr>
+    <tr><td class="k">¿Qué pasa si borro la cuenta?</td>
+        <td>Se elimina todo de forma permanente, en el teléfono y en la nube, y se revoca tu sesión. No hay vuelta atrás.</td></tr>
+  </table>
+
+  <div class="spacer"></div>
+
+  <div class="card">
+    <div class="ident">
+      <img src="img/icon.png" alt="Icono de la app">
+      <div>
+        <div class="t">NeuroPaso en tu pantalla de inicio</div>
+        <div class="d">Este es el icono que verás junto a las demás apps del móvil. Es el mismo que aparece en la ficha de la tienda.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="foot"><span>NeuroPaso · Manual de uso rápido</span><span><b>8</b></span></div>
+</section>
+
+</body>
+</html>
