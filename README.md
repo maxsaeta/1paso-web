@@ -47,13 +47,13 @@ npm run preview  # sirve dist/ tal cual se despliega
 npm run verify        # lint + typecheck + check:assets + build
 ```
 
-| Comando | Qué hace |
-|---|---|
-| `npm run lint` | ESLint sobre `.astro`, `.mjs` y `.cjs` |
-| `npm run typecheck` | `astro check` en modo `strict` |
-| `npm run format` / `format:check` | Prettier |
-| `npm run check:assets` | Regenera los PNG y falla si no coinciden con lo commiteado |
-| `npm run verify` | Todo lo anterior en orden, el comando de la CI |
+| Comando                           | Qué hace                                                   |
+| --------------------------------- | ---------------------------------------------------------- |
+| `npm run lint`                    | ESLint sobre `.astro`, `.mjs` y `.cjs`                     |
+| `npm run typecheck`               | `astro check` en modo `strict`                             |
+| `npm run format` / `format:check` | Prettier                                                   |
+| `npm run check:assets`            | Regenera los PNG y falla si no coinciden con lo commiteado |
+| `npm run verify`                  | Todo lo anterior en orden, el comando de la CI             |
 
 Prettier se aplica a la configuración y a los scripts, no al markup. `legal/`, `public/legal/`, `public/manual/` y los `.astro` están en `.prettierignore`: los legales se suben a Google Play Console y reformatearlos a ciegas genera un diff que esconde el cambio real.
 
@@ -114,13 +114,13 @@ Todo se escribe en `public/assets/`, que es lo único que Astro copia a `dist/`.
 
 `src/layouts/Layout.astro` centraliza el head: canonical, Open Graph, Twitter Card, `theme-color`, `author` y los JSON-LD `MobileApplication` + `Organization`.
 
-| Pieza                             | Dónde                                                    |
-| --------------------------------- | -------------------------------------------------------- |
+| Pieza                                   | Dónde                                                    |
+| --------------------------------------- | -------------------------------------------------------- |
 | `site: 'https://neuropaso.netlify.app'` | `astro.config.mjs`, obligatorio para canonical y sitemap |
-| canonical                         | todas las páginas menos las `noindex`                    |
-| `noindex`                         | `404.astro`, y `Layout` acepta `noindex` como prop       |
-| `google-play-app:android:package` | `com.unpaso.app`                                         |
-| `FAQPage`                         | prop `faq` del frontmatter de `app.astro`                |
-| `robots.txt`                      | `public/robots.txt`, apunta a `sitemap-index.xml`        |
+| canonical                               | todas las páginas menos las `noindex`                    |
+| `noindex`                               | `404.astro`, y `Layout` acepta `noindex` como prop       |
+| `google-play-app:android:package`       | `com.unpaso.app`                                         |
+| `FAQPage`                               | prop `faq` del frontmatter de `app.astro`                |
+| `robots.txt`                            | `public/robots.txt`, apunta a `sitemap-index.xml`        |
 
 Para cambiar los datos estructurados hay que editar los objetos `softwareSchema`, `orgSchema` y `faqSchema` del frontmatter de `Layout.astro`.
