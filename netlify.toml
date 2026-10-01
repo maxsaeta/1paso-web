@@ -39,7 +39,8 @@
   to = "/app/index.html"
   status = 200
 
-# 404 for everything else (no SPA fallback)
+# Cualquier ruta desconocida responde con la landing y codigo 404, para
+# que nadie aterrice en un pagina muerta (cambio de fcafdf9).
 [[redirects]]
   from = "/*"
   to = "/landing"
