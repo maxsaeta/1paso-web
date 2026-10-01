@@ -1,9 +1,53 @@
 ---
 import Layout from '../layouts/Layout.astro';
+
+const faq = [
+  {
+    question: '¿Para quién es NeuroPaso?',
+    answer:
+      'Para cualquiera que se sienta abrumado por una lista de tareas. Si alguna vez has sentido "no sé por dónde empezar", NeuroPaso es para ti.',
+  },
+  {
+    question: '¿Es gratis?',
+    answer:
+      'Sí, NeuroPaso es gratis y sin suscripción. No hay nada que comprar ni que cancelar. Todas las funciones de la app están disponibles sin pagar: tareas, desglose con IA, Pomodoro personalizable y estadísticas.',
+  },
+  {
+    question: '¿Mis datos están seguros?',
+    answer:
+      'Sí. Tus tareas y datos personales se almacenan en tu dispositivo y en tu cuenta de Firebase (autenticada con Google). No vendemos ni compartimos tus datos con terceros. Lee nuestra Política de Privacidad para más detalles.',
+  },
+  {
+    question: '¿Cómo funciona la división de tareas con IA?',
+    answer:
+      'Escribes tu tarea (por ejemplo, «Llamar al médico») y la inteligencia artificial la analiza y la divide automáticamente en pasos pequeños y específicos, cada uno estimado en unos 5 minutos. Tú decides si aceptar los pasos o ajustarlos.',
+  },
+  {
+    question: '¿Puedo usarla sin conexión?',
+    answer:
+      'Las funciones básicas (ver tareas, completar pasos, timer) funcionan sin conexión. La división de tareas con IA y el sincronizado en la nube requieren conexión a internet.',
+  },
+  {
+    question: '¿Cómo cierro el día?',
+    answer:
+      'Al final del día, NeuroPaso te invita a un ritual de cierre: revisar lo que lograste, guardar pendientes para mañana y desconectar.',
+  },
+  {
+    question: '¿Hay versión para iPhone?',
+    answer:
+      'No por ahora. NeuroPaso es una app para Android y se distribuye en Google Play. Si usas iPhone, puedes consultar esta web para leer el manual y conocer el método, pero la app todavía no está disponible para iOS.',
+  },
+  {
+    question: '¿Cómo elimino mi cuenta y mis datos?',
+    answer:
+      'En la app, baja hasta el enlace Eliminar Cuenta en el pie de la pantalla principal y sigue las instrucciones. También puedes solicitar la eliminación por correo a maxsaeta@gmail.com. Consulta la sección Solicitar Eliminación de Cuenta para más detalles.',
+  },
+];
 ---
 <Layout
   title="NeuroPaso - Un micro-paso a la vez"
   description="NeuroPaso: productividad con calma. Divide tus tareas en pasos pequeños y avanza una a la vez."
+  faq={faq}
 >
   <header>
     <nav>
@@ -160,7 +204,7 @@ import Layout from '../layouts/Layout.astro';
             </button>
             <div class="faq-answer">
               <div class="faq-answer-inner">
-                Escribes tu tarea (ej: "Llamar al médico") y la inteligencia artificial la analiza. automaticamente la divide en pasos pequeños y específicos, cada uno estimado en ~5 minutos. Tú decides si aceptar los pasos o ajustarlos.
+                Escribes tu tarea (por ejemplo, «Llamar al médico») y la inteligencia artificial la analiza y la divide automáticamente en pasos pequeños y específicos, cada uno estimado en unos 5 minutos. Tú decides si aceptar los pasos o ajustarlos.
               </div>
             </div>
           </div>
@@ -193,7 +237,7 @@ import Layout from '../layouts/Layout.astro';
             </button>
             <div class="faq-answer">
               <div class="faq-answer-inner">
-                Actualmente NeuroPaso está disponible solo para Android. La versión web (neuropaso.netlify.app) funciona desde cualquier navegador, incluyendo iPhone.
+                No por ahora. NeuroPaso es una app para Android y se distribuye en Google Play. Si usas iPhone, puedes consultar esta web para leer el manual y conocer el método, pero la app todavía no está disponible para iOS.
               </div>
             </div>
           </div>

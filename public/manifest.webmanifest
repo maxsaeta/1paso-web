@@ -45,22 +45,5 @@
       "purpose": "any"
     }
   ],
-  "categories": ["productivity", "health", "lifestyle"],
-  "screenshots": [],
-  "shortcuts": [
-    {
-      "name": "Nueva tarea",
-      "short_name": "Nueva",
-      "description": "Crear una tarea con micro-pasos IA",
-      "url": "/app#new-task",
-      "icons": [{ "src": "/assets/favicon-96.png", "sizes": "96x96" }]
-    },
-    {
-      "name": "Timer Pomodoro",
-      "short_name": "Timer",
-      "description": "Iniciar un bloque de foco 25/5",
-      "url": "/app#timer",
-      "icons": [{ "src": "/assets/favicon-96.png", "sizes": "96x96" }]
-    }
-  ]
+  "categories": ["productivity", "lifestyle"]
 }
