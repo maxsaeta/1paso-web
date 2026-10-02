@@ -41,3 +41,48 @@ jobs:
           name: dist
           path: dist/
           retention-days: 7
+
+  deploy:
+    needs: build
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Comprobar que hay credenciales de Netlify
+        id: creds
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+        run: |
+          if [ -z "$NETLIFY_AUTH_TOKEN" ] || [ -z "$NETLIFY_SITE_ID" ]; then
+            echo "::warning title=Despliegue omitido::Faltan NETLIFY_AUTH_TOKEN o NETLIFY_SITE_ID en los secrets del repositorio."
+            echo "::warning::Anadirlos en Settings > Secrets and variables > Actions para que cada push despliegue solo."
+            echo "faltan=1" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Recuperar dist
+        if: steps.creds.outputs.faltan != '1'
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+      - name: Copiar netlify.toml dentro de dist
+        if: steps.creds.outputs.faltan != '1'
+        run: |
+          # Netlify solo lee netlify.toml de la base del despliegue. Sin esto,
+          # los redirect de / a /landing/ y las cabeceras de cache se pierden.
+          cp netlify.toml dist/netlify.toml
+
+      - name: Desplegar en Netlify
+        if: steps.creds.outputs.faltan != '1'
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+        run: |
+          npx --yes netlify-cli@27 deploy \
+            --dir=dist \
+            --prod \
+            --site="$NETLIFY_SITE_ID" \
+            --message="Deploy ${GITHUB_SHA}"
